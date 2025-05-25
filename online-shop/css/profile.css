@@ -1,0 +1,207 @@
+/* Основные стили */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Стиль для личного кабинета */
+.profile-page {
+    padding: 40px 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.profile-content {
+    display: flex;
+    gap: 40px;
+}
+
+.profile-sidebar {
+    width: 300px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    background-color: #3498db;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    color: white;
+}
+
+.user-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.user-email, .user-phone {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.profile-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.profile-menu ul li {
+    margin: 15px 0;
+}
+
+.profile-menu ul li a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #3498db;
+    display: flex;
+    align-items: center;
+}
+
+.profile-menu ul li a i {
+    margin-right: 10px;
+}
+
+.profile-main {
+    flex-grow: 1;
+}
+
+.section-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Форма для редактирования профиля */
+.profile-form, .password-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.btn {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 15px;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid #3498db;
+    color: #3498db;
+    padding: 10px 25px;
+}
+
+.btn-outline:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Карточки заказов */
+.orders-list {
+    margin-top: 30px;
+}
+
+.order-card {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-id, .order-date, .order-status, .order-total {
+    font-size: 16px;
+}
+
+.order-status {
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+.order-details {
+    margin-top: 10px;
+}
+
+.order-card .order-status.pending {
+    color: #f39c12;
+}
+
+.order-card .order-status.processing {
+    color: #f1c40f;
+}
+
+.order-card .order-status.shipped {
+    color: #27ae60;
+}
+
+.order-card .order-status.delivered {
+    color: #2ecc71;
+}
+
+.order-card .order-status.cancelled {
+    color: #e74c3c;
+}
