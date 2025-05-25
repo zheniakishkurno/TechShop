@@ -1,9 +1,9 @@
 <?php
 // Параметры подключения к базе данных из переменных окружения
-$host = getenv('DB_HOST');
-$dbname = getenv('DB_NAME');
-$username = getenv('DB_USER');
-$password = getenv('DB_PASSWORD');
+$host = getenv('DB_HOST') ?: 'localhost';
+$dbname   = getenv('DB_NAME') ?: 'electronics_shop';
+$username = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASSWORD') ?: 'zhe27';
 $charset = 'utf8mb4';
 
 // Стартуем сессию, если еще не начата
