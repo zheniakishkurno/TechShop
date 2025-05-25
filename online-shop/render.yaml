@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: online-shop
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: shopdb
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: shopdb
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: shopdb
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: shopdb
+          property: password
