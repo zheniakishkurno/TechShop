@@ -1,16 +1,9 @@
 <?php
-// Выводим переменные окружения для диагностики — временно
-echo "DB_HOST = " . getenv('DB_HOST') . "\n";
-echo "DB_NAME = " . getenv('DB_NAME') . "\n";
-echo "DB_USER = " . getenv('DB_USER') . "\n";
-echo "DB_PASSWORD " . (getenv('DB_PASSWORD') ? '[set]' : '[not set]') . "\n";
-
-// Параметры подключения к базе данных из переменных окружения с fallback
-$host = getenv('DB_HOST') ?: '127.0.0.1';  // Заменили localhost на 127.0.0.1
-$dbname   = getenv('DB_NAME') ?: 'electronics_shop';
-$username = getenv('DB_USER') ?: 'root';
-$password = getenv('DB_PASSWORD') ?: 'zhe27';
-$charset = 'utf8mb4';
+$host = 'dpg-d0pk9todl3ps73asobi0-a';  // твой Hostname
+$port = '5432';
+$dbname = 'shopdb_vynx';                // твоя база
+$user = 'shopdb_vynx_user';             // пользователь
+$password = 'ВАШ_ПАРОЛЬ_ОТ_RENDER';    // пароль из Render
 
 // Стартуем сессию, если еще не начата
 if (session_status() === PHP_SESSION_NONE) {
@@ -18,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 try {
-    $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
 
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,  
@@ -26,15 +19,14 @@ try {
         PDO::ATTR_EMULATE_PREPARES => false,  
     ];
 
-    $pdo = new PDO($dsn, $username, $password, $options);
+    $pdo = new PDO($dsn, $user, $password, $options);
     
 } catch (PDOException $e) {
     die("Ошибка подключения: " . $e->getMessage());
 }
 
-// Настройки сайта — можешь оставить как есть или подправить под prod-среду
+// Настройки сайта
 define('SITE_NAME', 'TechShop');
-// Сделай SITE_URL пустым или укажи URL на Render, например:
 define('SITE_URL', 'https://your-online-shop.onrender.com');
 define('ADMIN_EMAIL', 'admin@techshop.ru');
 ?>
