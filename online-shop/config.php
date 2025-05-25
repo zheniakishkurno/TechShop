@@ -1,6 +1,12 @@
 <?php
-// Параметры подключения к базе данных из переменных окружения
-$host = getenv('DB_HOST') ?: 'localhost';
+// Выводим переменные окружения для диагностики — временно
+echo "DB_HOST = " . getenv('DB_HOST') . "\n";
+echo "DB_NAME = " . getenv('DB_NAME') . "\n";
+echo "DB_USER = " . getenv('DB_USER') . "\n";
+echo "DB_PASSWORD " . (getenv('DB_PASSWORD') ? '[set]' : '[not set]') . "\n";
+
+// Параметры подключения к базе данных из переменных окружения с fallback
+$host = getenv('DB_HOST') ?: '127.0.0.1';  // Заменили localhost на 127.0.0.1
 $dbname   = getenv('DB_NAME') ?: 'electronics_shop';
 $username = getenv('DB_USER') ?: 'root';
 $password = getenv('DB_PASSWORD') ?: 'zhe27';
