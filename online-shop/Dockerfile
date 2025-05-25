@@ -1,14 +1,16 @@
-# Используем официальный PHP-образ с Apache
-FROM php:8.2-apache
+FROM php:8.1-apache
 
-# Устанавливаем необходимые расширения
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Устанавливаем нужные расширения PHP (например, для работы с MySQL)
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Включаем mod_rewrite для ЧПУ (если нужно)
-RUN a2enmod rewrite
-
-# Копируем файлы сайта в папку веб-сервера
+# Копируем все файлы сайта в директорию, обслуживаемую Apache
 COPY . /var/www/html/
 
-# Устанавливаем права
+# Включаем mod_rewrite (если нужно для .htaccess)
+RUN a2enmod rewrite
+
+# Настраиваем права доступа (не обязательно, но полезно)
 RUN chown -R www-data:www-data /var/www/html
+
+# Объявляем порт (Render игнорирует EXPOSE, но это best practice)
+EXPOSE 80
