@@ -34,7 +34,7 @@ require_once 'header.php';
 
 function getUserOrders($user_id) {
     global $pdo;
-    
+
     $stmt = $pdo->prepare("
         SELECT 
             o.id, 
@@ -64,7 +64,7 @@ function getUserOrders($user_id) {
         ORDER BY o.created_at DESC
     ");
     $stmt->execute([$user_id]);
-    
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
