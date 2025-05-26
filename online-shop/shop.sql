@@ -1,16 +1,11 @@
--- Удаляем таблицы если существуют
-DROP TABLE IF EXISTS reviews, order_items, orders, customers, products, categories, users CASCADE;
-
--- Создаём ENUM типы
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN
-        CREATE TYPE user_role AS ENUM ('user', 'admin');
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'order_status') THEN
-        CREATE TYPE order_status AS ENUM ('processing', 'shipped', 'delivered', 'cancelled');
-    END IF;
-END$$;
+-- Удаление таблиц, если существуют (в правильном порядке из-за внешних ключей)
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS order_items CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS customers CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
 -- Создание таблиц
 
@@ -21,7 +16,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(20) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role user_role DEFAULT 'user',
+    role VARCHAR(10) DEFAULT 'user' CHECK (role IN ('user', 'admin')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -35,14 +30,14 @@ CREATE TABLE categories (
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    category_id INT REFERENCES categories(id),
+    category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
     price NUMERIC(10,2) NOT NULL,
     description TEXT,
-    stock INT NOT NULL DEFAULT 0,
+    stock INTEGER NOT NULL DEFAULT 0,
     image_url VARCHAR(255),
-    discount INT DEFAULT 0,
-    views INT DEFAULT 0,
-    reviews_count INT DEFAULT 0,
+    discount INTEGER DEFAULT 0,
+    views INTEGER DEFAULT 0,
+    reviews_count INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -57,9 +52,9 @@ CREATE TABLE customers (
 
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
-    customer_id INT NOT NULL REFERENCES customers(id),
+    customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
     total NUMERIC(10,2) NOT NULL,
-    status order_status DEFAULT 'processing',
+    status VARCHAR(20) DEFAULT 'processing' CHECK (status IN ('processing', 'shipped', 'delivered', 'cancelled')),
     payment_method VARCHAR(50) NOT NULL,
     shipping_address TEXT NOT NULL,
     delivery_date TIMESTAMP NULL,
@@ -70,17 +65,17 @@ CREATE TABLE orders (
 
 CREATE TABLE order_items (
     id SERIAL PRIMARY KEY,
-    order_id INT NOT NULL REFERENCES orders(id),
-    product_id INT NOT NULL REFERENCES products(id),
-    quantity INT NOT NULL,
+    order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL,
     price NUMERIC(10,2) NOT NULL
 );
 
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
-    product_id INT NOT NULL REFERENCES products(id),
-    user_id INT NOT NULL REFERENCES users(id),
-    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -93,7 +88,7 @@ INSERT INTO categories (name, image_url) VALUES
 ('Телевизоры и аудио', 'images/audio.jpg'),
 ('Фото и видеокамеры', 'images/iu.jpg');
 
-INSERT INTO products (name, category_id, price, description, stock, image_url, discount, reviews_count) VALUES 
+INSERT INTO products (name, category_id, price, description, stock, image_url, discount, reviews_count) VALUES
 ('Смартфон Apple iPhone 14 Pro', 1, 999.90, 'Флагманский смартфон с процессором A16 Bionic и камерой 48 МП', 15, 'images/AppleiPhone14Pro.jpg', 0, 42),
 ('Смартфон Samsung Galaxy S23 Ultra', 1, 899.90, 'Смартфон с экраном Dynamic AMOLED 2X и S Pen', 12, 'images/SamsungGalaxyS23.jpg', 5, 38),
 ('Смартфон Xiaomi 13 Pro', 1, 74990.00, 'Флагман с камерой Leica и Snapdragon 8 Gen 2', 20, 'images/xiaomi-13-pro.jpg', 10, 33),
@@ -121,22 +116,9 @@ INSERT INTO products (name, category_id, price, description, stock, image_url, d
 INSERT INTO users (first_name, last_name, phone, email, password, role) VALUES
 ('Иван', 'Иванов', '+79161234567', 'ivan@gmail.com', '$2b$12$QfMdnn7IiWPlg9Rnl6Xtre/vvAVOBzqf23zghFJYP2LzHSHSYixGq', 'user'),
 ('женя', 'женя', '+375447566666', 'zhenia@gmail.com', '$2b$12$QfMdnn7IiWPlg9Rnl6Xtre/vvAVOBzqf23zghFJYP2LzHSHSYixGq', 'user'),
-('админ', 'админ', '+375291234567', 'admin@gmail.com', '$2b$12$QfMdnn7IiWPlg9Rnl6Xtre/vvAVOBzqf23zghFJYP2LzHSHSYixGq', 'admin');
+('Админ', 'Админов', '+79167654321', 'admin@gmail.com', '$2b$12$QfMdnn7IiWPlg9Rnl6Xtre/vvAVOBzqf23zghFJYP2LzHSHSYixGq', 'admin');
 
 INSERT INTO customers (name, email, phone, address) VALUES
-('Иван Иванов', 'ivan@gmail.com', '+79161234567', 'Москва, ул. Пушкина, д. 1'),
-('Петр Петров', 'petr@gmail.com', '+79261234567', 'Санкт-Петербург, ул. Ленина, д. 10');
-
-INSERT INTO orders (customer_id, total, status, payment_method, shipping_address, delivery_date, notes, delivery_address) VALUES
-(1, 2500.00, 'processing', 'credit card', 'Москва, ул. Пушкина, д. 1', NULL, 'Без звонков', 'Москва'),
-(2, 1200.00, 'shipped', 'paypal', 'Санкт-Петербург, ул. Ленина, д. 10', '2025-05-30 15:00:00', '', 'Санкт-Петербург');
-
-INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-(1, 1, 2, 999.90),
-(1, 4, 1, 399.90),
-(2, 2, 1, 899.90);
-
-INSERT INTO reviews (product_id, user_id, rating, comment) VALUES
-(1, 1, 5, 'Отличный смартфон!'),
-(2, 2, 4, 'Хорошо, но дороговато'),
-(3, 3, 3, 'Средний телефон');
+('Иван Иванов', 'ivan@gmail.com', '+79161234567', 'ул. Пушкина, д.10'),
+('женя женя', 'zhenia@gmail.com', '+375447566666', 'ул. Ленина, д.5'),
+('Админ Админов', 'admin@gmail.com', '+79167654321', 'ул. Гагарина, д.15');
