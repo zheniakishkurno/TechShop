@@ -205,8 +205,8 @@ if (isset($_POST['delete_order'])) {
             $_SESSION['message'] = "Отзыв успешно удален!";
         }
 
-        header("Location: admin.php");
-        exit();
+header("Location: admin.php");
+exit;
     } catch (PDOException $e) {
         $_SESSION['error'] = "Ошибка: " . $e->getMessage();
         header("Location: admin.php");
