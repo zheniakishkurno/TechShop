@@ -8,7 +8,7 @@
     <title><?= isset($page_title) ? "$page_title | " : "" ?>TechShop</title>
     
     <!-- Подключение основного CSS файла -->
-    <link rel="stylesheet" href="/online-shop/css/style.css"> <!-- Убедитесь, что путь правильный -->
+    <link rel="stylesheet" href="css/style.css"> <!-- Убедитесь, что путь правильный -->
 </head>
 <div class="contacts-page">
     <div class="container">
