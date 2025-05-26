@@ -1,36 +1,18 @@
-# Используем официальный образ PHP с Apache
+# Используем официальный PHP-образ с Apache
 FROM php:8.2-apache
 
-# Устанавливаем необходимые зависимости
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libpq-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    && docker-php-ext-install pdo pdo_mysql gd zip
+# Устанавливаем необходимые расширения
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Включаем модули Apache
-RUN a2enmod rewrite headers
-
-# Копируем файлы приложения
+# Копируем файлы в контейнер
 COPY . /var/www/html/
 
-# Устанавливаем права
+# Настройки Apache
 RUN chown -R www-data:www-data /var/www/html \
-    && find /var/www/html -type d -exec chmod 755 {} \; \
-    && find /var/www/html -type f -exec chmod 644 {} \; \
-    && chmod 777 /var/www/html/uploads
+    && chmod -R 755 /var/www/html
 
-# Настраиваем PHP
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
-    echo "upload_max_filesize = 10M" >> "$PHP_INI_DIR/php.ini" && \
-    echo "post_max_size = 10M" >> "$PHP_INI_DIR/php.ini" && \
-    echo "memory_limit = 256M" >> "$PHP_INI_DIR/php.ini"
+# Включаем mod_rewrite
+RUN a2enmod rewrite
 
-# Открываем порт 80
-EXPOSE 80
-
-# Команда запуска
-CMD ["apache2-foreground"]
+# Установка timezone
+ENV TZ=Europe/Moscow
