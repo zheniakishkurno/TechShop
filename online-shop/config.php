@@ -4,6 +4,7 @@ $host = 'dpg-d0q2kleuk2gs73a63960-a';  // Адрес сервера MySQL (local
 $dbname = 'electronics_shop';  // Название базы данных
 $username = 'electronics_shop';  // Имя пользователя базы данных
 $password = 'postgresql://electronics_shop_user:zSiCB74wM7hpHtqeyUDw1ewd2TOySz6U@dpg-d0q2kleuk2gs73a63960-a.oregon-postgres.render.com/electronics_shop';  // Пароль пользователя базы данных
+$dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
 $charset = 'utf8mb4';  // Кодировка для работы с базой данных
 
 // Стартуем сессию только если Ыона еще не начата
