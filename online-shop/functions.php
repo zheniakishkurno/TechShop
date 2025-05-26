@@ -33,15 +33,21 @@ function login($email, $password) {
     $stmt->execute([$email]);
     $user = $stmt->fetch();
     
-    // Проверяем, совпадает ли введённый пароль с хешированным паролем в базе данных
-if ($user && password_verify($password, $user['password'])) {
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['role'] = $user['role'];
-    return true;
-}
-    
+    if (!$user) {
+        echo "Пользователь не найден<br>";
+    } elseif (!password_verify($password, $user['password'])) {
+        echo "Пароль не совпадает<br>";
+    }
+
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
+        return true;
+    }
+
     return false;
 }
+
 
 
 // Выход пользователя
