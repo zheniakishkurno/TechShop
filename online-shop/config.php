@@ -6,14 +6,12 @@ $username = 'electronics_shop_user';
 $password = 'zSiCB74wM7hpHtqeyUDw1ewd2TOySz6U';
 
 
-// Подключение
 try {
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
     $pdo = new PDO($dsn, $user, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
     echo "Подключение успешно!";
 } catch (PDOException $e) {
     die("Ошибка подключения: " . $e->getMessage());
-}
-?>
