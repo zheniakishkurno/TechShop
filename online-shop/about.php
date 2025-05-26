@@ -10,7 +10,7 @@ require_once 'header.php';
     <title><?= isset($page_title) ? "$page_title | " : "" ?>TechShop</title>
     
     <!-- Подключение основного CSS файла -->
-    <link rel="stylesheet" href="/online-shop/css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 
