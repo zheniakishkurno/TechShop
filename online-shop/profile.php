@@ -63,10 +63,12 @@ function getUserOrders($user_id) {
         WHERE u.id = ?
         ORDER BY o.created_at DESC
     ");
+
     $stmt->execute([$user_id]);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 function getOrderStatusBadge($status) {
     $statuses = [
