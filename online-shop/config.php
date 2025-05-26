@@ -9,7 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 try {
-    $dsn = "pgsql:host=$host;dbname=$dbname";
+$dsn = "pgsql:host=$host;port=5432;dbname=$dbname";
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
