@@ -1,19 +1,19 @@
 # Используем официальный PHP-образ с Apache
 FROM php:8.2-apache
 
-# Устанавливаем необходимые расширения для PostgreSQL
+# Устанавливаем расширения для PostgreSQL
 RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql
 
-# Копируем файлы в контейнер
+# Копируем файлы
 COPY . /var/www/html/
 
-# Настройки прав и доступа
+# Устанавливаем права
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# Включаем mod_rewrite для .htaccess
+# Включаем mod_rewrite
 RUN a2enmod rewrite
 
-# Установка timezone
+# Устанавливаем таймзону
 ENV TZ=Europe/Moscow
