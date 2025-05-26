@@ -1,5 +1,6 @@
 <?php
-$host = 'dpg-d0q2kleuk2gs73a63960-a';
+$host = 'dpg-d0q2kleuk2gs73a63960-a.oregon-postgres.render.com';
+$port = 5432;
 $dbname = 'electronics_shop';
 $username = 'electronics_shop_user';
 $password = 'zSiCB74wM7hpHtqeyUDw1ewd2TOySz6U';
@@ -9,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 try {
-$dsn = "pgsql:host=$host;port=5432;dbname=$dbname";
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
