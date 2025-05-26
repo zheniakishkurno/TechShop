@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация | TechShop</title>
-    <link rel="stylesheet" href="/online-shop/css/register.css">
+    <link rel="stylesheet" href="css/register.css">
 </head>
 <body>
     <div class="auth-form">
