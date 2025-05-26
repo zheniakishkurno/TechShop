@@ -46,13 +46,13 @@ function getUserOrders($user_id) {
             o.delivery_address,
             o.notes,
             (
-                SELECT GROUP_CONCAT(CONCAT(p.name, ' (', oi.quantity, ' шт.)') SEPARATOR '<br>')
+                SELECT string_agg(p.name || ' (' || oi.quantity || ' шт.)', '<br>')
                 FROM order_items oi
                 JOIN products p ON oi.product_id = p.id
                 WHERE oi.order_id = o.id
             ) as products_list,
             (
-                SELECT GROUP_CONCAT(p.image_url SEPARATOR '|||')
+                SELECT string_agg(p.image_url, '|||')
                 FROM order_items oi
                 JOIN products p ON oi.product_id = p.id
                 WHERE oi.order_id = o.id
