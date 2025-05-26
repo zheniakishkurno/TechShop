@@ -5,23 +5,23 @@ $dbname = 'electronics_shop';
 $username = 'electronics_shop_user';
 $password = 'zSiCB74wM7hpHtqeyUDw1ewd2TOySz6U';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 try {
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-    $options = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ];
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;";
+    $pdo = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+    echo "Подключение успешно!";
 
-    $pdo = new PDO($dsn, $username, $password, $options);
+    // Пример простого запроса
+    $stmt = $pdo->query("SELECT * FROM products LIMIT 5");
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo "<pre>";
+    print_r($products);
+    echo "</pre>";
+
 } catch (PDOException $e) {
-    die("Ошибка подключения: " . $e->getMessage());
+    echo "Ошибка подключения: " . $e->getMessage();
 }
-
-define('SITE_NAME', 'TechShop');
-define('SITE_URL', 'https://example.onrender.com');
-define('ADMIN_EMAIL', 'admin@techshop.ru');
 ?>
