@@ -122,3 +122,9 @@ INSERT INTO customers (name, email, phone, address) VALUES
 ('Иван Иванов', 'ivan@gmail.com', '+79161234567', 'ул. Пушкина, д.10'),
 ('женя женя', 'zhenia@gmail.com', '+375447566666', 'ул. Ленина, д.5'),
 ('Админ Админов', 'admin@gmail.com', '+79167654321', 'ул. Гагарина, д.15');
+
+SELECT * FROM users;
+SELECT * FROM categories;
+SELECT * FROM products;
+SELECT * FROM orders;
+SELECT * FROM customers; 
