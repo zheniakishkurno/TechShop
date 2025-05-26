@@ -90,7 +90,7 @@ function getOrderStatusBadge($status) {
     
     <!-- Подключение CSS -->
     <link rel="stylesheet" href="css/profile.css">
-        
+            <link rel="stylesheet" href="css/style.css">
     <!-- Подключение иконок (если необходимо) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <script src="js/profile.js" defer></script>
