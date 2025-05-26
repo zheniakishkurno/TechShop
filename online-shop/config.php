@@ -1,27 +1,16 @@
 <?php
 $host = 'dpg-d0q2kleuk2gs73a63960-a.oregon-postgres.render.com';
-$port = 5432;
 $dbname = 'electronics_shop';
-$username = 'electronics_shop_user';
-$password = 'zSiCB74wM7hpHtqeyUDw1ewd2TOySz6U';
+$user = 'electronics_shop_user'; // реальный пользователь из Render
+$password = 'zSiCB74wM7hpHtqeyUDw1ewd2TOySz6U'; // реальный пароль из Render
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+$dsn = "pgsql:host=$host;dbname=$dbname;sslmode=require";
 
 try {
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-    $options = [
+    $pdo = new PDO($dsn, $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ];
-
-    $pdo = new PDO($dsn, $username, $password, $options);
+    ]);
 } catch (PDOException $e) {
     die("Ошибка подключения: " . $e->getMessage());
 }
-
-define('SITE_NAME', 'TechShop');
-define('SITE_URL', 'https://example.onrender.com');
-define('ADMIN_EMAIL', 'admin@techshop.ru');
-?>
