@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: techshop
+    env: docker
+    region: oregon
+    plan: free
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_HOST
+        value: your-database-host
+      - key: DB_NAME
+        value: electronics_shop
+      - key: DB_USER
+        value: your-db-user
+      - key: DB_PASS
+        value: your-db-password
