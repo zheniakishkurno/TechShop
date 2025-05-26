@@ -86,18 +86,15 @@ function getCategories() {
 // Форматирование пути к изображению
 function formatImagePath($path) {
     if (empty($path)) {
-        return 'http://localhost/online-shop/images/no-image.png'; // Путь по умолчанию, если изображения нет
+        return 'http://localhost/online-shop/images/no-image.png';
     }
 
-    // Преобразуем Windows-путь в обычный (если нужно)
-    $path = str_replace('\\', '/', $path); 
+    $path = str_replace('\\', '/', $path);
 
-    // Получаем только имя файла, если путь абсолютный
-    $filename = basename($path);
-
-    // Возвращаем полный путь
-    return 'http://localhost/online-shop/images/' . $filename;
+    // Здесь возвращаем полный путь, без обрезки basename
+    return 'http://localhost/online-shop/' . $path;
 }
+
 
 // Получение товаров по категории
 function getProducts($category_id = null, $limit = null) {
