@@ -23,26 +23,28 @@ if (!file_exists('uploads')) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Обработка товаров
-        if (isset($_POST['add_product'])) {
-            $image_url = null;
-            if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
-                $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-                $image_url = 'uploads/' . $image_name;
-                move_uploaded_file($_FILES['image_url']['tmp_name'], $image_url);
-            }
-            
-            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([
-                $_POST['name'],
-                $_POST['category_id'],
-                $_POST['price'],
-                $_POST['description'],
-                $_POST['stock'],
-                $image_url,
-                $_POST['discount'] ?? 0
-            ]);
-            $_SESSION['message'] = "Товар успешно добавлен!";
-        }
+if (isset($_POST['add_product'])) {
+    $image_url = null;
+    if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
+        $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
+        $image_url = 'uploads/' . $image_name;
+        move_uploaded_file($_FILES['image_url']['tmp_name'], $image_url);
+    }
+    
+    $description = $_POST['description'] ?? ''; // Add this line to handle missing description
+    
+    $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([
+        $_POST['name'],
+        $_POST['category_id'],
+        $_POST['price'],
+        $description, // Use the variable here
+        $_POST['stock'],
+        $image_url,
+        $_POST['discount'] ?? 0
+    ]);
+    $_SESSION['message'] = "Товар успешно добавлен!";
+}
 
         if (isset($_POST['update_product'])) {
             $image_url = $_POST['current_image'];
