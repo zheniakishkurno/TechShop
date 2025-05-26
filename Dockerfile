@@ -2,7 +2,9 @@
 FROM php:8.2-apache
 
 # Устанавливаем необходимые расширения
-RUN docker-php-ext-install pdo pdo_mysql
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
+
 
 # Копируем файлы проекта в папку сайта
 COPY . /var/www/html/
