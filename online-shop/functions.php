@@ -34,11 +34,11 @@ function login($email, $password) {
     $user = $stmt->fetch();
     
     // Проверяем, совпадает ли введённый пароль с хешированным паролем в базе данных
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['role'] = $user['role'];
-        return true;
-    }
+if ($user && password_verify($password, $user['password'])) {
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['role'] = $user['role'];
+    return true;
+}
     
     return false;
 }
@@ -108,9 +108,10 @@ function getProducts($category_id = null, $limit = null) {
     
     $sql .= " ORDER BY p.created_at DESC"; // Выводим товары по дате создания (или можете изменить на сортировку по другим полям)
     
-    if ($limit) {
-        $sql .= " LIMIT :limit";
-    }
+if ($limit) {
+    $sql .= " LIMIT " . intval($limit);
+}
+
     
     $stmt = $pdo->prepare($sql);
     
@@ -150,7 +151,8 @@ function getProductById($product_id) {
 // Получение популярных товаров
 function getPopularProducts($limit = 4) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT * FROM products ORDER BY views DESC LIMIT ?");
+    $limit = (int)$limit; // безопасно вручную вставляем число
+$stmt = $pdo->query("SELECT * FROM products ORDER BY views DESC LIMIT $limit");
     $stmt->bindValue(1, $limit, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -213,20 +215,23 @@ function createOrder($user_id, $items, $total, $payment_method, $delivery_method
         $delivery_date = date('Y-m-d H:i:s', strtotime('+1 day'));
 
         // Создаем заказ с датой доставки
-    $order_stmt = $pdo->prepare("INSERT INTO orders 
-        (customer_id, total, status, payment_method, shipping_address, delivery_address, delivery_date, notes) 
-        VALUES (?, ?, 'processing', ?, ?, ?, ?, ?)");
-    $order_stmt->execute([
-        $customer_id,
-        $total,
-        $payment_method,
-        $address,
-        $address,
-        $delivery_date,
-        $notes
-    ]);
+$order_stmt = $pdo->prepare("
+    INSERT INTO orders 
+    (customer_id, total, status, payment_method, shipping_address, delivery_address, delivery_date, notes)
+    VALUES (?, ?, 'processing', ?, ?, ?, ?, ?) RETURNING id
+");
+$order_stmt->execute([
+    $customer_id,
+    $total,
+    $payment_method,
+    $address,
+    $address,
+    $delivery_date,
+    $notes
+]);
 
-        $order_id = $pdo->lastInsertId();
+$order_id = $order_stmt->fetchColumn(); // вместо lastInsertId()
+
 
         // Добавляем товары в заказ
         $items_stmt = $pdo->prepare("INSERT INTO order_items 
