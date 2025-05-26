@@ -12,6 +12,7 @@ if ($searchQuery) {
 $page_title = 'Результаты поиска';
 require_once 'header.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
