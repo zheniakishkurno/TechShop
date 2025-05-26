@@ -1,8 +1,12 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once 'functions.php';
 $current_user = getCurrentUser();
 
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
