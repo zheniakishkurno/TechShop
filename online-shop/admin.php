@@ -31,19 +31,29 @@ if (isset($_POST['add_product'])) {
         move_uploaded_file($_FILES['image_url']['tmp_name'], $image_url);
     }
     
-    $description = $_POST['description'] ?? ''; // Add this line to handle missing description
+    // Исправление для description
+    $description = $_POST['description'] ?? '';
     
     $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([
-        $_POST['name'],
-        $_POST['category_id'],
-        $_POST['price'],
-        $description, // Use the variable here
-        $_POST['stock'],
+        $_POST['name'] ?? '',
+        $_POST['category_id'] ?? 0,
+        $_POST['price'] ?? 0,
+        $description,
+        $_POST['stock'] ?? 0,
         $image_url,
         $_POST['discount'] ?? 0
     ]);
+    
     $_SESSION['message'] = "Товар успешно добавлен!";
+    
+    // Безопасный редирект
+    if (!headers_sent()) {
+        header("Location: admin.php");
+    } else {
+        echo '<script>window.location.href="admin.php";</script>';
+    }
+    exit;
 }
 
         if (isset($_POST['update_product'])) {
