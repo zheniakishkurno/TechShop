@@ -133,26 +133,26 @@ function getProducts($category_id = null, $limit = null) {
 function getProductById($product_id) {
     global $pdo;
 
-    // Запрос к базе данных для получения информации о товаре
     $stmt = $pdo->prepare('
-        SELECT p.id, p.name, p.description, p.price, p.image_url, p.stock, p.category_id, c.name AS category_name, p.discount, COUNT(r.id) AS reviews_count
+        SELECT p.id, p.name, p.description, p.price, p.image_url, p.stock, p.category_id,
+               c.name AS category_name, p.discount, p.reviews_count
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.id
-        LEFT JOIN reviews r ON r.product_id = p.id
         WHERE p.id = :id
-        GROUP BY p.id, c.name
     ');
     $stmt->execute(['id' => $product_id]);
-    
+
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
 
 
 // Получение популярных товаров
 function getPopularProducts($limit = 4) {
     global $pdo;
     $stmt = $pdo->prepare("SELECT * FROM products ORDER BY views DESC LIMIT ?");
-    $stmt->execute([$limit]);
+    $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+    $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -170,7 +170,7 @@ function incrementProductViews($product_id) {
 
 // Создание заказа
 // Создание заказа
-function createOrder($user_id, $items, $total, $payment_method, $delivery_method, $address = '') {
+function createOrder($user_id, $items, $total, $payment_method, $delivery_method, $address = '', $notes = '') {
     global $pdo;
 
     try {
@@ -213,17 +213,19 @@ function createOrder($user_id, $items, $total, $payment_method, $delivery_method
         $delivery_date = date('Y-m-d H:i:s', strtotime('+1 day'));
 
         // Создаем заказ с датой доставки
-        $order_stmt = $pdo->prepare("INSERT INTO orders 
-                                    (customer_id, total, status, payment_method, shipping_address, delivery_address, delivery_date) 
-                                    VALUES (?, ?, 'processing', ?, ?, ?, ?)");
-        $order_stmt->execute([
-            $customer_id,
-            $total,
-            $payment_method,
-            $address, // shipping_address
-            $address, // delivery_address
-            $delivery_date
-        ]);
+    $order_stmt = $pdo->prepare("INSERT INTO orders 
+        (customer_id, total, status, payment_method, shipping_address, delivery_address, delivery_date, notes) 
+        VALUES (?, ?, 'processing', ?, ?, ?, ?, ?)");
+    $order_stmt->execute([
+        $customer_id,
+        $total,
+        $payment_method,
+        $address,
+        $address,
+        $delivery_date,
+        $notes
+    ]);
+
         $order_id = $pdo->lastInsertId();
 
         // Добавляем товары в заказ
@@ -275,10 +277,8 @@ function searchProductsByName($searchQuery) {
 function hashPassword($password) {
     return password_hash($password, PASSWORD_BCRYPT);
 }
- 
+
 function verifyPassword($password, $hash) {
     return password_verify($password, $hash);
 }
-
-
 ?>
