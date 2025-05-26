@@ -86,16 +86,13 @@ function getCategories() {
 // Форматирование пути к изображению
 function formatImagePath($path) {
     if (empty($path)) {
-        return '/images/no-image.png'; // относительный путь к дефолтной картинке
+        return '/images/no-image.png';
     }
-
     $path = str_replace('\\', '/', $path);
-
-    // Если у тебя в базе лежит просто имя файла, возвращаем относительный путь
     $filename = basename($path);
-
     return '/images/' . $filename;
 }
+
 
 
 // Получение товаров по категории
