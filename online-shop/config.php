@@ -6,23 +6,14 @@ $username = 'electronics_shop_user';
 $password = 'zSiCB74wM7hpHtqeyUDw1ewd2TOySz6U';
 
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
+// Подключение
 try {
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-    $options = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ];
-
-    $pdo = new PDO($dsn, $username, $password, $options);
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+    $pdo = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+    echo "Подключение успешно!";
 } catch (PDOException $e) {
     die("Ошибка подключения: " . $e->getMessage());
 }
-
-define('SITE_NAME', 'TechShop');
-define('SITE_URL', 'https://example.onrender.com');
-define('ADMIN_EMAIL', 'admin@techshop.ru');
 ?>
