@@ -10,11 +10,8 @@ $page_title = 'Успешный заказ';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-      <link rel="stylesheet" href="css/admin.css" />
-    <title><?= $page_title ?></title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <div class="order-success-page">
     <div class="container">
         <h1>Ваш заказ успешно оформлен!</h1>
