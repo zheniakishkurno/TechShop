@@ -5,41 +5,41 @@ require_once 'functions.php';
 $category_id = $_GET['category_id'] ?? null;
 $search_query = $_GET['q'] ?? null;
 $sort = $_GET['sort'] ?? 'newest';
+
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$per_page = 15;
+$offset = ($page - 1) * $per_page;
+
 $categories = getCategories();
 
-// Получаем товары с учетом фильтров
-// Получаем все товары, если нет фильтра категории или поиска
+$total_products = 0;
+
 if ($category_id) {
-    $products = getProducts($category_id);
+    $products = getProducts($category_id, $per_page, $offset);
+    $total_products = countProductsByCategory($category_id);
     $section_title = "Товары из выбранной категории";
 } elseif ($search_query) {
-    $products = searchProductsByName($search_query);
+    $products = searchProductsByName($search_query, $per_page, $offset);
+    $total_products = countProductsBySearch($search_query);
     $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
-    $products = getProducts();  // Теперь выводим все товары
+    $products = getProducts(null, $per_page, $offset);
+    $total_products = countAllProducts();
     $section_title = "Все товары";
 }
 
+$total_pages = ceil($total_products / $per_page);
 
-// Сортировка товаров
+// Сортировка товаров (локально после получения с лимитом)
 if ($sort === 'price_asc') {
-    usort($products, function($a, $b) {
-        return $a['price'] <=> $b['price'];
-    });
-} elseif ($sort === 'price_desc') { 
-    usort($products, function($a, $b) {
-        return $b['price'] <=> $a['price'];
-    });
+    usort($products, fn($a, $b) => $a['price'] <=> $b['price']);
+} elseif ($sort === 'price_desc') {
+    usort($products, fn($a, $b) => $b['price'] <=> $a['price']);
 } elseif ($sort === 'name_asc') {
-    usort($products, function($a, $b) {
-        return strcmp($a['name'], $b['name']);
-    });
+    usort($products, fn($a, $b) => strcmp($a['name'], $b['name']));
 } elseif ($sort === 'name_desc') {
-    usort($products, function($a, $b) {
-        return strcmp($b['name'], $a['name']);
-    });
+    usort($products, fn($a, $b) => strcmp($b['name'], $a['name']));
 }
-
 ?>
 
 <!DOCTYPE html>
