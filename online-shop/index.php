@@ -10,35 +10,36 @@ $categories = getCategories();
 // Получаем товары с учетом фильтров
 // Получаем все товары, если нет фильтра категории или поиска
 if ($category_id) {
-    $products = getProducts($category_id);
-    $section_title = "Товары из выбранной категории";
+    $products = getProducts($category_id);
+    $section_title = "Товары из выбранной категории";
 } elseif ($search_query) {
-    $products = searchProductsByName($search_query);
-    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
+    $products = searchProductsByName($search_query);
+    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
-    $products = getProducts();  // Теперь выводим все товары
-    $section_title = "Все товары";
+    $products = getProducts();  // Теперь выводим все товары
+    $section_title = "Все товары";
 }
+
 
 // Сортировка товаров
 if ($sort === 'price_asc') {
-    usort($products, function($a, $b) {
-        return $a['price'] <=> $b['price'];
-    });
-} elseif ($sort === 'price_desc') {
-    usort($products, function($a, $b) {
-        return $b['price'] <=> $a['price'];
-    });
+    usort($products, function($a, $b) {
+        return $a['price'] <=> $b['price'];
+    });
+} elseif ($sort === 'price_desc') { 
+    usort($products, function($a, $b) {
+        return $b['price'] <=> $a['price'];
+    });
 } elseif ($sort === 'name_asc') {
-    usort($products, function($a, $b) {
-        return strcmp($a['name'], $b['name']);
-    });
+    usort($products, function($a, $b) {
+        return strcmp($a['name'], $b['name']);
+    });
 } elseif ($sort === 'name_desc') {
-    usort($products, function($a, $b) {
-        return strcmp($b['name'], $a['name']);
-    });
+    usort($products, function($a, $b) {
+        return strcmp($b['name'], $a['name']);
+    });
 }
-    
+
 ?>
 
 <!DOCTYPE html>
@@ -136,8 +137,8 @@ if ($sort === 'price_asc') {
                         <?php endif; ?>
                     </div>
 <div class="product-actions">
-    <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
-    <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
+    <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
+   <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
 </div>
                 </div>
             </div>
@@ -154,48 +155,3 @@ if ($sort === 'price_asc') {
 <?php require_once 'footer.php'; ?>
 </body>
 </html>
-<script>
-    // Добавить в корзину и сразу перейти в cart.php
-    function buyNow(productId, quantity = 1) {
-        fetch('add_to_cart.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                product_id: parseInt(productId),
-                quantity: quantity
-            })
-        })
-        .then(response => {
-            if (response.redirected) {
-                // Перенаправление с сервера (если это обычный POST)
-                window.location.href = response.url;
-                return;
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data && data.success) {
-                // Для AJAX: переход в корзину вручную
-                window.location.href = 'cart.php';
-            } else if (data) {
-                alert(data.error || 'Ошибка при добавлении в корзину');
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка при добавлении в корзину:', error);
-            alert('Произошла ошибка');
-        });
-    }
-
-    // Обработка кликов по кнопкам "Купить"
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.btn-buy-now').forEach(button => {
-            button.addEventListener('click', function () {
-                const productId = this.getAttribute('data-id');
-                buyNow(productId);
-            });
-        });
-    });
-</script>
