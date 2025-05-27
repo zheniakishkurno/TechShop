@@ -1,4 +1,46 @@
+<?php
+require_once 'header.php';
+require_once 'functions.php';
 
+$category_id = $_GET['category_id'] ?? null;
+$search_query = $_GET['q'] ?? null;
+$sort = $_GET['sort'] ?? 'newest';
+
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$per_page = 15;
+$offset = ($page - 1) * $per_page;
+
+$categories = getCategories();
+
+$total_products = 0;
+
+if ($category_id) {
+    $products = getProducts($category_id, $per_page, $offset);
+    $total_products = countProductsByCategory($category_id);
+    $section_title = "Товары из выбранной категории";
+} elseif ($search_query) {
+    $products = searchProductsByName($search_query, $per_page, $offset);
+    $total_products = countProductsBySearch($search_query);
+    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
+} else {
+    $products = getProducts(null, $per_page, $offset);
+    $total_products = countAllProducts();
+    $section_title = "Все товары";
+}
+
+$total_pages = ceil($total_products / $per_page);
+
+// Сортировка товаров (локально после получения с лимитом)
+if ($sort === 'price_asc') {
+    usort($products, fn($a, $b) => $a['price'] <=> $b['price']);
+} elseif ($sort === 'price_desc') {
+    usort($products, fn($a, $b) => $b['price'] <=> $a['price']);
+} elseif ($sort === 'name_asc') {
+    usort($products, fn($a, $b) => strcmp($a['name'], $b['name']));
+} elseif ($sort === 'name_desc') {
+    usort($products, fn($a, $b) => strcmp($b['name'], $a['name']));
+}
+?>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -105,6 +147,14 @@
                 <p>Нет товаров для отображения.</p>
             <?php endif; ?>
         </div>
+   <?php if ($total_pages > 1): ?>
+        <nav class="pagination">
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+                   class="<?= $i === $page ? 'active' : '' ?>"><?= $i ?></a>
+            <?php endfor; ?>
+        </nav>
+        <?php endif; ?>
     </div>
 </section>
 
