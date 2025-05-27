@@ -74,15 +74,15 @@ $discount = $_POST['discount'] ?? 0;
 $product_id = $_POST['product_id'] ?? 0;
 
             $stmt = $pdo->prepare("UPDATE products SET name=?, category_id=?, price=?, description=?, stock=?, image_url=?, discount=? WHERE id=?");
-  $stmt->execute([
+$stmt->execute([
     $_POST['name'],
     $_POST['category_id'],
     $_POST['price'],
-    $_POST['description'],
+    $_POST['description'] ?? '',    
     $_POST['stock'],
     $image_url,
-    $_POST['discount'],
-    $_POST['product_id']
+    $_POST['discount'] ?? 0,        
+    $_POST['product_id'] ?? 0       
 ]);
 
             $_SESSION['message'] = "Товар успешно обновлен!";
