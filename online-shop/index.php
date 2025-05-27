@@ -55,14 +55,14 @@ if ($sort === 'price_asc') {
 
 <!-- Главная секция -->
 <?php if (!$category_id): ?>
-<section class="hero">
-    <div class="container">
-        <h1>Добро пожаловать в TechShop</h1>
-        <p>Лучшие гаджеты и электроника по доступным ценам</p>
-        <a href="#products" class="btn btn-primary">Смотреть товары</a>
-    </div>
-</section>
-<?php endif; ?>
+    <section class="here">
+        <div class="container">
+            <h1>Добро пожаловать в TechShop</h1>
+            <p>Лучшие гаджеты и электроника по доступным ценам</p>
+            <a href="#products" class="btn btn-primary">Смотреть товары</a>
+        </div>
+    </section>
+    <?php endif; ?>
 
 <!-- Категории -->
 <section class="categories">
