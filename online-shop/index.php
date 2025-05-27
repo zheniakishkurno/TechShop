@@ -16,16 +16,19 @@ $categories = getCategories();
 // Получаем товары с учетом фильтров
 // Получаем все товары, если нет фильтра категории или поиска
 if ($category_id) {
-    $products = getProducts($category_id);
-    $section_title = "Товары из выбранной категории";
+    $products = getProducts($category_id, $per_page, $offset);
+    $total_products = countProductsByCategory($category_id);
+    $section_title = "Товары из выбранной категории";
 } elseif ($search_query) {
     $products = searchProductsByName($search_query, $per_page, $offset);
     $total_products = countProductsBySearch($search_query);
     $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
-    $products = getProducts();  // Теперь выводим все товары
-    $section_title = "Все товары";
+    $products = getProducts(null, $per_page, $offset);
+    $total_products = countAllProducts();
+    $section_title = "Все товары";
 }
+
 
 
 // Сортировка товаров
