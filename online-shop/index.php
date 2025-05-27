@@ -11,20 +11,20 @@ $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $per_page = 15;
 $offset = ($page - 1) * $per_page;
 
-$total_products = 0;
-
 $categories = getCategories();
 
 // Получаем товары с учетом фильтров
 // Получаем все товары, если нет фильтра категории или поиска
+$total_products = 0;
+
 if ($category_id) {
-    $products = getProducts($category_id, $per_page, $offset);
-    $total_products = countProductsByCategory($category_id);
-    $section_title = "Товары из выбранной категории";
+    $products = getProducts($category_id, $per_page, $offset);
+    $total_products = countProductsByCategory($category_id);
+    $section_title = "Товары из выбранной категории";
 } elseif ($search_query) {
-    $products = searchProductsByName($search_query, $per_page, $offset);
-    $total_products = countProductsBySearch($search_query);
-    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
+    $products = searchProductsByName($search_query, $per_page, $offset);
+    $total_products = countProductsBySearch($search_query);
+    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
     $products = getProducts(null, $per_page, $offset);
     $total_products = countAllProducts();
