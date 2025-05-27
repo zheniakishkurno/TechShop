@@ -77,8 +77,8 @@ if ($sort === 'price_asc') {
             <?php foreach ($categories as $category): ?>
                 <div class="category-card <?= $category_id == $category['id'] ? 'active' : '' ?>">
                     <a href="index.php?category_id=<?= $category['id'] ?>" class="category-link">
-                        <img src="<?= htmlspecialchars(formatImagePath($category['image_url'])) ?>"
-                             alt="<?= htmlspecialchars($category['name']) ?>" class="category-img">
+<img src="<?= htmlspecialchars(formatImagePath($category['image_url'])) ?>"
+     alt="<?= htmlspecialchars($category['name']) ?>" class="category-img">
                         <h3 class="category-title"><?= htmlspecialchars($category['name']) ?></h3>
                     </a>
                 </div>
