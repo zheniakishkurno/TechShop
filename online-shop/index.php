@@ -11,6 +11,8 @@ $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $per_page = 15;
 $offset = ($page - 1) * $per_page;
 
+$total_products = 0;
+
 $categories = getCategories();
 
 // Получаем товары с учетом фильтров
