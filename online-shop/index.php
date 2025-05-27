@@ -2,13 +2,15 @@
 require_once 'header.php';
 require_once 'functions.php';
 
+$category_id = $_GET['category_id'] ?? null;
+$search_query = $_GET['q'] ?? null;
+$sort = $_GET['sort'] ?? 'newest';
+$categories = getCategories();
+
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $per_page = 15;
 $offset = ($page - 1) * $per_page;
 
-$category_id = $_GET['category_id'] ?? null;
-$search_query = $_GET['q'] ?? null;
-$sort = $_GET['sort'] ?? 'newest';
 $categories = getCategories();
 
 // Получаем товары с учетом фильтров
