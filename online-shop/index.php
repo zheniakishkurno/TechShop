@@ -136,8 +136,8 @@ if ($sort === 'price_asc') {
                         <?php endif; ?>
                     </div>
 <div class="product-actions">
-    <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
-    <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
+    <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
+    <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
 </div>
                 </div>
             </div>
