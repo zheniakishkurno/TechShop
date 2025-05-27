@@ -199,4 +199,4 @@ if ($sort === 'price_asc') {
             });
         });
     });
-</script> 
+</script>
