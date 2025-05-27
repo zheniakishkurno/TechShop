@@ -78,11 +78,11 @@ $stmt->execute([
     $_POST['name'],
     $_POST['category_id'],
     $_POST['price'],
-    $_POST['description'] ?? '',    
+    $description,        
     $_POST['stock'],
     $image_url,
-    $_POST['discount'] ?? 0,        
-    $_POST['product_id'] ?? 0       
+    $discount,          
+    $product_id          
 ]);
 
             $_SESSION['message'] = "Товар успешно обновлен!";
