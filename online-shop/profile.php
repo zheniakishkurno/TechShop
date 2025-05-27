@@ -112,13 +112,21 @@ function getOrderStatusBadge($status) {
                     <p class="user-phone"><?= htmlspecialchars($current_user['phone']) ?></p>
                 </div>
 
-                <nav class="profile-menu">
-                    <ul>
-                        <li class="active"><a href="profile.php?tab=settings"><i class="fas fa-user"></i> Профиль</a></li>
-                        <li><a href="profile.php?tab=orders"><i class="fas fa-shopping-bag"></i> Мои заказы</a></li>
-                        <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Выход</a></li>
-                    </ul>
-                </nav>
+<?php $tab = $_GET['tab'] ?? 'settings'; ?>
+<nav class="profile-menu">
+    <ul>
+        <li class="<?= $tab === 'settings' ? 'active' : '' ?>">
+            <a href="profile.php?tab=settings"><i class="fas fa-user"></i> Профиль</a>
+        </li>
+        <li class="<?= $tab === 'orders' ? 'active' : '' ?>">
+            <a href="profile.php?tab=orders"><i class="fas fa-shopping-bag"></i> Мои заказы</a>
+        </li>
+        <li>
+            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Выход</a>
+        </li>
+    </ul>
+</nav>
+
 
                 <?php if (isAdmin()): ?>
                     <!-- Кнопка для администратора -->
