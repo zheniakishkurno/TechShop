@@ -5,41 +5,41 @@ require_once 'functions.php';
 $category_id = $_GET['category_id'] ?? null;
 $search_query = $_GET['q'] ?? null;
 $sort = $_GET['sort'] ?? 'newest';
+
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$per_page = 15;
+$offset = ($page - 1) * $per_page;
+
 $categories = getCategories();
 
-// Получаем товары с учетом фильтров
-// Получаем все товары, если нет фильтра категории или поиска
+$total_products = 0;
+
 if ($category_id) {
-    $products = getProducts($category_id);
+    $products = getProducts($category_id, $per_page, $offset);
+    $total_products = countProductsByCategory($category_id);
     $section_title = "Товары из выбранной категории";
 } elseif ($search_query) {
-    $products = searchProductsByName($search_query);
+    $products = searchProductsByName($search_query, $per_page, $offset);
+    $total_products = countProductsBySearch($search_query);
     $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
-    $products = getProducts();  // Теперь выводим все товары
+    $products = getProducts(null, $per_page, $offset);
+    $total_products = countAllProducts();
     $section_title = "Все товары";
 }
 
+$total_pages = ceil($total_products / $per_page);
 
-// Сортировка товаров
+// Сортировка товаров (локально после получения с лимитом)
 if ($sort === 'price_asc') {
-    usort($products, function($a, $b) {
-        return $a['price'] <=> $b['price'];
-    });
-} elseif ($sort === 'price_desc') { 
-    usort($products, function($a, $b) {
-        return $b['price'] <=> $a['price'];
-    });
+    usort($products, fn($a, $b) => $a['price'] <=> $b['price']);
+} elseif ($sort === 'price_desc') {
+    usort($products, fn($a, $b) => $b['price'] <=> $a['price']);
 } elseif ($sort === 'name_asc') {
-    usort($products, function($a, $b) {
-        return strcmp($a['name'], $b['name']);
-    });
+    usort($products, fn($a, $b) => strcmp($a['name'], $b['name']));
 } elseif ($sort === 'name_desc') {
-    usort($products, function($a, $b) {
-        return strcmp($b['name'], $a['name']);
-    });
+    usort($products, fn($a, $b) => strcmp($b['name'], $a['name']));
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +55,6 @@ if ($sort === 'price_asc') {
 </head>
 <body>
 
-<!-- Главная секция -->
 <?php if (!$category_id): ?>
 <section class="hero">
     <div class="container">
@@ -66,7 +65,6 @@ if ($sort === 'price_asc') {
 </section>
 <?php endif; ?>
 
-<!-- Категории -->
 <section class="categories">
     <div class="container">
         <h2>Категории товаров</h2>
@@ -89,7 +87,6 @@ if ($sort === 'price_asc') {
     </div>
 </section>
 
-<!-- Товары -->
 <section class="products" id="products">
     <div class="container">
         <div class="products-header">
@@ -97,106 +94,105 @@ if ($sort === 'price_asc') {
             <div class="sort-options">
                 <span>Сортировка:</span>
                 <select id="sort-select" onchange="window.location.href=this.value">
-                    <option value="?sort=newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Новинки</option>
-                    <option value="?sort=price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Цена по возрастанию</option>
-                    <option value="?sort=price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Цена по убыванию</option>
-                    <option value="?sort=name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Название А-Я</option>
-                    <option value="?sort=name_desc" <?= $sort === 'name_desc' ? 'selected' : '' ?>>Название Я-А</option>
+                    <?php
+                    $baseParams = $_GET;
+                    unset($baseParams['sort']);
+                    foreach ([
+                        'newest' => 'Новинки',
+                        'price_asc' => 'Цена по возрастанию',
+                        'price_desc' => 'Цена по убыванию',
+                        'name_asc' => 'Название А-Я',
+                        'name_desc' => 'Название Я-А',
+                    ] as $value => $label): ?>
+                    <?php $params = array_merge($baseParams, ['sort' => $value]); ?>
+                    <option value="?<?= http_build_query($params) ?>" <?= $sort === $value ? 'selected' : '' ?>>
+                        <?= $label ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
         </div>
+
         <div class="products-grid">
-            <?php
-            if (count($products) > 0):
-                foreach ($products as $product):
+            <?php if (count($products) > 0): ?>
+                <?php foreach ($products as $product): ?>
+                    <?php
                     $product_image = !empty($product['image_url']) ? formatImagePath($product['image_url']) : 'images/no-image.png';
                     $old_price = number_format($product['price'], 2, '.', ' ');
                     $new_price = $product['discount'] > 0
                         ? number_format($product['price'] * (1 - $product['discount'] / 100), 2, '.', ' ')
                         : $old_price;
-            ?>
-            <div class="product-card">
-                <div class="product-image">
-                    <a href="product.php?id=<?= $product['id'] ?>">
-                        <img src="<?= htmlspecialchars($product_image) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-img">
-                        <?php if ($product['discount'] > 0): ?>
-                            <span class="discount-badge">-<?= $product['discount'] ?>%</span>
-                        <?php endif; ?>
-                    </a>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">
-                        <a href="product.php?id=<?= $product['id'] ?>"><?= htmlspecialchars($product['name']) ?></a>
-                    </h3>
-                    <div class="product-price">
-                        <?php if ($product['discount'] > 0): ?>
-                            <span class="old-price"><?= $old_price ?> ₽</span>
-                            <span class="current-price"><?= $new_price ?> ₽</span>
-                        <?php else: ?>
-                            <span class="current-price"><?= $old_price ?> ₽</span>
-                        <?php endif; ?>
+                    ?>
+                    <div class="product-card">
+                        <div class="product-image">
+                            <a href="product.php?id=<?= $product['id'] ?>">
+                                <img src="<?= htmlspecialchars($product_image) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-img">
+                                <?php if ($product['discount'] > 0): ?>
+                                    <span class="discount-badge">-<?= $product['discount'] ?>%</span>
+                                <?php endif; ?>
+                            </a>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">
+                                <a href="product.php?id=<?= $product['id'] ?>"><?= htmlspecialchars($product['name']) ?></a>
+                            </h3>
+                            <div class="product-price">
+                                <?php if ($product['discount'] > 0): ?>
+                                    <span class="old-price"><?= $old_price ?> ₽</span>
+                                    <span class="current-price"><?= $new_price ?> ₽</span>
+                                <?php else: ?>
+                                    <span class="current-price"><?= $old_price ?> ₽</span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="product-actions">
+                                <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
+                                <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
+                            </div>
+                        </div>
                     </div>
-<div class="product-actions">
-    <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
-   <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
-</div>
-                </div>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
             <?php else: ?>
                 <p>Нет товаров для отображения.</p>
             <?php endif; ?>
         </div>
+
+        <?php if ($total_pages > 1): ?>
+        <nav class="pagination">
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+                   class="<?= $i === $page ? 'active' : '' ?>"><?= $i ?></a>
+            <?php endfor; ?>
+        </nav>
+        <?php endif; ?>
     </div>
 </section>
 
 <script src="js/main.js"></script>
-
 <?php require_once 'footer.php'; ?>
 </body>
 </html>
-<script>
-    // Добавить в корзину и сразу перейти в cart.php
-    function buyNow(productId, quantity = 1) {
-        fetch('add_to_cart.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                product_id: parseInt(productId),
-                quantity: quantity
-            })
-        })
-        .then(response => {
-            if (response.redirected) {
-                // Перенаправление с сервера (если это обычный POST)
-                window.location.href = response.url;
-                return;
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data && data.success) {
-                // Для AJAX: переход в корзину вручную
-                window.location.href = 'cart.php';
-            } else if (data) {
-                alert(data.error || 'Ошибка при добавлении в корзину');
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка при добавлении в корзину:', error);
-            alert('Произошла ошибка');
-        });
-    }
 
-    // Обработка кликов по кнопкам "Купить"
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.btn-buy-now').forEach(button => {
-            button.addEventListener('click', function () {
-                const productId = this.getAttribute('data-id');
-                buyNow(productId);
-            });
-        });
+<script>
+function buyNow(productId, quantity = 1) {
+    fetch('add_to_cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: parseInt(productId), quantity: quantity })
+    })
+    .then(response => response.redirected ? window.location.href = response.url : response.json())
+    .then(data => {
+        if (data && data.success) window.location.href = 'cart.php';
+        else alert(data?.error || 'Ошибка при добавлении в корзину');
+    })
+    .catch(error => {
+        console.error('Ошибка при добавлении в корзину:', error);
+        alert('Произошла ошибка');
     });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-buy-now').forEach(button => {
+        button.addEventListener('click', () => buyNow(button.dataset.id));
+    });
+});
 </script>
