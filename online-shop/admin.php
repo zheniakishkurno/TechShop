@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 require_once 'config.php';
 require_once 'functions.php';
@@ -74,7 +75,7 @@ if (isset($_POST['add_product'])) {
                 $_POST['name'],
                 $_POST['category_id'],
                 $_POST['price'],
-                $_POST['description'],
+                $_POST['description'] ?? ''
                 $_POST['stock'],
                 $image_url,
                 $_POST['discount'] ?? 0,
@@ -254,6 +255,7 @@ $reviews = $pdo->query("SELECT
     JOIN users u ON r.user_id = u.id
     JOIN products p ON r.product_id = p.id
     ORDER BY r.created_at DESC")->fetchAll();
+ob_end_flush();
 ?>
 <!DOCTYPE html>
 <html lang="ru">
