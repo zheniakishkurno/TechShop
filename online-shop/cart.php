@@ -120,7 +120,7 @@ require_once 'header.php';
                                     </td>
                                     <td class="price"><?= number_format($item['price'], 2, '.', ' ') ?> ₽</td>
                                     <td class="quantity">
-                                        <input type="number" value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock'] ?>" data-id="<?= $item['id'] ?>">
+                                        <input type="number" value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock'] ?>" data-id="<?= $item['id'] ?>" readonly>
                                     </td>
                                     <td class="subtotal"><?= number_format($item['subtotal'], 2, '.', ' ') ?> ₽</td>
                                     <td class="remove">
