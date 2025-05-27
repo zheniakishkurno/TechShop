@@ -1,47 +1,4 @@
-<?php
-require_once 'header.php';
-require_once 'functions.php';
 
-$category_id = $_GET['category_id'] ?? null;
-$search_query = $_GET['q'] ?? null;
-$sort = $_GET['sort'] ?? 'newest';
-
-
-// Получаем товары с учетом фильтров
-// Получаем все товары, если нет фильтра категории или поиска
-if ($category_id) {
-    $products = getProducts($category_id);
-    $section_title = "Товары из выбранной категории";
-}elseif ($search_query) {
-    $products = searchProductsByName($search_query);
-    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
-} else {
-    $products = getProducts();  // Теперь выводим все товары
-    $section_title = "Все товары";
-}
-
-
-
-// Сортировка товаров
-if ($sort === 'price_asc') {
-    usort($products, function($a, $b) {
-        return $a['price'] <=> $b['price'];
-    });
-} elseif ($sort === 'price_desc') { 
-    usort($products, function($a, $b) {
-        return $b['price'] <=> $a['price'];
-    });
-} elseif ($sort === 'name_asc') {
-    usort($products, function($a, $b) {
-        return strcmp($a['name'], $b['name']);
-    });
-} elseif ($sort === 'name_desc') {
-    usort($products, function($a, $b) {
-        return strcmp($b['name'], $a['name']);
-    });
-}
-
-?>
 
 <!DOCTYPE html>
 <html lang="ru">
