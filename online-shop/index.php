@@ -8,7 +8,6 @@ $sort = $_GET['sort'] ?? 'newest';
 $categories = getCategories();
 
 // Получаем товары с учетом фильтров
-// Получаем все товары, если нет фильтра категории или поиска
 if ($category_id) {
     $products = getProducts($category_id);
     $section_title = "Товары из выбранной категории";
@@ -16,7 +15,7 @@ if ($category_id) {
     $products = searchProductsByName($search_query);
     $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
-    $products = getProducts();  // Теперь выводим все товары
+    $products = getProducts();
     $section_title = "Все товары";
 }
 
