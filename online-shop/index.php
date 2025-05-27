@@ -22,23 +22,23 @@ if ($category_id) {
 
 // Сортировка товаров
 if ($sort === 'price_asc') {
-    usort($products, function($a, $b) {
-        return $a['price'] <=> $b['price'];
-    });
+    usort($products, function($a, $b) {
+        return $a['price'] <=> $b['price'];
+    });
 } elseif ($sort === 'price_desc') {
-    usort($products, function($a, $b) {
-        return $b['price'] <=> $a['price'];
-    });
+    usort($products, function($a, $b) {
+        return $b['price'] <=> $a['price'];
+    });
 } elseif ($sort === 'name_asc') {
-    usort($products, function($a, $b) {
-        return strcmp($a['name'], $b['name']);
-    });
+    usort($products, function($a, $b) {
+        return strcmp($a['name'], $b['name']);
+    });
 } elseif ($sort === 'name_desc') {
-    usort($products, function($a, $b) {
-        return strcmp($b['name'], $a['name']);
-    });
+    usort($products, function($a, $b) {
+        return strcmp($b['name'], $a['name']);
+    });
 }
-
+    
 ?>
 
 <!DOCTYPE html>
