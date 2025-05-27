@@ -10,16 +10,15 @@ $categories = getCategories();
 // Получаем товары с учетом фильтров
 // Получаем все товары, если нет фильтра категории или поиска
 if ($category_id) {
-    $products = getProducts($category_id);
-    $section_title = "Товары из выбранной категории";
+    $products = getProducts($category_id);
+    $section_title = "Товары из выбранной категории";
 } elseif ($search_query) {
-    $products = searchProductsByName($search_query);
-    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
+    $products = searchProductsByName($search_query);
+    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
-    $products = getProducts();  // Теперь выводим все товары
-    $section_title = "Все товары";
+    $products = getProducts();  // Теперь выводим все товары
+    $section_title = "Все товары";
 }
-
 
 // Сортировка товаров
 if ($sort === 'price_asc') {
