@@ -208,3 +208,41 @@ if ($sort === 'price_asc') {
         });
     });
 </script>
+function getProducts($category_id = null, $limit = 15, $offset = 0) {
+    global $pdo;
+    $query = "SELECT * FROM products";
+    $params = [];
+
+    if ($category_id) {
+        $query .= " WHERE category_id = ?";
+        $params[] = $category_id;
+    }
+
+    $query .= " ORDER BY created_at DESC LIMIT ? OFFSET ?";
+    $params[] = $limit;
+    $params[] = $offset;
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function countProductsByCategory($category_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM products WHERE category_id = ?");
+    $stmt->execute([$category_id]);
+    return (int)$stmt->fetchColumn();
+}
+
+function countProductsBySearch($query) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM products WHERE name LIKE ?");
+    $stmt->execute(['%' . $query . '%']);
+    return (int)$stmt->fetchColumn();
+}
+
+function countAllProducts() {
+    global $pdo;
+    $stmt = $pdo->query("SELECT COUNT(*) FROM products");
+    return (int)$stmt->fetchColumn();
+}
