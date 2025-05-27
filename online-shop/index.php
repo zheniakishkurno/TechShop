@@ -5,7 +5,7 @@ require_once 'functions.php';
 $category_id = $_GET['category_id'] ?? null;
 $search_query = $_GET['q'] ?? null;
 $sort = $_GET['sort'] ?? 'newest';
-$categories = getCategories();
+
 
 // Получаем товары с учетом фильтров
 // Получаем все товары, если нет фильтра категории или поиска
