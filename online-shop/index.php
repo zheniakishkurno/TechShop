@@ -44,7 +44,7 @@ if ($sort === 'price_asc') {
 <html lang="ru">
 <head>
    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="TechShop - лучший магазин электроники с огромным выбором гаджетов по доступным ценам.">
     <title>TechShop</title>
     <link rel="stylesheet" href="css/style.css">
@@ -55,14 +55,14 @@ if ($sort === 'price_asc') {
 
 <!-- Главная секция -->
 <?php if (!$category_id): ?>
-<section class="hero">
-    <div class="container">
-        <h1>Добро пожаловать в TechShop</h1>
-        <p>Лучшие гаджеты и электроника по доступным ценам</p>
-        <a href="#products" class="btn btn-primary">Смотреть товары</a>
-    </div>
-</section>
-<?php endif; ?>
+    <section class="hero">
+        <div class="container">
+            <h1>Добро пожаловать в TechShop</h1>
+            <p>Лучшие гаджеты и электроника по доступным ценам</p>
+            <a href="#products" class="btn btn-primary">Смотреть товары</a>
+        </div>
+    </section>
+    <?php endif; ?>
 
 <!-- Категории -->
 <section class="categories">
@@ -77,8 +77,8 @@ if ($sort === 'price_asc') {
             <?php foreach ($categories as $category): ?>
                 <div class="category-card <?= $category_id == $category['id'] ? 'active' : '' ?>">
                     <a href="index.php?category_id=<?= $category['id'] ?>" class="category-link">
-<img src="<?= htmlspecialchars(formatImagePath($category['image_url'])) ?>"
-     alt="<?= htmlspecialchars($category['name']) ?>" class="category-img">
+                        <img src="<?= htmlspecialchars(formatImagePath($category['image_url'])) ?>"
+                            alt="<?= htmlspecialchars($category['name']) ?>" class="category-img">
                         <h3 class="category-title"><?= htmlspecialchars($category['name']) ?></h3>
                     </a>
                 </div>
@@ -134,16 +134,16 @@ if ($sort === 'price_asc') {
                             <span class="current-price"><?= $old_price ?> ₽</span>
                         <?php endif; ?>
                     </div>
-<div class="product-actions">
-    <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
-   <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
-</div>
+                    <div class="product-actions">
+                        <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
+                        <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
+                    </div>
                 </div>
-            </div>
-            <?php endforeach; ?>
-            <?php else: ?>
-                <p>Нет товаров для отображения.</p>
-            <?php endif; ?>
+            </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                <p>Нет товаров для отображения.</p>
+                <?php endif; ?>
         </div>
     </div>
 </section>
