@@ -114,9 +114,8 @@ function getOrderStatusBadge($status) {
 
                 <nav class="profile-menu">
                     <ul>
-                        <li class="active"><a href="profile.php"><i class="fas fa-user"></i> Профиль</a></li>
+                        <li class="active"><a href="profile.php?tab=settings"><i class="fas fa-user"></i> Профиль</a></li>
                         <li><a href="profile.php?tab=orders"><i class="fas fa-shopping-bag"></i> Мои заказы</a></li>
-                        <li><a href="profile.php?tab=settings"><i class="fas fa-cog"></i> Настройки</a></li>
                         <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Выход</a></li>
                     </ul>
                 </nav>
