@@ -5,6 +5,15 @@ require_once 'header.php';
 
 $page_title = 'Успешный заказ';
 ?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+      <link rel="stylesheet" href="css/admin.css" />
+    <title><?= $page_title ?></title>
+</head>
 
 <div class="order-success-page">
     <div class="container">
