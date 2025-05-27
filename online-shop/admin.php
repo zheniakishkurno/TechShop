@@ -255,7 +255,6 @@ $reviews = $pdo->query("SELECT
     JOIN users u ON r.user_id = u.id
     JOIN products p ON r.product_id = p.id
     ORDER BY r.created_at DESC")->fetchAll();
-ob_end_flush();
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -581,3 +580,4 @@ ob_end_flush();
 </div>
 </body>
 </html>
+ob_end_flush();
