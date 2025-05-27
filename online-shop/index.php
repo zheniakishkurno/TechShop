@@ -104,15 +104,7 @@ if ($sort === 'price_asc') {
             </div>
         </div>
         <div class="products-grid">
-            <?php
-            if (count($products) > 0):
-                foreach ($products as $product):
-                    $product_image = !empty($product['image_url']) ? formatImagePath($product['image_url']) : 'images/no-image.png';
-                    $old_price = number_format($product['price'], 2, '.', ' ');
-                    $new_price = $product['discount'] > 0
-                        ? number_format($product['price'] * (1 - $product['discount'] / 100), 2, '.', ' ')
-                        : $old_price;
-            ?>
+           
             <div class="product-card">
                 <div class="product-image">
                     <a href="product.php?id=<?= $product['id'] ?>">
