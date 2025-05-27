@@ -2,6 +2,10 @@
 require_once 'header.php';
 require_once 'functions.php';
 
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$per_page = 15;
+$offset = ($page - 1) * $per_page;
+
 $category_id = $_GET['category_id'] ?? null;
 $search_query = $_GET['q'] ?? null;
 $sort = $_GET['sort'] ?? 'newest';
@@ -38,6 +42,62 @@ if ($sort === 'price_asc') {
     usort($products, function($a, $b) {
         return strcmp($b['name'], $a['name']);
     });
+}
+
+$total_products = 0;
+
+if ($category_id) {
+    $products = getProducts($category_id, $per_page, $offset);
+    $total_products = countProductsByCategory($category_id);
+    $section_title = "Товары из выбранной категории";
+} elseif ($search_query) {
+    $products = searchProductsByName($search_query, $per_page, $offset);
+    $total_products = countProductsBySearch($search_query);
+    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
+} else {
+    $products = getProducts(null, $per_page, $offset);
+    $total_products = countAllProducts();
+    $section_title = "Все товары";
+}
+
+$total_pages = ceil($total_products / $per_page);
+function getProducts($category_id = null, $limit = 15, $offset = 0) {
+    global $db;
+    if ($category_id) {
+        $stmt = $db->prepare("SELECT * FROM products WHERE category_id = ? LIMIT ? OFFSET ?");
+        $stmt->execute([$category_id, $limit, $offset]);
+    } else {
+        $stmt = $db->prepare("SELECT * FROM products LIMIT ? OFFSET ?");
+        $stmt->execute([$limit, $offset]);
+    }
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function searchProductsByName($query, $limit = 15, $offset = 0) {
+    global $db;
+    $stmt = $db->prepare("SELECT * FROM products WHERE name LIKE ? LIMIT ? OFFSET ?");
+    $stmt->execute(["%$query%", $limit, $offset]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function countProductsByCategory($category_id) {
+    global $db;
+    $stmt = $db->prepare("SELECT COUNT(*) FROM products WHERE category_id = ?");
+    $stmt->execute([$category_id]);
+    return $stmt->fetchColumn();
+}
+
+function countProductsBySearch($query) {
+    global $db;
+    $stmt = $db->prepare("SELECT COUNT(*) FROM products WHERE name LIKE ?");
+    $stmt->execute(["%$query%"]);
+    return $stmt->fetchColumn();
+}
+
+function countAllProducts() {
+    global $db;
+    $stmt = $db->query("SELECT COUNT(*) FROM products");
+    return $stmt->fetchColumn();
 }
 
 ?>
@@ -140,6 +200,14 @@ if ($sort === 'price_asc') {
     <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
    <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
 </div>
+                    <?php if ($total_pages > 1): ?>
+    <nav class="pagination">
+        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+               class="<?= $i === $page ? 'active' : '' ?>"><?= $i ?></a>
+        <?php endfor; ?>
+    </nav>
+<?php endif; ?>
                 </div>
             </div>
             <?php endforeach; ?>
