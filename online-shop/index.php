@@ -21,6 +21,7 @@ if ($category_id) {
 }
 
 
+
 // Сортировка товаров
 if ($sort === 'price_asc') {
     usort($products, function($a, $b) {
