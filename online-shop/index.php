@@ -2,9 +2,10 @@
 require_once 'header.php';
 require_once 'functions.php';
 
-$category_id = $_GET['category_id'] ?? null;
-$search_query = $_GET['q'] ?? null;
-$sort = $_GET['sort'] ?? 'newest';
+$category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+$search_query = isset($_GET['q']) ? $_GET['q'] : null;
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
+
 $categories = getCategories();
 
 // Получаем товары с учетом фильтров
