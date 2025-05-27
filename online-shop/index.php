@@ -1,4 +1,4 @@
-вот главной странице <?php
+<?php
 require_once 'header.php';
 require_once 'functions.php';
 
