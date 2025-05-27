@@ -12,7 +12,7 @@ $categories = getCategories();
 if ($category_id) {
     $products = getProducts($category_id);
     $section_title = "Товары из выбранной категории";
-} elseif ($search_query) {
+}elseif ($search_query) {
     $products = searchProductsByName($search_query);
     $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
