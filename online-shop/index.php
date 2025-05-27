@@ -103,7 +103,7 @@ if ($sort === 'price_asc') {
                 </select>
             </div>
         </div>
-        <div class="products-grid">
+                   <div class="category-card <?= !$category_id ? 'active' : '' ?>">
             <?php
             if (count($products) > 0):
                 foreach ($products as $product):
