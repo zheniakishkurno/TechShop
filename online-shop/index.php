@@ -20,13 +20,12 @@ if ($category_id) {
     $section_title = "Все товары";
 }
 
-
 // Сортировка товаров
 if ($sort === 'price_asc') {
     usort($products, function($a, $b) {
         return $a['price'] <=> $b['price'];
-    });
-} elseif ($sort === 'price_desc') { 
+    }); 
+  } elseif ($sort === 'price_desc') { 
     usort($products, function($a, $b) {
         return $b['price'] <=> $a['price'];
     });
