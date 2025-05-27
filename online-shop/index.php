@@ -1,4 +1,6 @@
 <?php
+ob_start(); // (необязательно, но может помочь в отладке)
+session_start();
 require_once 'header.php';
 require_once 'functions.php';
 
