@@ -90,20 +90,20 @@ if ($sort === 'price_asc') {
 <!-- Товары -->
 <section class="products" id="products">
     <div class="container">
-        <div class="products-header">
-            <h2><?= $section_title ?></h2>
-            <div class="sort-options">
-                <span>Сортировка:</span>
-                <select id="sort-select" onchange="window.location.href=this.value">
-                    <option value="?sort=newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Новинки</option>
-                    <option value="?sort=price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Цена по возрастанию</option>
-                    <option value="?sort=price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Цена по убыванию</option>
-                    <option value="?sort=name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Название А-Я</option>
-                    <option value="?sort=name_desc" <?= $sort === 'name_desc' ? 'selected' : '' ?>>Название Я-А</option>
-                </select>
-            </div>
-        </div>
-                   <div class="category-card <?= !$category_id ? 'active' : '' ?>">
+<div class="products-header">
+    <h2><?= $section_title ?></h2>
+    <div class="sort-options">
+        <span>Сортировка:</span>
+        <select id="sort-select" onchange="window.location.href=this.value">
+            <option value="?sort=newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Новинки</option>
+            <option value="?sort=price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Цена по возрастанию</option>
+            <option value="?sort=price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Цена по убыванию</option>
+            <option value="?sort=name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Название А-Я</option>
+            <option value="?sort=name_desc" <?= $sort === 'name_desc' ? 'selected' : '' ?>>Название Я-А</option>
+        </select>
+    </div>
+</div>
+
             <?php
             if (count($products) > 0):
                 foreach ($products as $product):
