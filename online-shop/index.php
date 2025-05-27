@@ -2,49 +2,51 @@
 require_once 'header.php';
 require_once 'functions.php';
 
-$category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
-$search_query = isset($_GET['q']) ? $_GET['q'] : null;
-$sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
-
+$category_id = $_GET['category_id'] ?? null;
+$search_query = $_GET['q'] ?? null;
+$sort = $_GET['sort'] ?? 'newest';
 $categories = getCategories();
 
 // Получаем товары с учетом фильтров
+// Получаем все товары, если нет фильтра категории или поиска
 if ($category_id) {
-    $products = getProducts($category_id);
-    $section_title = "Товары из выбранной категории";
+    $products = getProducts($category_id);
+    $section_title = "Товары из выбранной категории";
 } elseif ($search_query) {
-    $products = searchProductsByName($search_query);
-    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
+    $products = searchProductsByName($search_query);
+    $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
-    $products = getProducts();
-    $section_title = "Все товары";
+    $products = getProducts();  // Теперь выводим все товары
+    $section_title = "Все товары";
 }
+
 
 // Сортировка товаров
 if ($sort === 'price_asc') {
-    usort($products, function($a, $b) {
-        return $a['price'] <=> $b['price'];
-    });
-} elseif ($sort === 'price_desc') { 
-    usort($products, function($a, $b) {
-        return $b['price'] <=> $a['price'];
-    });
+    usort($products, function($a, $b) {
+        return $a['price'] <=> $b['price'];
+    });
+} elseif ($sort === 'price_desc') { 
+    usort($products, function($a, $b) {
+        return $b['price'] <=> $a['price'];
+    });
 } elseif ($sort === 'name_asc') {
-    usort($products, function($a, $b) {
-        return strcmp($a['name'], $b['name']);
-    });
+    usort($products, function($a, $b) {
+        return strcmp($a['name'], $b['name']);
+    });
 } elseif ($sort === 'name_desc') {
-    usort($products, function($a, $b) {
-        return strcmp($b['name'], $a['name']);
-    });
+    usort($products, function($a, $b) {
+        return strcmp($b['name'], $a['name']);
+    });
 }
+
 ?>
 
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="TechShop - лучший магазин электроники с огромным выбором гаджетов по доступным ценам.">
     <title>TechShop</title>
     <link rel="stylesheet" href="css/style.css">
@@ -55,14 +57,14 @@ if ($sort === 'price_asc') {
 
 <!-- Главная секция -->
 <?php if (!$category_id): ?>
-    <section class="hero">
-        <div class="container">
-            <h1>Добро пожаловать в TechShop</h1>
-            <p>Лучшие гаджеты и электроника по доступным ценам</p>
-            <a href="#products" class="btn btn-primary">Смотреть товары</a>
-        </div>
-    </section>
-    <?php endif; ?>
+<section class="hero">
+    <div class="container">
+        <h1>Добро пожаловать в TechShop</h1>
+        <p>Лучшие гаджеты и электроника по доступным ценам</p>
+        <a href="#products" class="btn btn-primary">Смотреть товары</a>
+    </div>
+</section>
+<?php endif; ?>
 
 <!-- Категории -->
 <section class="categories">
@@ -77,8 +79,8 @@ if ($sort === 'price_asc') {
             <?php foreach ($categories as $category): ?>
                 <div class="category-card <?= $category_id == $category['id'] ? 'active' : '' ?>">
                     <a href="index.php?category_id=<?= $category['id'] ?>" class="category-link">
-                        <img src="<?= htmlspecialchars(formatImagePath($category['image_url'])) ?>"
-                            alt="<?= htmlspecialchars($category['name']) ?>" class="category-img">
+                        <img src="<?= htmlspecialchars(formatImagePath($category['image_url'])) ?>"
+                             alt="<?= htmlspecialchars($category['name']) ?>" class="category-img">
                         <h3 class="category-title"><?= htmlspecialchars($category['name']) ?></h3>
                     </a>
                 </div>
@@ -90,20 +92,20 @@ if ($sort === 'price_asc') {
 <!-- Товары -->
 <section class="products" id="products">
     <div class="container">
-<div class="products-header">
-    <h2><?= $section_title ?></h2>
-    <div class="sort-options">
-        <span>Сортировка:</span>
-        <select id="sort-select" onchange="window.location.href=this.value">
-            <option value="?sort=newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Новинки</option>
-            <option value="?sort=price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Цена по возрастанию</option>
-            <option value="?sort=price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Цена по убыванию</option>
-            <option value="?sort=name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Название А-Я</option>
-            <option value="?sort=name_desc" <?= $sort === 'name_desc' ? 'selected' : '' ?>>Название Я-А</option>
-        </select>
-    </div>
-</div>
-
+        <div class="products-header">
+            <h2><?= $section_title ?></h2>
+            <div class="sort-options">
+                <span>Сортировка:</span>
+                <select id="sort-select" onchange="window.location.href=this.value">
+                    <option value="?sort=newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Новинки</option>
+                    <option value="?sort=price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Цена по возрастанию</option>
+                    <option value="?sort=price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Цена по убыванию</option>
+                    <option value="?sort=name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Название А-Я</option>
+                    <option value="?sort=name_desc" <?= $sort === 'name_desc' ? 'selected' : '' ?>>Название Я-А</option>
+                </select>
+            </div>
+        </div>
+        <div class="products-grid">
             <?php
             if (count($products) > 0):
                 foreach ($products as $product):
@@ -134,16 +136,16 @@ if ($sort === 'price_asc') {
                             <span class="current-price"><?= $old_price ?> ₽</span>
                         <?php endif; ?>
                     </div>
-                    <div class="product-actions">
-                        <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
-                        <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
-                    </div>
+<div class="product-actions">
+    <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
+   <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
+</div>
                 </div>
-            </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                <p>Нет товаров для отображения.</p>
-                <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
+            <?php else: ?>
+                <p>Нет товаров для отображения.</p>
+            <?php endif; ?>
         </div>
     </div>
 </section>
