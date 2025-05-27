@@ -295,4 +295,43 @@ function hashPassword($password) {
 function verifyPassword($password, $hash) {
     return password_verify($password, $hash);
 }
+function getProducts($category_id = null, $limit = 15, $offset = 0) {
+    global $db;
+    if ($category_id) {
+        $stmt = $db->prepare("SELECT * FROM products WHERE category_id = ? LIMIT ? OFFSET ?");
+        $stmt->execute([$category_id, $limit, $offset]);
+    } else {
+        $stmt = $db->prepare("SELECT * FROM products LIMIT ? OFFSET ?");
+        $stmt->execute([$limit, $offset]);
+    }
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function searchProductsByName($query, $limit = 15, $offset = 0) {
+    global $db;
+    $stmt = $db->prepare("SELECT * FROM products WHERE name LIKE ? LIMIT ? OFFSET ?");
+    $stmt->execute(["%$query%", $limit, $offset]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function countProductsByCategory($category_id) {
+    global $db;
+    $stmt = $db->prepare("SELECT COUNT(*) FROM products WHERE category_id = ?");
+    $stmt->execute([$category_id]);
+    return $stmt->fetchColumn();
+}
+
+function countProductsBySearch($query) {
+    global $db;
+    $stmt = $db->prepare("SELECT COUNT(*) FROM products WHERE name LIKE ?");
+    $stmt->execute(["%$query%"]);
+    return $stmt->fetchColumn();
+}
+
+function countAllProducts() {
+    global $db;
+    $stmt = $db->query("SELECT COUNT(*) FROM products");
+    return $stmt->fetchColumn();
+}
+
 ?>
