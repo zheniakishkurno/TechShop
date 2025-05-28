@@ -124,7 +124,7 @@ document.querySelectorAll('.quantity-btn').forEach(button => {
 
 <?php require_once 'footer.php'; ?>
 <script>
-.product-grid {
+    .product-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
