@@ -112,7 +112,7 @@ require_once 'header.php';
     </div>
 </div>
 <!-- В самом конце HTML -->
+<?php require_once 'footer.php'; ?>
 <script src="js/product.js"></script>
 </body>
 </html>
-<?php require_once 'footer.php'; ?> 
