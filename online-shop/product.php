@@ -116,17 +116,119 @@ require_once 'header.php';
             margin: 0 auto;
             padding: 20px;
         }
-        .product-image {
-            max-width: 500px;
-            height: auto;
+        
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
         }
-        .reviews-section {
-            margin-top: 50px;
-            padding: 20px;
+        
+        .product-gallery {
             background: #fff;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        
+        .product-image {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        .product-info {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .product-info h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .product-meta {
+            margin-bottom: 20px;
+        }
+        
+        .availability {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .in-stock {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .out-of-stock {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .product-price {
+            margin: 20px 0;
+            font-size: 24px;
+        }
+        
+        .current-price {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            margin-right: 10px;
+        }
+        
+        .discount {
+            background: #dc3545;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .product-actions {
+            margin: 20px 0;
+        }
+        
+        .quantity {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .quantity-btn {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 5px 15px;
+            cursor: pointer;
+        }
+        
+        .quantity input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 5px;
+            margin: 0 5px;
+        }
+        
+        .reviews-section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+        
         .reviews-section h2 {
             font-size: 24px;
             color: #333;
@@ -134,88 +236,80 @@ require_once 'header.php';
             padding-bottom: 10px;
             border-bottom: 2px solid #eee;
         }
+        
         .review-form {
             background: #f8f9fa;
             padding: 25px;
             border-radius: 10px;
             margin-bottom: 30px;
         }
-        .review-form h3 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            resize: vertical;
-        }
-        .star-rating {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-        .star-rating input {
-            display: none;
-        }
-        .star-rating label {
-            float: right;
-            cursor: pointer;
-            color: #ddd;
-            font-size: 28px;
-            padding: 0 2px;
-        }
-        .star-rating label:before {
-            content: '★';
-        }
-        .star-rating input:checked ~ label {
-            color: #ffd700;
-        }
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            color: #ffd700;
-        }
-        .star-rating:not(:hover) input:checked ~ label {
-            color: #ffd700;
-        }
+        
         .reviews-list {
             display: grid;
             gap: 20px;
+            padding: 20px 0;
         }
+        
         .review {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 10px;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
         }
+        
         .review .rating {
             margin-bottom: 10px;
+            font-size: 20px;
         }
+        
         .review strong {
-            color: #333;
-            font-size: 16px;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            color: #333;
         }
+        
         .review p {
             color: #666;
             line-height: 1.6;
             margin-bottom: 10px;
         }
+        
         .review small {
             color: #888;
-            font-size: 12px;
         }
+        
+        .star-rating {
+            display: inline-block;
+        }
+        
+        .star-rating input {
+            display: none;
+        }
+        
+        .star-rating label {
+            float: right;
+            cursor: pointer;
+            color: #ddd;
+            font-size: 24px;
+        }
+        
+        .star-rating label:before {
+            content: '★';
+        }
+        
+        .star-rating input:checked ~ label {
+            color: #ffd700;
+        }
+        
+        .star-rating:hover input ~ label {
+            color: #ddd;
+        }
+        
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffd700 !important;
+        }
+        
         .btn {
             background: #007bff;
             color: white;
@@ -224,29 +318,19 @@ require_once 'header.php';
             border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            width: 100%;
         }
+        
         .btn:hover {
             background: #0056b3;
+            transform: translateY(-1px);
         }
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-        }
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .rating {
-            font-size: 24px;
-            color: #ffd700;
+        
+        @media (max-width: 768px) {
+            .product-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -262,51 +346,46 @@ require_once 'header.php';
         
         <!-- Подробности товара -->
         <div class="product-details">
-            <!-- Галерея товара -->
-            <div class="product-gallery">
-                <div class="main-image">
-                    <img src="<?= htmlspecialchars($product['image_url'] ?? 'images/no-image.jpg') ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-image">
+            <div class="product-container">
+                <div class="product-gallery">
+                    <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="product-image">
+                </div>
+                
+                <div class="product-info">
+                    <h1><?= htmlspecialchars($product['name']) ?></h1>
+                    
+                    <div class="product-meta">
+                        <div class="availability <?= $product['stock'] > 0 ? 'in-stock' : 'out-of-stock' ?>">
+                            <?= $product['stock'] > 0 ? 'В наличии' : 'Нет в наличии' ?>
+                        </div>
+                    </div>
+                    
+                    <div class="product-price">
+                        <?php if ($product['discount'] > 0): ?>
+                            <span class="old-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
+                            <span class="current-price"><?= number_format($product['price'] * (1 - $product['discount']/100), 2, '.', ' ') ?> ₽</span>
+                            <span class="discount">-<?= $product['discount'] ?>%</span>
+                        <?php else: ?>
+                            <span class="current-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="product-actions">
+                        <div class="quantity">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" value="1" min="1" max="<?= $product['stock'] ?>" id="quantity">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <button class="btn">Добавить в корзину</button>
+                    </div>
+                    
+                    <div class="product-description">
+                        <h3>Описание</h3>
+                        <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
+                    </div>
                 </div>
             </div>
             
-            <!-- Информация о товаре -->
-            <div class="product-info">
-                <h1><?= htmlspecialchars($product['name']) ?></h1>
-                
-                <div class="product-meta">
-                    <div class="availability <?= $product['stock'] > 0 ? 'in-stock' : 'out-of-stock' ?>">
-                        <?= $product['stock'] > 0 ? 'В наличии' : 'Нет в наличии' ?>
-                    </div>
-                </div>
-                
-                <div class="product-price">
-                    <?php if ($product['discount'] > 0): ?>
-                        <span class="old-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
-                        <span class="current-price"><?= number_format($product['price'] * (1 - $product['discount']/100), 2, '.', ' ') ?> ₽</span>
-                        <span class="discount">-<?= $product['discount'] ?>%</span>
-                    <?php else: ?>
-                        <span class="current-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
-                    <?php endif; ?>
-                </div>
-                
-                <!-- Количество товара -->
-                <div class="product-actions">
-                    <div class="quantity">
-                        <button class="quantity-btn minus">-</button>
-                        <input type="number" value="1" min="1" max="<?= $product['stock'] ?>" id="quantity-input">
-                        <button class="quantity-btn plus">+</button>
-                    </div>
-                    
-                    <button class="btn add-to-cart" data-id="<?= $product['id'] ?>">В корзину</button>
-                </div>
-                
-                <div class="product-description">
-                    <h3>Описание</h3>
-                    <p><?= nl2br(htmlspecialchars((string)($product['description'] ?? ''))) ?></p>
-                </div>
-
-            </div>
-
             <div class="reviews-section">
                 <h2>Отзывы (<?= count($reviews) ?>)</h2>
                 <?php if ($avg_rating > 0): ?>
