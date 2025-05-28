@@ -111,8 +111,8 @@ require_once 'header.php';
         <?php endif; ?>
     </div>
 </div>
-
-<!-- Подключение JavaScript файла -->
-<script src="js/product.js"></script> <!-- Укажите правильный путь к вашему файлу JS -->
-
+<!-- В самом конце HTML -->
+<script src="js/product.js"></script>
+</body>
+</html>
 <?php require_once 'footer.php'; ?> 
