@@ -6,27 +6,12 @@ $searchQuery = $_GET['q'] ?? '';
 $products = [];
 
 if ($searchQuery) {
-    $products = searchProductsByName($searchQuery);  // Using the function to search products by name
+    $products = searchProductsByName($searchQuery);
 }
 
 $page_title = 'Результаты поиска';
-require_once 'header.php';
+require_once 'header.php'; // тут уже есть <html><head><body>
 ?>
-
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TechShop - лучший магазин электроники с огромным выбором гаджетов по доступным ценам.">
-    <title><?= isset($page_title) ? "$page_title | " : "" ?>TechShop</title>
-    
-    <!-- Подключение CSS файла -->
-    <link rel="stylesheet" href="css/style.css"> <!-- Correct the path to your CSS file -->
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
 
 <div class="product-page">
     <div class="container">
@@ -55,50 +40,43 @@ require_once 'header.php';
                         <div class="product-meta">
                             <div class="rating">
                                 <span class="stars">★★★★★</span>
-                                <span class="reviews">
-                                    <?= isset($product['reviews_count']) ? $product['reviews_count'] : 0 ?> отзывов
-                                </span>
+                                <span class="reviews"><?= $product['reviews_count'] ?? 0 ?> отзывов</span>
                             </div>
-                            
-                            <div class="availability <?= isset($product['stock']) && $product['stock'] > 0 ? 'in-stock' : 'out-of-stock' ?>">
-                                <?= isset($product['stock']) && $product['stock'] > 0 ? 'В наличии' : 'Нет в наличии' ?>
+                            <div class="availability <?= ($product['stock'] ?? 0) > 0 ? 'in-stock' : 'out-of-stock' ?>">
+                                <?= ($product['stock'] ?? 0) > 0 ? 'В наличии' : 'Нет в наличии' ?>
                             </div>
                         </div>
-                        
+
                         <div class="product-price">
-                            <?php if (isset($product['discount']) && $product['discount'] > 0): ?>
+                            <?php if (!empty($product['discount'])): ?>
                                 <span class="old-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
-                                <span class="current-price"><?= number_format($product['price'] * (1 - $product['discount']/100), 2, '.', ' ') ?> ₽</span>
+                                <span class="current-price"><?= number_format($product['price'] * (1 - $product['discount'] / 100), 2, '.', ' ') ?> ₽</span>
                                 <span class="discount">-<?= $product['discount'] ?>%</span>
                             <?php else: ?>
                                 <span class="current-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
                             <?php endif; ?>
                         </div>
-                        
-                        <!-- Количество товара -->
-<div class="product-actions">
-    <div class="quantity">
-        <button class="quantity-btn minus">-</button>
-        <input type="number"
-               class="quantity-input"
-               value="1"
-               min="1"
-               max="<?= isset($product['stock']) ? $product['stock'] : 0 ?>"
-               data-id="<?= $product['id'] ?>">
-        <button class="quantity-btn plus">+</button>
-    </div>
 
-    <button class="btn add-to-cart"
-            data-id="<?= $product['id'] ?>"
-            data-name="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>"
-            data-price="<?= isset($product['discount']) && $product['discount'] > 0
-                ? number_format($product['price'] * (1 - $product['discount']/100), 2, '.', '')
-                : number_format($product['price'], 2, '.', '') ?>">
-        В корзину
-    </button>
-</div>
+                        <div class="product-actions">
+                            <div class="quantity">
+                                <button class="quantity-btn minus">-</button>
+                                <input type="number" class="quantity-input" value="1"
+                                    min="1"
+                                    max="<?= $product['stock'] ?? 0 ?>"
+                                    data-id="<?= $product['id'] ?>">
+                                <button class="quantity-btn plus">+</button>
+                            </div>
 
-                        
+                            <button class="btn add-to-cart"
+                                data-id="<?= $product['id'] ?>"
+                                data-name="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>"
+                                data-price="<?= isset($product['discount']) && $product['discount'] > 0
+                                    ? number_format($product['price'] * (1 - $product['discount'] / 100), 2, '.', '')
+                                    : number_format($product['price'], 2, '.', '') ?>">
+                                В корзину
+                            </button>
+                        </div>
+
                         <div class="product-description">
                             <h3>Описание</h3>
                             <p><?= nl2br(htmlspecialchars($product['description'] ?? 'Описание отсутствует')) ?></p>
@@ -111,8 +89,5 @@ require_once 'header.php';
         <?php endif; ?>
     </div>
 </div>
-<!-- В самом конце HTML -->
+
 <?php require_once 'footer.php'; ?>
-<script src="js/product.js"></script>
-</body>
-</html>
