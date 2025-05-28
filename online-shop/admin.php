@@ -404,88 +404,134 @@ $reviews = $pdo->query("SELECT
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/admin.css" />
     <style>
-        .refresh-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
-            transition: background-color 0.3s;
-        }
-        
-        .refresh-button:hover {
-            background-color: #45a049;
+        /* Дополнительные стили для таблиц */
+        .table-responsive {
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
         }
 
-        .button-group {
-            margin-bottom: 20px;
+        .table-wrapper {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        table th {
+            position: sticky;
+            top: 0;
+            background: #5c6bc0;
+            z-index: 10;
+        }
+
+        table td {
+            background: white;
+        }
+
+        .form-row {
             display: flex;
             gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .button-group form {
-            margin: 0;
+        .form-group {
+            flex: 1;
         }
 
-        .button-group .refresh-button {
-            margin-bottom: 0;
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
         }
 
-        .update-form {
-            margin: 0;
-            display: inline;
+        .image-preview {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-input-button {
+            background: #5c6bc0;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
         }
 
         .actions {
-            white-space: nowrap;
+            display: flex;
+            gap: 5px;
+            justify-content: flex-start;
+            align-items: center;
         }
 
         .actions button {
-            margin: 2px;
+            min-width: 80px;
         }
 
-        .delete {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
-        .delete:hover {
-            background-color: #da190b;
+        .status-processing { background: #fff3cd; color: #856404; }
+        .status-shipped { background: #cce5ff; color: #004085; }
+        .status-delivered { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+
+        .tab-content {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
         }
 
-        .actions {
-            white-space: nowrap;
+        .refresh-button {
+            margin: 20px 0;
         }
-        .actions form {
-            display: inline-block;
-            margin: 0;
-        }
-        .update-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-        .update-btn:hover {
-            background-color: #45a049;
-        }
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 5px;
-            margin: 0;
-            box-sizing: border-box;
+
+        /* Стили для мобильных устройств */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .actions button {
+                width: 100%;
+                margin-bottom: 5px;
+            }
         }
     </style>
     <script src="js/admin.js" defer></script>
@@ -517,32 +563,60 @@ $reviews = $pdo->query("SELECT
     <!-- Управление товарами -->
     <div id="products" class="tab-content active">
         <h2>Управление товарами</h2>
-        <div class="button-group">
-            <form method="POST" id="products-form">
-                <input type="hidden" name="table_name" value="products">
-                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
-            </form>
-        </div>
-
-        <!-- Добавление товара -->
+        
+        <!-- Форма добавления товара -->
         <form method="POST" enctype="multipart/form-data" class="form">
             <h3>Добавить новый товар</h3>
-            <input type="text" name="name" placeholder="Название" required />
-            <select name="category_id" required>
-                <option value="">Выберите категорию</option>
-                <?php foreach ($categories as $category): ?>
-                    <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <input type="number" name="price" placeholder="Цена" step="0.01" min="0" required />
-            <textarea name="description" placeholder="Описание" required></textarea>
-            <input type="number" name="stock" placeholder="Количество" min="0" required />
-            <input type="number" name="discount" placeholder="Скидка (%)" min="0" max="100" value="0" />
-            <input type="file" name="image_url" required />
-            <button type="submit" name="add_product">Добавить</button>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Название</label>
+                    <input type="text" name="name" required />
+                </div>
+                <div class="form-group">
+                    <label>Категория</label>
+                    <select name="category_id" required>
+                        <option value="">Выберите категорию</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Цена</label>
+                    <input type="number" name="price" step="0.01" min="0" required />
+                </div>
+                <div class="form-group">
+                    <label>Количество</label>
+                    <input type="number" name="stock" min="0" required />
+                </div>
+                <div class="form-group">
+                    <label>Скидка (%)</label>
+                    <input type="number" name="discount" min="0" max="100" value="0" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea name="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Изображение</label>
+                <div class="file-input-wrapper">
+                    <button type="button" class="file-input-button">Выберите файл</button>
+                    <input type="file" name="image_url" required />
+                </div>
+            </div>
+            <button type="submit" name="add_product">Добавить товар</button>
         </form>
 
-        <!-- Список товаров -->
+        <!-- Кнопка обновления всех товаров -->
+        <form method="POST" id="products-form">
+            <input type="hidden" name="table_name" value="products">
+            <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
+        </form>
+
+        <!-- Таблица товаров -->
         <div class="table-wrapper">
             <table>
                 <thead>
@@ -562,7 +636,7 @@ $reviews = $pdo->query("SELECT
                     <tr>
                         <td><?= $product['id'] ?></td>
                         <td>
-                            <form method="POST" enctype="multipart/form-data" style="display: inline;">
+                            <form method="POST" enctype="multipart/form-data" class="update-form">
                                 <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required />
                         </td>
                         <td>
@@ -580,10 +654,13 @@ $reviews = $pdo->query("SELECT
                         <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
                         <td>
                             <?php if ($product['image_url']): ?>
-                                <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
+                                <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" class="image-preview" />
                             <?php endif; ?>
                             <input type="hidden" name="current_image" value="<?= htmlspecialchars($product['image_url']) ?>" />
-                            <input type="file" name="image_url" />
+                            <div class="file-input-wrapper">
+                                <button type="button" class="file-input-button">Изменить</button>
+                                <input type="file" name="image_url" />
+                            </div>
                         </td>
                         <td class="actions">
                             <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
