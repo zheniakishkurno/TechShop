@@ -271,9 +271,9 @@ $order_id = $order_stmt->fetchColumn(); // вместо lastInsertId()
 
 
 function searchProductsByName($query) {
-    $db = getDBConnection();
+    global $pdo;
     $query = "%$query%";
-    $stmt = $db->prepare("SELECT * FROM products WHERE LOWER(name) LIKE LOWER(?)");
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE LOWER(name) LIKE LOWER(?)");
     $stmt->execute([$query]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
