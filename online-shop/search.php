@@ -121,6 +121,22 @@ document.querySelectorAll('.quantity-btn').forEach(button => {
 </script>
 
 <script src="profile.js"></script>
+<script>
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', () => {
+        const productId = button.dataset.id;
+        const productName = button.dataset.name;
+        const productPrice = parseFloat(button.dataset.price);
+        const quantityInput = button.parentElement.querySelector('.quantity-input');
+        const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+
+        // Здесь можно отправить данные на сервер, добавить в localStorage, обновить UI и т.п.
+        alert(`Добавлено в корзину:\n${productName}\nКоличество: ${quantity}\nЦена за единицу: ${productPrice} ₽`);
+        
+        // Пример: можно добавить AJAX запрос для добавления в корзину
+    });
+});
+</script>
 
 <?php require_once 'footer.php'; ?>
 <script>
