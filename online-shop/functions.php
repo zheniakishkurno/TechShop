@@ -271,30 +271,26 @@ $order_id = $order_stmt->fetchColumn(); // вместо lastInsertId()
 
 
 function searchProductsByName(string $query): array {
-    global $pdo; // предположим, $pdo — это подключение к БД из config.php
+    global $pdo;
 
     $query = trim($query);
 
-    // Если пустой запрос — сразу пустой массив
     if ($query === '') {
         return [];
     }
 
-    // Подготовленный запрос с LIKE и подстановкой %
     $stmt = $pdo->prepare("
         SELECT *
         FROM products
-        WHERE name LIKE :query COLLATE utf8mb4_general_ci
+        WHERE LOWER(name) LIKE LOWER(:query)
         ORDER BY name ASC
         LIMIT 50
     ");
 
-    // Оборачиваем запрос в % для поиска вхождения
     $stmt->execute(['query' => "%$query%"]);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
 
 // Функции безопасности
 function hashPassword($password) {
