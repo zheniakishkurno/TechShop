@@ -140,3 +140,232 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 
 <?php require_once 'footer.php'; ?>
 
+<style>
+.search-results-page {
+    padding: 2rem 0;
+}
+
+.search-title {
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+    color: var(--text);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.product-card {
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+    position: relative;
+    padding-top: 100%;
+    overflow: hidden;
+    background: var(--background);
+}
+
+.product-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 1rem;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--error);
+    color: var(--white);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.product-info {
+    padding: 1.25rem;
+}
+
+.product-info h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+.product-meta {
+    margin-bottom: 1rem;
+}
+
+.availability {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.in-stock {
+    background-color: #dcfce7;
+    color: var(--success);
+}
+
+.out-of-stock {
+    background-color: #fee2e2;
+    color: var(--error);
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.stars {
+    color: #f59e0b;
+    font-size: 0.9rem;
+}
+
+.reviews {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+}
+
+.product-price {
+    margin-bottom: 1rem;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.current-price {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.product-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--gray-light);
+    border-radius: 6px;
+    overflow: hidden;
+    width: 100px;
+}
+
+.quantity-btn {
+    background-color: #f1f5f9;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: none;
+}
+
+.quantity-btn:hover {
+    background-color: var(--gray-light);
+}
+
+.quantity-input {
+    width: 3rem;
+    height: 2rem;
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--gray-light);
+    border-right: 1px solid var(--gray-light);
+    -moz-appearance: textfield;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.add-to-cart {
+    flex-grow: 1;
+    background-color: var(--primary);
+    color: var(--white);
+    height: 2rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.add-to-cart:hover {
+    background-color: var(--primary-dark);
+}
+
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.no-results p {
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.no-results .btn {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.no-results .btn:hover {
+    background-color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+    
+    .product-actions {
+        flex-direction: column;
+    }
+    
+    .quantity-control {
+        width: 100%;
+    }
+}
+</style>
