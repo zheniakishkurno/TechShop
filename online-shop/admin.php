@@ -127,77 +127,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $upload_path = 'online-shop/images/' . $image_name;
                 
                 if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
-                    copy($upload_path, 'uploads/' . $image_name);
-                    $image_url = 'online-shop/images/' . $image_name;
+                    $image_url = $upload_path;
+                    $_SESSION['message'] = "Товар и изображение успешно добавлены!";
+                } else {
+                    $_SESSION['error'] = "Ошибка при загрузке изображения.";
+                    header("Location: admin.php");
+                    exit;
                 }
             }
             
-            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([
-                $_POST['name'],
-                $_POST['category_id'],
-                $_POST['price'],
-                $_POST['description'] ?? '',
-                $_POST['stock'],
-                $image_url,
-                $_POST['discount'] ?? 0
-            ]);
+            try {
+                $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([
+                    $_POST['name'],
+                    $_POST['category_id'],
+                    $_POST['price'],
+                    $_POST['description'] ?? '',
+                    $_POST['stock'],
+                    $image_url,
+                    $_POST['discount'] ?? 0
+                ]);
+                
+                if (!isset($_SESSION['message'])) {
+                    $_SESSION['message'] = "Товар успешно добавлен!";
+                }
+            } catch (PDOException $e) {
+                $_SESSION['error'] = "Ошибка при добавлении товара: " . $e->getMessage();
+                // Удаляем загруженное изображение в случае ошибки
+                if ($image_url && file_exists($image_url)) {
+                    unlink($image_url);
+                }
+            }
             
-            $_SESSION['message'] = "Товар успешно добавлен!";
             header("Location: admin.php");
             exit;
         }
 
         if (isset($_POST['update_product'])) {
-            $product_id = $_POST['product_id'];
-            $image_url = $_POST['current_image'];
-            
-            if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
-                // Удаляем старое изображение
-                if ($image_url) {
-                    @unlink($image_url);
-                    @unlink('uploads/' . basename($image_url));
+            try {
+                $image_url = $_POST['current_image'];
+                if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
+                    // Удаляем старое изображение
+                    if ($image_url && file_exists($image_url)) {
+                        unlink($image_url);
+                    }
+                    
+                    $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
+                    $upload_path = 'online-shop/images/' . $image_name;
+                    
+                    if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
+                        $image_url = $upload_path;
+                    } else {
+                        throw new Exception("Ошибка при загрузке изображения");
+                    }
                 }
                 
-                $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-                $upload_path = 'online-shop/images/' . $image_name;
+                $stmt = $pdo->prepare("UPDATE products SET name=?, category_id=?, price=?, stock=?, image_url=?, discount=? WHERE id=?");
+                $stmt->execute([
+                    $_POST['name'],
+                    $_POST['category_id'],
+                    $_POST['price'],
+                    $_POST['stock'],
+                    $image_url,
+                    $_POST['discount'] ?? 0,
+                    $_POST['product_id']
+                ]);
                 
-                if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
-                    copy($upload_path, 'uploads/' . $image_name);
-                    $image_url = 'online-shop/images/' . $image_name;
-                }
+                $_SESSION['message'] = "Товар успешно обновлен!";
+            } catch (Exception $e) {
+                $_SESSION['error'] = "Ошибка: " . $e->getMessage();
             }
             
-            $stmt = $pdo->prepare("UPDATE products SET name=?, category_id=?, price=?, description=?, stock=?, image_url=?, discount=? WHERE id=?");
-            $stmt->execute([
-                $_POST['name'],
-                $_POST['category_id'],
-                $_POST['price'],
-                $_POST['description'] ?? '',
-                $_POST['stock'],
-                $image_url,
-                $_POST['discount'] ?? 0,
-                $product_id
-            ]);
-            
-            $_SESSION['message'] = "Товар успешно обновлен!";
             header("Location: admin.php");
             exit;
         }
 
         if (isset($_POST['delete_product'])) {
-            $stmt = $pdo->prepare("SELECT image_url FROM products WHERE id=?");
-            $stmt->execute([$_POST['product_id']]);
-            $product = $stmt->fetch();
-            
-            if ($product['image_url']) {
-                @unlink($product['image_url']);
-                @unlink('uploads/' . basename($product['image_url']));
+            try {
+                // Получаем информацию о товаре
+                $stmt = $pdo->prepare("SELECT image_url FROM products WHERE id = ?");
+                $stmt->execute([$_POST['product_id']]);
+                $product = $stmt->fetch();
+                
+                // Удаляем изображение
+                if ($product['image_url'] && file_exists($product['image_url'])) {
+                    unlink($product['image_url']);
+                }
+                
+                // Удаляем запись из БД
+                $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
+                $stmt->execute([$_POST['product_id']]);
+                
+                $_SESSION['message'] = "Товар успешно удален!";
+            } catch (Exception $e) {
+                $_SESSION['error'] = "Ошибка при удалении: " . $e->getMessage();
             }
             
-            $stmt = $pdo->prepare("DELETE FROM products WHERE id=?");
-            $stmt->execute([$_POST['product_id']]);
-            $_SESSION['message'] = "Товар успешно удален!";
             header("Location: admin.php");
             exit;
         }
@@ -472,86 +497,77 @@ $reviews = $pdo->query("SELECT
         </div>
 
         <!-- Добавление товара -->
-       <form method="POST" enctype="multipart/form-data" class="form">
-    <h3>Добавить новый товар</h3>
-    <input type="text" name="name" placeholder="Название" required />
-    <select name="category_id" required>
-        <option value="">Выберите категорию</option>
-        <?php foreach ($categories as $category): ?>
-            <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
-        <?php endforeach; ?>
-    </select>
-    <input type="number" name="price" placeholder="Цена" step="0.01" min="0" required />
-    <textarea name="description" placeholder="Описание" required></textarea>
-    <input type="number" name="stock" placeholder="Количество" min="0" required />
-    <input type="number" name="discount" placeholder="Скидка (%)" min="0" max="100" />
-    <!-- Добавленные поля -->
-    <input type="number" name="views" placeholder="Количество просмотров" min="0" value="0" />
-    <input type="number" name="reviews_count" placeholder="Количество отзывов" min="0" value="0" />
-    <input type="file" name="image_url" required />
-    <button type="submit" name="add_product">Добавить</button>
-</form>
-<div class="table-wrapper">
-    <table>
+        <form method="POST" enctype="multipart/form-data" class="form">
+            <h3>Добавить новый товар</h3>
+            <input type="text" name="name" placeholder="Название" required />
+            <select name="category_id" required>
+                <option value="">Выберите категорию</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <input type="number" name="price" placeholder="Цена" step="0.01" min="0" required />
+            <textarea name="description" placeholder="Описание" required></textarea>
+            <input type="number" name="stock" placeholder="Количество" min="0" required />
+            <input type="number" name="discount" placeholder="Скидка (%)" min="0" max="100" value="0" />
+            <input type="file" name="image_url" required />
+            <button type="submit" name="add_product">Добавить</button>
+        </form>
+
         <!-- Список товаров -->
-        <h3>Список товаров</h3>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Название</th>
-                <th>Категория</th>
-                <th>Цена</th>
-                <th>Скидка</th>
-                <th>На складе</th>
-                <th>Изображение</th>
-                <th>Действия</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($products as $product): ?>
-                <tr>
-                    <td><?= $product['id'] ?></td>
-                    <td>
-                        <form method="POST" enctype="multipart/form-data" class="update-form">
-                            <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required />
-                    </td>
-                    <td>
-                        <select name="category_id" required>
-                            <option value="">Без категории</option>
-                            <?php foreach ($categories as $category): ?>
-                                <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($category['name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                    <td><input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" min="0" required /></td>
-                    <td><input type="number" name="discount" value="<?= $product['discount'] ?>" min="0" max="100" /></td>
-                    <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
-                    <td>
-                        <?php if ($product['image_url']): ?>
-                            <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
-                        <?php endif; ?>
-                        <input type="hidden" name="current_image" value="<?= htmlspecialchars($product['image_url']) ?>" />
-                        <input type="file" name="image_url" />
-                    </td>
-                    <td class="actions">
-                        <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
-                        <button type="submit" name="update_product">Обновить</button>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Категория</th>
+                        <th>Цена</th>
+                        <th>Скидка</th>
+                        <th>На складе</th>
+                        <th>Изображение</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($products as $product): ?>
+                    <tr>
+                        <form method="POST" enctype="multipart/form-data">
+                            <td><?= $product['id'] ?></td>
+                            <td><input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required /></td>
+                            <td>
+                                <select name="category_id" required>
+                                    <option value="">Без категории</option>
+                                    <?php foreach ($categories as $category): ?>
+                                        <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($category['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td><input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" min="0" required /></td>
+                            <td><input type="number" name="discount" value="<?= $product['discount'] ?>" min="0" max="100" /></td>
+                            <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
+                            <td>
+                                <?php if ($product['image_url']): ?>
+                                    <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
+                                <?php endif; ?>
+                                <input type="hidden" name="current_image" value="<?= htmlspecialchars($product['image_url']) ?>" />
+                                <input type="file" name="image_url" />
+                            </td>
+                            <td class="actions">
+                                <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
+                                <button type="submit" name="update_product">Обновить</button>
+                                <button type="submit" name="delete_product" class="delete" onclick="return confirm('Вы уверены?');">Удалить</button>
+                            </td>
                         </form>
-                        <form method="POST" style="display: inline;">
-                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
-                            <button type="submit" name="delete_product" class="delete">Удалить</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </table>
-</div>
+
     <!-- Управление категориями -->
     <div id="categories" class="tab-content">
         <h2>Управление категориями</h2>
