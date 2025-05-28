@@ -164,7 +164,6 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 .product-image {
     position: relative;
     width: 100%;
-    padding-top: 100%;
     background: #f5f5f5;
     overflow: hidden;
 }
