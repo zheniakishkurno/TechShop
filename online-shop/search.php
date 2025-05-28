@@ -123,25 +123,4 @@ document.querySelectorAll('.quantity-btn').forEach(button => {
 <script src="profile.js"></script>
 
 <?php require_once 'footer.php'; ?>
-<style>
-    .product-card {
-        width: 220px;
-        padding: 10px;
-    }
-    .product-image img {
-        max-height: 140px;
-    }
-    .product-info h3 {
-        font-size: 14px;
-    }
-    .product-price {
-        font-size: 14px;
-    }
-    .quantity-control {
-        font-size: 12px;
-    }
-    .product-actions .btn {
-        font-size: 13px;
-        padding: 6px 10px;
-    }
-</style>
+
