@@ -104,54 +104,54 @@ require_once 'header.php';
     </div>
 </div>
 
-<!-- Добавляем необходимые скрипты -->
-<script>
-// Обработчики для кнопок количества
-document.querySelectorAll('.quantity-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const input = this.parentElement.querySelector('.quantity-input');
-        if (this.classList.contains('minus') && input.value > 1) {
-            input.value--;
-        } else if (this.classList.contains('plus')) {
-            const max = parseInt(input.getAttribute('max')) || 999;
-            if (input.value < max) input.value++;
-        }
-    });
-});
-</script>
-
 <script src="profile.js"></script>
+
 <script>
-document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', () => {
-        const productId = button.dataset.id;
-        const productName = button.dataset.name;
-        const productPrice = parseFloat(button.dataset.price);
-        const quantityInput = button.parentElement.querySelector('.quantity-input');
-        const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+document.addEventListener('DOMContentLoaded', function () {
+    // Обработчик кнопок +/- количества
+    document.querySelectorAll('.quantity-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const input = this.parentElement.querySelector('input[type="number"]');
+            let value = parseInt(input.value);
+            const max = parseInt(input.getAttribute('max')) || 99;
 
-        // Получить текущую корзину из localStorage
-        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+            if (this.classList.contains('minus') && value > 1) {
+                input.value = value - 1;
+            } else if (this.classList.contains('plus') && value < max) {
+                input.value = value + 1;
+            }
+        });
+    });
 
-        // Если товар уже в корзине, увеличиваем количество
-        if (cart[productId]) {
-            cart[productId].quantity += quantity;
-        } else {
-            cart[productId] = {
-                name: productName,
-                price: productPrice,
-                quantity: quantity
-            };
-        }
+    // Обработчик всех кнопок "В корзину"
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.dataset.id;
+            const productName = this.dataset.name;
+            const productPrice = parseFloat(this.dataset.price);
+            const quantityInput = this.closest('.product-actions').querySelector('.quantity-input');
+            const quantity = parseInt(quantityInput.value) || 1;
 
-        // Сохраняем обратно в localStorage
-        localStorage.setItem('cart', JSON.stringify(cart));
+            let cart = JSON.parse(localStorage.getItem('cart')) || {};
 
-        // Уведомление
-        alert(`Добавлено в корзину:\n${productName}\nКоличество: ${quantity}\nЦена за единицу: ${productPrice} ₽`);
+            if (cart[productId]) {
+                cart[productId].quantity += quantity;
+            } else {
+                cart[productId] = {
+                    name: productName,
+                    price: productPrice,
+                    quantity: quantity
+                };
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            alert(`Добавлено в корзину:\n${productName}\nКоличество: ${quantity}\nЦена за единицу: ${productPrice} ₽`);
+        });
     });
 });
 </script>
+
 
 <?php require_once 'footer.php'; ?>
 
