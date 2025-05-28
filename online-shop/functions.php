@@ -269,12 +269,12 @@ $order_id = $order_stmt->fetchColumn(); // вместо lastInsertId()
     }
 }
 
+function searchProductsByName($searchQuery) {
+    global $pdo;  // или как у тебя подключение к базе
 
-function searchProductsByName($query) {
-    global $pdo;
-    $query = "%$query%";
-    $stmt = $pdo->prepare("SELECT * FROM products WHERE LOWER(name) LIKE LOWER(?)");
-    $stmt->execute([$query]);
+    $sql = "SELECT * FROM products WHERE name LIKE :search";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['search' => '%' . $searchQuery . '%']);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
