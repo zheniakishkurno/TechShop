@@ -24,7 +24,8 @@ if (isset($_POST['refresh_table'])) {
     } catch (PDOException $e) {
         $_SESSION['error'] = "Ошибка при обновлении таблицы: " . $e->getMessage();
     }
-    
+}
+
 // Проверка авторизации и прав администратора
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
