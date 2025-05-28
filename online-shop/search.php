@@ -1,4 +1,4 @@
-<?php
+]<?php
 require_once 'config.php';
 require_once 'functions.php';
 
@@ -33,7 +33,7 @@ require_once 'header.php';
         <!-- Хлебные крошки -->
         <div class="breadcrumbs">
             <a href="index.php">Главная</a> / 
-            <a href="catalog.php">Каталог</a> / 
+            <a href="index.php#products">Каталог</a>/ 
             <span>Поиск: "<?= htmlspecialchars($searchQuery) ?>"</span>
         </div>
 
