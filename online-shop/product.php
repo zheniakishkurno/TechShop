@@ -85,11 +85,11 @@ require_once 'header.php';
                     <button class="btn add-to-cart" data-id="<?= $product['id'] ?>">В корзину</button>
                 </div>
                 
-                <div class="product-description">
-                    <h3>Описание</h3>
-                  <span><?= htmlspecialchars($product['name'] ?? '') ?></span>
+<div class="product-description">
+    <h3>Описание</h3>
+    <span><?= htmlspecialchars($product['name'] ?? '') ?></span>
+</div>
 
-                </div>
             </div>
         </div>
 
