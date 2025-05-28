@@ -139,146 +139,261 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 </script>
 
 <?php require_once 'footer.php'; ?>
-<script>
+<style>
+.search-results-page {
+    padding: 20px 0 40px;
+}
+
+.search-title {
+    font-size: 24px;
+    margin: 20px 0 30px;
+    color: #333;
+    font-weight: 600;
+}
+
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
 }
 
 .product-card {
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    height: 100%;
+    border: 1px solid #eee;
 }
 
 .product-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.product-image {
+.product-image-container {
     position: relative;
     width: 100%;
-    background: #f5f5f5;
+    padding-top: 100%; /* Квадратное соотношение */
+    background: #f9f9f9;
     overflow: hidden;
 }
 
-.product-image img {
+.product-image {
     position: absolute;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 15px;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
 }
 
 .discount-badge {
     position: absolute;
     top: 10px;
-    left: 10px;
-    background: #ff3d00;
+    right: 10px;
+    background: linear-gradient(135deg, #ff3d00, #ff6d00);
     color: #fff;
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
+    z-index: 2;
 }
 
 .product-info {
-    padding: 15px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
-.product-info h3 {
-    font-size: 18px;
-    margin: 0 0 8px;
-    line-height: 1.3;
+.product-name {
+    font-size: 16px;
+    margin: 0 0 12px;
+    line-height: 1.4;
+    color: #333;
+    font-weight: 500;
+    flex-grow: 1;
 }
 
 .product-meta {
-    font-size: 14px;
-    color: #666;
+    margin-bottom: 15px;
+}
+
+.availability {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
     margin-bottom: 10px;
+}
+
+.availability.in-stock {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.availability.out-of-stock {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.rating {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    margin-bottom: 12px;
 }
 
-.product-meta .availability.in-stock {
-    color: #4caf50;
-    font-weight: bold;
+.stars {
+    color: #ffc107;
+    font-size: 14px;
+    letter-spacing: 1px;
 }
 
-.product-meta .availability.out-of-stock {
-    color: #f44336;
-    font-weight: bold;
+.reviews {
+    font-size: 12px;
+    color: #757575;
+    margin-left: 5px;
 }
 
 .product-price {
-    margin: 10px 0;
-    font-size: 16px;
+    margin: 10px 0 15px;
 }
 
-.product-price .old-price {
-    color: #888;
+.old-price {
+    color: #9e9e9e;
     text-decoration: line-through;
+    font-size: 14px;
     margin-right: 8px;
 }
 
-.product-price .current-price {
-    font-weight: bold;
-    color: #000;
-    font-size: 18px;
+.current-price {
+    font-weight: 700;
+    color: #333;
+    font-size: 20px;
 }
 
 .product-actions {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-    padding-top: 10px;
     gap: 10px;
+    margin-top: auto;
 }
 
 .quantity-control {
     display: flex;
     align-items: center;
-    border: 1px solid #ddd;
+    border: 1px solid #e0e0e0;
     border-radius: 6px;
     overflow: hidden;
-    max-width: 100px;
+    width: 100px;
 }
 
 .quantity-btn {
-    background: #eee;
+    background: #f5f5f5;
     border: none;
-    padding: 6px 10px;
+    padding: 8px 12px;
     cursor: pointer;
+    font-size: 16px;
+    color: #555;
+    transition: background 0.2s;
+}
+
+.quantity-btn:hover {
+    background: #e0e0e0;
 }
 
 .quantity-input {
     width: 40px;
     border: none;
     text-align: center;
+    font-size: 14px;
+    -moz-appearance: textfield;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .btn.add-to-cart {
     flex-grow: 1;
-    background: #1976d2;
+    background: linear-gradient(135deg, #1976d2, #2196f3);
     color: white;
     border: none;
     padding: 10px;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .btn.add-to-cart:hover {
-    background: #125ea2;
+    background: linear-gradient(135deg, #1565c0, #1976d2);
+    box-shadow: 0 3px 10px rgba(25, 118, 210, 0.3);
 }
 
-</script>
+.no-results {
+    text-align: center;
+    padding: 50px 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    margin: 30px 0;
+}
+
+.no-results p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.no-results .btn {
+    background: #1976d2;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.no-results .btn:hover {
+    background: #1565c0;
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+    }
+    
+    .product-info {
+        padding: 15px;
+    }
+    
+    .product-actions {
+        flex-direction: column;
+    }
+    
+    .quantity-control {
+        width: 100%;
+    }
+}
+</style>
