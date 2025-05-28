@@ -120,86 +120,86 @@ if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Обработка товаров
-if (isset($_POST['add_product'])) {
-    $image_url = null;
-    if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
-        $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-        $image_url = 'uploads/' . $image_name;
-        move_uploaded_file($_FILES['image_url']['tmp_name'], $image_url);
-    }
-    
-    // Исправление для description
-    $description = $_POST['description'] ?? '';
-    
-    $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([
-        $_POST['name'] ?? '',
-        $_POST['category_id'] ?? 0,
-        $_POST['price'] ?? 0,
-        $description,
-        $_POST['stock'] ?? 0,
-        $image_url,
-        $_POST['discount'] ?? 0
-    ]);
-    
-    $_SESSION['message'] = "Товар успешно добавлен!";
-    
-    // Безопасный редирект
-    if (!headers_sent()) {
-        header("Location: admin.php");
-    } else {
-        echo '<script>window.location.href="admin.php";</script>';
-    }
-    exit;
-}
+        if (isset($_POST['add_product'])) {
+            $image_url = null;
+            if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
+                $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
+                $upload_path = 'online-shop/images/' . $image_name;
+                
+                if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
+                    copy($upload_path, 'uploads/' . $image_name);
+                    $image_url = 'online-shop/images/' . $image_name;
+                }
+            }
+            
+            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $_POST['name'],
+                $_POST['category_id'],
+                $_POST['price'],
+                $_POST['description'] ?? '',
+                $_POST['stock'],
+                $image_url,
+                $_POST['discount'] ?? 0
+            ]);
+            
+            $_SESSION['message'] = "Товар успешно добавлен!";
+            header("Location: admin.php");
+            exit;
+        }
 
         if (isset($_POST['update_product'])) {
+            $product_id = $_POST['product_id'];
             $image_url = $_POST['current_image'];
+            
             if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
-                // Удаляем старое изображение, если оно есть
-                if ($image_url && file_exists($image_url)) {
-                    unlink($image_url);
+                // Удаляем старое изображение
+                if ($image_url) {
+                    @unlink($image_url);
+                    @unlink('uploads/' . basename($image_url));
                 }
                 
                 $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-                $image_url = 'uploads/' . $image_name;
-                move_uploaded_file($_FILES['image_url']['tmp_name'], $image_url);
+                $upload_path = 'online-shop/images/' . $image_name;
+                
+                if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
+                    copy($upload_path, 'uploads/' . $image_name);
+                    $image_url = 'online-shop/images/' . $image_name;
+                }
             }
-            $description = $_POST['description'] ?? '';
-$discount = $_POST['discount'] ?? 0;
-$product_id = $_POST['product_id'] ?? 0;
-
+            
             $stmt = $pdo->prepare("UPDATE products SET name=?, category_id=?, price=?, description=?, stock=?, image_url=?, discount=? WHERE id=?");
-$stmt->execute([
-    $_POST['name'],
-    $_POST['category_id'],
-    $_POST['price'],
-    $description,        
-    $_POST['stock'],
-    $image_url,
-    $discount,          
-    $product_id          
-]);
-
+            $stmt->execute([
+                $_POST['name'],
+                $_POST['category_id'],
+                $_POST['price'],
+                $_POST['description'] ?? '',
+                $_POST['stock'],
+                $image_url,
+                $_POST['discount'] ?? 0,
+                $product_id
+            ]);
+            
             $_SESSION['message'] = "Товар успешно обновлен!";
+            header("Location: admin.php");
+            exit;
         }
 
         if (isset($_POST['delete_product'])) {
-            // Получаем имя файла из URL
-            $image_name = basename($product['image_url']);
-            
-            // Удаляем изображение товара
             $stmt = $pdo->prepare("SELECT image_url FROM products WHERE id=?");
             $stmt->execute([$_POST['product_id']]);
             $product = $stmt->fetch();
             
-            if ($product['image_url'] && file_exists($product['image_url'])) {
-                unlink($product['image_url']);
+            if ($product['image_url']) {
+                @unlink($product['image_url']);
+                @unlink('uploads/' . basename($product['image_url']));
             }
             
             $stmt = $pdo->prepare("DELETE FROM products WHERE id=?");
             $stmt->execute([$_POST['product_id']]);
             $_SESSION['message'] = "Товар успешно удален!";
+            header("Location: admin.php");
+            exit;
         }
 
         // Обработка категорий
@@ -302,20 +302,19 @@ $stmt->execute([
             $_SESSION['message'] = "Заказ успешно обновлен!";
         }
 
-if (isset($_POST['delete_order'])) {
-    $order_id = $_POST['order_id'];
+        if (isset($_POST['delete_order'])) {
+            $order_id = $_POST['order_id'];
 
-    // Удаляем связанные элементы заказа
-    $stmt = $pdo->prepare("DELETE FROM order_items WHERE order_id=?");
-    $stmt->execute([$order_id]);
+            // Удаляем связанные элементы заказа
+            $stmt = $pdo->prepare("DELETE FROM order_items WHERE order_id=?");
+            $stmt->execute([$order_id]);
 
-    // Удаляем заказ
-    $stmt = $pdo->prepare("DELETE FROM orders WHERE id=?");
-    $stmt->execute([$order_id]);
+            // Удаляем заказ
+            $stmt = $pdo->prepare("DELETE FROM orders WHERE id=?");
+            $stmt->execute([$order_id]);
 
-    $_SESSION['message'] = "Заказ успешно удален!";
-}
-
+            $_SESSION['message'] = "Заказ успешно удален!";
+        }
 
         // Обработка отзывов
         if (isset($_POST['update_review'])) {
@@ -334,14 +333,13 @@ if (isset($_POST['delete_order'])) {
             $_SESSION['message'] = "Отзыв успешно удален!";
         }
 
-header("Location: admin.php");
-exit;
+        header("Location: admin.php");
+        exit;
     } catch (PDOException $e) {
         $_SESSION['error'] = "Ошибка: " . $e->getMessage();
         header("Location: admin.php");
         exit();
     }
-    
 }
 
 // Получение данных для отображения
@@ -409,6 +407,32 @@ $reviews = $pdo->query("SELECT
 
         .button-group .refresh-button {
             margin-bottom: 0;
+        }
+
+        .update-form {
+            margin: 0;
+            display: inline;
+        }
+
+        .actions {
+            white-space: nowrap;
+        }
+
+        .actions button {
+            margin: 2px;
+        }
+
+        .delete {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete:hover {
+            background-color: #da190b;
         }
     </style>
     <script src="js/admin.js" defer></script>
@@ -488,9 +512,12 @@ $reviews = $pdo->query("SELECT
             <?php foreach ($products as $product): ?>
                 <tr>
                     <td><?= $product['id'] ?></td>
-                    <td><input type="text" name="products[<?= $product['id'] ?>][name]" value="<?= htmlspecialchars($product['name']) ?>" required form="products-form" /></td>
                     <td>
-                        <select name="products[<?= $product['id'] ?>][category_id]" required form="products-form">
+                        <form method="POST" enctype="multipart/form-data" class="update-form">
+                            <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required />
+                    </td>
+                    <td>
+                        <select name="category_id" required>
                             <option value="">Без категории</option>
                             <?php foreach ($categories as $category): ?>
                                 <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>>
@@ -499,20 +526,24 @@ $reviews = $pdo->query("SELECT
                             <?php endforeach; ?>
                         </select>
                     </td>
-                    <td><input type="number" name="products[<?= $product['id'] ?>][price]" value="<?= $product['price'] ?>" step="0.01" min="0" required form="products-form" /></td>
-                    <td><input type="number" name="products[<?= $product['id'] ?>][discount]" value="<?= $product['discount'] ?>" min="0" max="100" form="products-form" /></td>
-                    <td><input type="number" name="products[<?= $product['id'] ?>][stock]" value="<?= $product['stock'] ?>" min="0" required form="products-form" /></td>
+                    <td><input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" min="0" required /></td>
+                    <td><input type="number" name="discount" value="<?= $product['discount'] ?>" min="0" max="100" /></td>
+                    <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
                     <td>
                         <?php if ($product['image_url']): ?>
                             <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
                         <?php endif; ?>
-                        <input type="hidden" name="products[<?= $product['id'] ?>][current_image]" value="<?= htmlspecialchars($product['image_url']) ?>" />
-                        <input type="file" name="products[<?= $product['id'] ?>][image_url]" />
+                        <input type="hidden" name="current_image" value="<?= htmlspecialchars($product['image_url']) ?>" />
+                        <input type="file" name="image_url" />
                     </td>
                     <td class="actions">
-                        <input type="hidden" name="products[<?= $product['id'] ?>][product_id]" value="<?= $product['id'] ?>" />
+                        <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
                         <button type="submit" name="update_product">Обновить</button>
-                        <button type="submit" name="delete_product" class="delete">Удалить</button>
+                        </form>
+                        <form method="POST" style="display: inline;">
+                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
+                            <button type="submit" name="delete_product" class="delete">Удалить</button>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
