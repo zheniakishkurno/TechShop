@@ -92,132 +92,28 @@ if (!isAdmin()) {
     exit('Доступ запрещен');
 }
 
-// Создание необходимых директорий с правами доступа
-$upload_dirs = ['uploads', 'online-shop/images'];
-foreach ($upload_dirs as $dir) {
-    if (!file_exists($dir)) {
-        if (!mkdir($dir, 0777, true)) {
-            $_SESSION['error'] = "Не удалось создать директорию: " . $dir;
-            error_log("Failed to create directory: " . $dir);
-        } else {
-            chmod($dir, 0777); // Установка прав доступа после создания
-        }
-    }
+// Создаем папку для загрузок, если ее нет
+if (!file_exists('uploads')) {
+    mkdir('uploads', 0777, true);
 }
 
-// Функция для безопасной загрузки изображения
-function handleImageUpload($file, $old_image = null) {
-    global $upload_dirs;
-    
-    try {
-        if (!isset($file['error']) || is_array($file['error'])) {
-            throw new Exception('Некорректные параметры файла.');
-        }
-
-        switch ($file['error']) {
-            case UPLOAD_ERR_OK:
-                break;
-            case UPLOAD_ERR_NO_FILE:
-                return null;
-            case UPLOAD_ERR_INI_SIZE:
-            case UPLOAD_ERR_FORM_SIZE:
-                throw new Exception('Превышен размер файла.');
-            default:
-                throw new Exception('Неизвестная ошибка загрузки.');
-        }
-
-        if ($file['size'] > 5242880) { // 5MB
-            throw new Exception('Файл слишком большой.');
-        }
-
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime_type = $finfo->file($file['tmp_name']);
-
-        $allowed_types = [
-            'image/jpeg' => 'jpg',
-            'image/png' => 'png',
-            'image/gif' => 'gif'
-        ];
-
-        if (!array_key_exists($mime_type, $allowed_types)) {
-            throw new Exception('Неверный формат файла. Разрешены только JPG, PNG и GIF.');
-        }
-
-        // Генерируем уникальное имя файла
-        $extension = $allowed_types[$mime_type];
-        $image_name = uniqid() . '_' . time() . '.' . $extension;
-        $upload_path = 'online-shop/images/' . $image_name;
-
-        // Удаляем старое изображение, если оно существует
-        if ($old_image && file_exists($old_image)) {
-            unlink($old_image);
-            error_log("Deleted old image: " . $old_image);
-        }
-
-        // Перемещаем загруженный файл
-        if (!move_uploaded_file($file['tmp_name'], $upload_path)) {
-            throw new Exception('Не удалось сохранить файл.');
-        }
-
-        // Создаем копию в папке uploads
-        if (!copy($upload_path, 'uploads/' . $image_name)) {
-            error_log("Failed to create copy in uploads folder: " . $image_name);
-        }
-
-        error_log("Successfully uploaded image: " . $upload_path);
-        return $upload_path;
-
-    } catch (Exception $e) {
-        error_log("Image upload error: " . $e->getMessage());
-        throw $e;
-    }
+if (!file_exists('online-shop/images')) {
+    mkdir('online-shop/images', 0777, true);
 }
 
 // Обработка загрузки изображений для продуктов
-if (isset($_POST['add_product']) || isset($_POST['update_product'])) {
-    try {
-        $image_url = null;
-        
-        if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] !== UPLOAD_ERR_NO_FILE) {
-            $old_image = isset($_POST['current_image']) ? $_POST['current_image'] : null;
-            $image_url = handleImageUpload($_FILES['image_url'], $old_image);
-        } elseif (isset($_POST['current_image'])) {
-            $image_url = $_POST['current_image'];
-        }
-
-        if (isset($_POST['add_product'])) {
-            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([
-                $_POST['name'],
-                $_POST['category_id'],
-                $_POST['price'],
-                $_POST['description'] ?? '',
-                $_POST['stock'],
-                $image_url,
-                $_POST['discount'] ?? 0
-            ]);
-            $_SESSION['message'] = "Товар успешно добавлен!";
-        } else {
-            $stmt = $pdo->prepare("UPDATE products SET name=?, category_id=?, price=?, stock=?, image_url=?, discount=? WHERE id=?");
-            $stmt->execute([
-                $_POST['name'],
-                $_POST['category_id'],
-                $_POST['price'],
-                $_POST['stock'],
-                $image_url,
-                $_POST['discount'] ?? 0,
-                $_POST['product_id']
-            ]);
-            $_SESSION['message'] = "Товар успешно обновлен!";
-        }
-        
-    } catch (Exception $e) {
-        $_SESSION['error'] = "Ошибка: " . $e->getMessage();
-        error_log("Product operation error: " . $e->getMessage());
-    }
+if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
+    $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
+    $upload_path = 'online-shop/images/' . $image_name; // Изменённый путь
     
-    header("Location: admin.php");
-    exit;
+    if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
+        // Создаем копию в папке uploads для админки
+        copy($upload_path, 'uploads/' . $image_name);
+        $image_url = 'online-shop/images/' . $image_name; // Изменённый путь в БД
+        $_SESSION['message'] = "Изображение успешно загружено!";
+    } else {
+        $_SESSION['error'] = "Ошибка при загрузке изображения.";
+    }
 }
 
 // Обработка POST-запросов
@@ -235,6 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['message'] = "Товар и изображение успешно добавлены!";
                 } else {
                     $_SESSION['error'] = "Ошибка при загрузке изображения.";
+                    header("Location: admin.php");
+                    exit;
                 }
             }
             
