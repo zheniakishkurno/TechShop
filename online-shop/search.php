@@ -76,15 +76,27 @@ require_once 'header.php';
                         </div>
                         
                         <!-- Количество товара -->
-                        <div class="product-actions">
-                    <div class="quantity">
-                        <button class="quantity-btn minus">-</button>
-                        <input type="number" value="1" min="1" max="<?= isset($product['stock']) ? $product['stock'] : 0 ?>" id="quantity-input">
-                        <button class="quantity-btn plus">+</button>
-                    </div>
-                    
-                    <button class="btn add-to-cart" data-id="<?= $product['id'] ?>">В корзину</button>
-                </div>
+<div class="product-actions">
+    <div class="quantity">
+        <button class="quantity-btn minus">-</button>
+        <input type="number"
+               class="quantity-input"
+               value="1"
+               min="1"
+               max="<?= isset($product['stock']) ? $product['stock'] : 0 ?>"
+               data-id="<?= $product['id'] ?>">
+        <button class="quantity-btn plus">+</button>
+    </div>
+
+    <button class="btn add-to-cart"
+            data-id="<?= $product['id'] ?>"
+            data-name="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>"
+            data-price="<?= isset($product['discount']) && $product['discount'] > 0
+                ? number_format($product['price'] * (1 - $product['discount']/100), 2, '.', '')
+                : number_format($product['price'], 2, '.', '') ?>">
+        В корзину
+    </button>
+</div>
 
                         
                         <div class="product-description">
