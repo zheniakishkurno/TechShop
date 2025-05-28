@@ -23,18 +23,19 @@ document.addEventListener("DOMContentLoaded", function () {
         cartContainer.appendChild(totalElement);
     }
 
-    function addToCart(productId, name, price) {
-        const existingItem = cart.find(item => item.id === productId);
+function addToCart(productId, name, price, quantityToAdd) {
+    const existingItem = cart.find(item => item.id === productId);
 
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({ id: productId, name, price, quantity: 1 });
-        }
-
-        localStorage.setItem("cart", JSON.stringify(cart));
-        updateCartDisplay();
+    if (existingItem) {
+        existingItem.quantity += quantityToAdd;
+    } else {
+        cart.push({ id: productId, name, price, quantity: quantityToAdd });
     }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartDisplay();
+}
+
 
     function removeFromCart(index) {
         cart.splice(index, 1);
@@ -56,14 +57,19 @@ document.addEventListener("DOMContentLoaded", function () {
         updateCartDisplay();
     }
 
-    document.querySelectorAll(".add-to-cart").forEach(button => {
-        button.addEventListener("click", function () {
-            const productId = this.getAttribute("data-id");
-            const productName = this.parentElement.querySelector("h3").innerText;
-            const productPrice = parseFloat(this.parentElement.querySelector("p").innerText.replace(" руб.", ""));
-            addToCart(productId, productName, productPrice);
-        });
+document.querySelectorAll(".add-to-cart").forEach(button => {
+    button.addEventListener("click", function () {
+        const productId = this.getAttribute("data-id");
+        const productName = this.getAttribute("data-name");
+        const productPrice = parseFloat(this.getAttribute("data-price"));
+
+        const quantityInput = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+        const quantity = parseInt(quantityInput.value, 10);
+
+        addToCart(productId, productName, productPrice, quantity);
     });
+});
+
 
     document.getElementById("checkout-btn").addEventListener("click", function () {
         if (cart.length === 0) {
@@ -90,4 +96,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateCartDisplay();
 
+});
+document.querySelectorAll(".quantity-btn").forEach(button => {
+    button.addEventListener("click", function () {
+        const input = this.parentElement.querySelector(".quantity-input");
+        let value = parseInt(input.value, 10);
+        const max = parseInt(input.max, 10);
+
+        if (this.classList.contains("plus") && value < max) {
+            input.value = value + 1;
+        } else if (this.classList.contains("minus") && value > 1) {
+            input.value = value - 1;
+        }
+    });
 });
