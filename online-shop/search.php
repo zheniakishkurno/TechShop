@@ -130,10 +130,25 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         const quantityInput = button.parentElement.querySelector('.quantity-input');
         const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
 
-        // Здесь можно отправить данные на сервер, добавить в localStorage, обновить UI и т.п.
+        // Получить текущую корзину из localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+        // Если товар уже в корзине, увеличиваем количество
+        if (cart[productId]) {
+            cart[productId].quantity += quantity;
+        } else {
+            cart[productId] = {
+                name: productName,
+                price: productPrice,
+                quantity: quantity
+            };
+        }
+
+        // Сохраняем обратно в localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Уведомление
         alert(`Добавлено в корзину:\n${productName}\nКоличество: ${quantity}\nЦена за единицу: ${productPrice} ₽`);
-        
-        // Пример: можно добавить AJAX запрос для добавления в корзину
     });
 });
 </script>
