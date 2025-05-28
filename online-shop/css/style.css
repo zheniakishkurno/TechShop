@@ -1078,3 +1078,49 @@ ul li strong {
       width: 100%;
     }
   }
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* расстояние между карточками */
+}
+
+.product-card {
+    width: 220px; /* уменьшенная ширина карточки */
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.product-image img {
+    width: 100%;  /* чтобы картинка не выходила за карточку */
+    height: auto;
+    max-height: 140px; /* уменьшенная высота изображения */
+    object-fit: contain;
+}
+
+.product-info h3 {
+    font-size: 14px; /* уменьшенный размер шрифта */
+    margin: 8px 0;
+}
+
+.product-price {
+    font-size: 14px; /* уменьшенный размер цены */
+}
+
+.quantity-control {
+    font-size: 12px;
+}
+
+.product-actions .btn {
+    font-size: 13px;
+    padding: 6px 10px;
+}
+
+/* Дополнительно можно уменьшить отступы, если нужно */
