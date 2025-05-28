@@ -82,6 +82,226 @@ require_once 'header.php';
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Стили для секции отзывов */
+        .reviews-section {
+            margin-top: 60px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 32px;
+        }
+
+        .reviews-header {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .reviews-summary {
+            text-align: center;
+            padding: 24px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .big-rating {
+            font-size: 64px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .rating-stars {
+            color: #FFB800;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .total-reviews {
+            color: #666;
+            font-size: 15px;
+        }
+
+        /* Форма отзыва */
+        .review-form {
+            background: #f8f9fa;
+            padding: 24px;
+            border-radius: 12px;
+        }
+
+        .review-form h3 {
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .star-rating {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            gap: 8px;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            font-size: 32px;
+            color: #ddd;
+            transition: color 0.2s;
+        }
+
+        .star-rating label:before {
+            content: '★';
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating:hover label:hover,
+        .star-rating:hover label:hover ~ label {
+            color: #FFB800;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 120px;
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0d6efd;
+        }
+
+        .submit-review {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-review:hover {
+            background: #0b5ed7;
+        }
+
+        /* Список отзывов */
+        .reviews-list {
+            display: grid;
+            gap: 24px;
+        }
+
+        .review {
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .review:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .review-date {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .review-rating {
+            color: #FFB800;
+            font-size: 20px;
+            margin: 12px 0;
+        }
+
+        .review-text {
+            color: #444;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .alert-success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .reviews-header {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .reviews-summary {
+                padding: 20px;
+            }
+
+            .big-rating {
+                font-size: 48px;
+            }
+
+            .rating-stars {
+                font-size: 24px;
+            }
+
+            .review {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 
 <div class="product-page">
