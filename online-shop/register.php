@@ -42,11 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Регистрация
             $hashed_password = hashPassword($password);
             $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, phone, password) VALUES (?, ?, ?, ?, ?)");
-
-            if ($stmt->execute([$first_name, $last_name, $email, $phone, $hashed_password])) {
-                // Регистрация прошла успешно, показываем успешное сообщение
-                $success = 'Регистрация прошла успешно! Теперь вы можете войти.';
-            } else {
+            
+             if ($stmt->execute([$first_name, $last_name, $email, $phone, $hashed_password])) {
+                // Регистрация прошла успешно, перенаправляем на страницу входа
+                $_SESSION['registration_success'] = 'Регистрация прошла успешно! Теперь вы можете войти.';
+                header('Location: login.php');
+                exit;
+            }
+            else {
                 $error = 'Ошибка при регистрации. Пожалуйста, попробуйте позже.';
             }
         }
