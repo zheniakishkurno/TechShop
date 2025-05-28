@@ -8,13 +8,13 @@ $products = [];
 if (!empty($searchQuery)) {
     $products = searchProductsByName($searchQuery);
 
+    // Если найден ровно один товар — редиректим на страницу товара
     if (count($products) === 1) {
         $productId = $products[0]['id'];
         header("Location: product.php?id=" . urlencode($productId));
         exit;
     }
 }
-
 
 $page_title = 'Результаты поиска: ' . htmlspecialchars($searchQuery);
 require_once 'header.php';
