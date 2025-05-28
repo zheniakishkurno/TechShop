@@ -87,7 +87,8 @@ require_once 'header.php';
                 
                 <div class="product-description">
                     <h3>Описание</h3>
-                    <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
+                  <p><?= nl2br(htmlspecialchars((string)($product['description'] ?? ''))) ?></p>
+
                 </div>
             </div>
         </div>
