@@ -260,6 +260,7 @@ $reviews = $pdo->query("SELECT
     JOIN products p ON r.product_id = p.id
     ORDER BY r.created_at DESC")->fetchAll();
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
