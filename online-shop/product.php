@@ -267,123 +267,97 @@ require_once 'header.php';
         }
 
         .reviews-section {
-            width: 100%;
-            max-width: 100%;
-            background: #fff;
+            margin-top: 50px;
             padding: 30px;
+            background: #fff;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-top: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
-        .reviews-section h2 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-        }
-        
-        .review-form {
-            width: 100%;
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
+
+        .reviews-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
             margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
         }
-        
-        .reviews-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            padding: 20px 0;
-            width: 100%;
+
+        .reviews-summary {
+            flex: 0 0 250px;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
-        
-        .review {
-            width: 100%;
+
+        .big-rating {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .rating-stars {
+            font-size: 24px;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .total-reviews {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .review-form {
+            flex: 1;
             background: #f8f9fa;
             padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .review-form h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .form-group {
             margin-bottom: 15px;
         }
-        
-        .review .rating {
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-        
-        .review strong {
+
+        .form-group label {
             display: block;
-            margin-bottom: 10px;
-            color: #333;
+            margin-bottom: 8px;
+            color: #555;
         }
-        
-        .review p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-        
-        .review small {
-            color: #888;
-        }
-        
+
         .star-rating {
-            display: inline-block;
+            display: inline-flex;
+            flex-direction: row-reverse;
+            gap: 5px;
         }
-        
+
         .star-rating input {
             display: none;
         }
-        
+
         .star-rating label {
-            float: right;
             cursor: pointer;
-            color: #ddd;
             font-size: 24px;
+            color: #ddd;
         }
-        
+
         .star-rating label:before {
             content: '★';
         }
-        
-        .star-rating input:checked ~ label {
+
+        .star-rating input:checked ~ label,
+        .star-rating:hover label:hover,
+        .star-rating:hover label:hover ~ label {
             color: #ffd700;
         }
-        
-        .star-rating:hover input ~ label {
-            color: #ddd;
-        }
-        
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            color: #ffd700 !important;
-        }
-        
-        .btn {
-            background: #007bff;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s;
-            width: 100%;
-        }
-        
-        .btn:hover {
-            background: #0056b3;
-            transform: translateY(-1px);
-        }
-        
-        .form-group {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        
+
         .form-group textarea {
             width: 100%;
             padding: 12px;
@@ -392,7 +366,80 @@ require_once 'header.php';
             resize: vertical;
             min-height: 100px;
         }
-        
+
+        .submit-review {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .submit-review:hover {
+            background: #0056b3;
+        }
+
+        .reviews-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .review {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .review-date {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .review-rating {
+            color: #ffd700;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .review-text {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         @media (max-width: 768px) {
             .product-container {
                 grid-template-columns: 1fr;
@@ -462,71 +509,78 @@ require_once 'header.php';
                 </div>
             </div>
             
-            <div id="reviews" class="reviews-section">
-                <h2>Отзывы о товаре</h2>
-                <div class="reviews-summary">
-                    <div class="average-rating">
+            <div class="reviews-section">
+                <div class="reviews-header">
+                    <div class="reviews-summary">
                         <div class="big-rating"><?= number_format($avg_rating, 1) ?></div>
-                        <div class="stars">
+                        <div class="rating-stars">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <?= $i <= $avg_rating ? '★' : '☆' ?>
                             <?php endfor; ?>
                         </div>
-                        <div class="reviews-count"><?= count($reviews) ?> отзывов</div>
+                        <div class="total-reviews"><?= count($reviews) ?> отзывов</div>
                     </div>
+
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <div class="review-form">
+                            <h3>Оставить отзыв</h3>
+                            
+                            <?php if ($review_error): ?>
+                                <div class="alert alert-error"><?= htmlspecialchars($review_error) ?></div>
+                            <?php endif; ?>
+                            
+                            <?php if ($review_success): ?>
+                                <div class="alert alert-success"><?= htmlspecialchars($review_success) ?></div>
+                            <?php endif; ?>
+
+                            <form method="POST">
+                                <div class="form-group">
+                                    <label>Оценка:</label>
+                                    <div class="star-rating">
+                                        <?php for ($i = 5; $i >= 1; $i--): ?>
+                                            <input type="radio" id="star<?= $i ?>" name="rating" value="<?= $i ?>" required>
+                                            <label for="star<?= $i ?>" title="<?= $i ?> звезд"></label>
+                                        <?php endfor; ?>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="comment">Комментарий:</label>
+                                    <textarea id="comment" name="comment" required></textarea>
+                                </div>
+
+                                <button type="submit" class="submit-review">Отправить отзыв</button>
+                            </form>
+                        </div>
+                    <?php else: ?>
+                        <p>Чтобы оставить отзыв, пожалуйста, <a href="login.php">войдите</a> в свой аккаунт.</p>
+                    <?php endif; ?>
                 </div>
 
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <div class="review-form">
-                        <h3>Оставить отзыв</h3>
-                        
-                        <?php if ($review_error): ?>
-                            <div class="alert alert-error"><?= htmlspecialchars($review_error) ?></div>
-                        <?php endif; ?>
-                        
-                        <?php if ($review_success): ?>
-                            <div class="alert alert-success"><?= htmlspecialchars($review_success) ?></div>
-                        <?php endif; ?>
-
-                        <form method="POST">
-                            <div class="form-group">
-                                <label>Оценка:</label>
-                                <div class="star-rating">
-                                    <?php for ($i = 5; $i >= 1; $i--): ?>
-                                        <input type="radio" id="star<?= $i ?>" name="rating" value="<?= $i ?>" required>
-                                        <label for="star<?= $i ?>" title="<?= $i ?> звезд"></label>
-                                    <?php endfor; ?>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="comment">Комментарий:</label>
-                                <textarea id="comment" name="comment" rows="4" required></textarea>
-                            </div>
-
-                            <button type="submit" class="btn">Отправить отзыв</button>
-                        </form>
-                    </div>
-                <?php else: ?>
-                    <p>Чтобы оставить отзыв, пожалуйста, <a href="login.php">войдите</a> в свой аккаунт.</p>
-                <?php endif; ?>
-
                 <div class="reviews-list">
-                    <?php foreach ($reviews as $review): ?>
-                        <div class="review">
-                            <div class="rating">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <span><?= $i <= $review['rating'] ? '★' : '☆' ?></span>
-                                <?php endfor; ?>
-                            </div>
-                            <p><strong><?= htmlspecialchars($review['first_name'] . ' ' . $review['last_name']) ?></strong></p>
-                            <p><?= htmlspecialchars($review['comment']) ?></p>
-                            <small>Дата: <?= date('d.m.Y H:i', strtotime($review['created_at'])) ?></small>
-                        </div>
-                    <?php endforeach; ?>
-                    
                     <?php if (empty($reviews)): ?>
                         <p>Пока нет отзывов. Будьте первым!</p>
+                    <?php else: ?>
+                        <?php foreach ($reviews as $review): ?>
+                            <div class="review">
+                                <div class="review-header">
+                                    <span class="reviewer-name">
+                                        <?= htmlspecialchars($review['first_name'] . ' ' . $review['last_name']) ?>
+                                    </span>
+                                    <span class="review-date">
+                                        <?= date('d.m.Y', strtotime($review['created_at'])) ?>
+                                    </span>
+                                </div>
+                                <div class="review-rating">
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <?= $i <= $review['rating'] ? '★' : '☆' ?>
+                                    <?php endfor; ?>
+                                </div>
+                                <div class="review-text">
+                                    <?= htmlspecialchars($review['comment']) ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
             </div>
@@ -539,3 +593,4 @@ require_once 'header.php';
 <script src="js/product.js"></script> <!-- Укажите правильный путь к вашему файлу JS -->
 
 <?php require_once 'footer.php'; ?> 
+
