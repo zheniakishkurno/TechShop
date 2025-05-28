@@ -282,7 +282,7 @@ function searchProductsByName(string $query): array {
     $stmt = $pdo->prepare("
         SELECT *
         FROM products
-        WHERE LOWER(name) LIKE LOWER(:query)
+        WHERE name ILIKE :query
         ORDER BY name ASC
         LIMIT 50
     ");
@@ -291,6 +291,7 @@ function searchProductsByName(string $query): array {
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 // Функции безопасности
 function hashPassword($password) {
