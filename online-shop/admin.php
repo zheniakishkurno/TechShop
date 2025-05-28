@@ -268,6 +268,23 @@ $reviews = $pdo->query("SELECT
     <title>Админ панель</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/admin.css" />
+    <style>
+        .refresh-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .refresh-button:hover {
+            background-color: #45a049;
+        }
+    </style>
     <script src="js/admin.js" defer></script>
 </head>
 <body>
@@ -297,6 +314,7 @@ $reviews = $pdo->query("SELECT
     <!-- Управление товарами -->
     <div id="products" class="tab-content active">
         <h2>Управление товарами</h2>
+        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
 
         <!-- Добавление товара -->
        <form method="POST" enctype="multipart/form-data" class="form">
@@ -377,6 +395,7 @@ $reviews = $pdo->query("SELECT
     <!-- Управление категориями -->
     <div id="categories" class="tab-content">
         <h2>Управление категориями</h2>
+        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
 
         <form method="POST" enctype="multipart/form-data" class="form">
             <h3>Добавить новую категорию</h3>
@@ -425,6 +444,7 @@ $reviews = $pdo->query("SELECT
     <!-- Управление пользователями -->
     <div id="users" class="tab-content">
         <h2>Управление пользователями</h2>
+        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
 
        <form method="POST" class="form">
     <h3>Добавить нового пользователя</h3>
@@ -485,6 +505,7 @@ $reviews = $pdo->query("SELECT
     <!-- Управление заказами -->
     <div id="orders" class="tab-content">
         <h2>Управление заказами</h2>
+        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
 
         <h3>Список заказов</h3>
         <table>
@@ -538,6 +559,7 @@ $reviews = $pdo->query("SELECT
     <!-- Управление отзывами -->
     <div id="reviews" class="tab-content">
         <h2>Управление отзывами</h2>
+        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
 
         <h3>Список отзывов</h3>
         <table>
@@ -584,4 +606,3 @@ $reviews = $pdo->query("SELECT
 </div>
 </body>
 </html>
-ob_end_flush();
