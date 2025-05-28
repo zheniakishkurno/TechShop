@@ -130,94 +130,120 @@ require_once 'header.php';
         .product-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 50px;
+            gap: 30px;
             margin-bottom: 50px;
         }
 
         .product-gallery {
             background: #fff;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .product-image {
-            max-width: 100%;
+            width: 100%;
             height: auto;
+            display: block;
         }
 
         .product-info {
-            padding: 20px;
+            padding: 20px 0;
         }
 
         .product-info h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 24px;
+            margin-bottom: 15px;
             color: #333;
         }
 
-        .rating-block {
+        .product-meta {
+            margin-bottom: 20px;
+        }
+
+        .rating-info {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
         .stars {
             color: #ffd700;
-            font-size: 20px;
+            font-size: 18px;
         }
 
-        .reviews-count {
-            color: #0d6efd;
-            text-decoration: none;
+        .rating-count {
+            color: #666;
+            font-size: 14px;
         }
 
-        .stock-status {
+        .availability {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 5px 10px;
             border-radius: 4px;
             font-size: 14px;
+        }
+
+        .in-stock {
             background: #d4edda;
             color: #155724;
-            margin-bottom: 20px;
         }
 
-        .price {
-            font-size: 32px;
+        .out-of-stock {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .product-price {
+            margin: 20px 0;
+        }
+
+        .current-price {
+            font-size: 24px;
             font-weight: bold;
             color: #333;
-            margin-bottom: 20px;
         }
 
-        .quantity-selector {
+        .old-price {
+            color: #999;
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+
+        .discount {
+            background: #dc3545;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .quantity {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 20px;
         }
 
-        .quantity-selector button {
-            width: 40px;
-            height: 40px;
+        .quantity-btn {
+            width: 35px;
+            height: 35px;
             border: 1px solid #ddd;
             background: #fff;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
         }
 
-        .quantity-selector input {
-            width: 60px;
-            height: 40px;
+        #quantity {
+            width: 50px;
+            height: 35px;
             text-align: center;
             border: 1px solid #ddd;
         }
 
         .add-to-cart {
             width: 100%;
-            padding: 15px;
-            background: #0d6efd;
+            padding: 12px;
+            background: #007bff;
             color: white;
             border: none;
             border-radius: 4px;
@@ -227,95 +253,19 @@ require_once 'header.php';
         }
 
         .add-to-cart:hover {
-            background: #0b5ed7;
+            background: #0056b3;
         }
 
-        .description {
+        .product-description {
             margin-top: 30px;
         }
 
-        .description h2 {
-            font-size: 20px;
+        .product-description h3 {
+            font-size: 18px;
             margin-bottom: 10px;
-        }
-        
-        .product-info h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
             color: #333;
         }
-        
-        .product-meta {
-            margin-bottom: 20px;
-        }
-        
-        .availability {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        
-        .in-stock {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .out-of-stock {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .product-price {
-            margin: 20px 0;
-            font-size: 24px;
-        }
-        
-        .current-price {
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .old-price {
-            text-decoration: line-through;
-            color: #999;
-            margin-right: 10px;
-        }
-        
-        .discount {
-            background: #dc3545;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 14px;
-            margin-left: 10px;
-        }
-        
-        .product-actions {
-            margin: 20px 0;
-        }
-        
-        .quantity {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .quantity-btn {
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            padding: 5px 15px;
-            cursor: pointer;
-        }
-        
-        .quantity input {
-            width: 60px;
-            text-align: center;
-            border: 1px solid #ddd;
-            padding: 5px;
-            margin: 0 5px;
-        }
-        
+
         .reviews-section {
             width: 100%;
             max-width: 100%;
@@ -470,29 +420,24 @@ require_once 'header.php';
                 <div class="product-info">
                     <h1><?= htmlspecialchars($product['name']) ?></h1>
                     
-                    <div class="rating-block">
-                        <div class="stars">
-                            <?php
-                            $full_stars = floor($avg_rating);
-                            $half_star = $avg_rating - $full_stars >= 0.5;
-                            for ($i = 1; $i <= 5; $i++) {
-                                if ($i <= $full_stars) {
-                                    echo '★';
-                                } elseif ($half_star && $i == $full_stars + 1) {
-                                    echo '★';
-                                } else {
-                                    echo '☆';
+                    <div class="product-meta">
+                        <div class="rating-info">
+                            <div class="stars">
+                                <?php
+                                for ($i = 1; $i <= 5; $i++) {
+                                    echo $i <= $avg_rating ? '★' : '☆';
                                 }
-                            }
-                            ?>
+                                ?>
+                            </div>
+                            <span class="rating-count"><?= count($reviews) ?> отзывов</span>
                         </div>
-                        <a href="#reviews" class="reviews-count"><?= count($reviews) ?> отзывов</a>
-                        <div class="stock-status">
+
+                        <div class="availability <?= $product['stock'] > 0 ? 'in-stock' : 'out-of-stock' ?>">
                             <?= $product['stock'] > 0 ? 'В наличии' : 'Нет в наличии' ?>
                         </div>
                     </div>
                     
-                    <div class="price">
+                    <div class="product-price">
                         <?php if ($product['discount'] > 0): ?>
                             <span class="old-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
                             <span class="current-price"><?= number_format($product['price'] * (1 - $product['discount']/100), 2, '.', ' ') ?> ₽</span>
@@ -502,33 +447,34 @@ require_once 'header.php';
                         <?php endif; ?>
                     </div>
                     
-                    <div class="quantity-selector">
-                        <button type="button" class="minus">-</button>
-                        <input type="number" value="1" min="1" max="<?= $product['stock'] ?>" id="quantity">
-                        <button type="button" class="plus">+</button>
+                    <div class="quantity">
+                        <button type="button" class="quantity-btn minus">-</button>
+                        <input type="number" id="quantity" value="1" min="1" max="<?= $product['stock'] ?>">
+                        <button type="button" class="quantity-btn plus">+</button>
                     </div>
 
                     <button class="add-to-cart">В корзину</button>
                     
-                    <div class="description">
-                        <h2>Описание</h2>
+                    <div class="product-description">
+                        <h3>Описание</h3>
                         <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
                     </div>
                 </div>
             </div>
             
             <div id="reviews" class="reviews-section">
-                <h2>Отзывы (<?= count($reviews) ?>)</h2>
-                <?php if ($avg_rating > 0): ?>
-                    <p>Средняя оценка: 
-                        <span class="rating">
+                <h2>Отзывы о товаре</h2>
+                <div class="reviews-summary">
+                    <div class="average-rating">
+                        <div class="big-rating"><?= number_format($avg_rating, 1) ?></div>
+                        <div class="stars">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <?= $i <= $avg_rating ? '★' : '☆' ?>
                             <?php endfor; ?>
-                            (<?= number_format($avg_rating, 1) ?>)
-                        </span>
-                    </p>
-                <?php endif; ?>
+                        </div>
+                        <div class="reviews-count"><?= count($reviews) ?> отзывов</div>
+                    </div>
+                </div>
 
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="review-form">
@@ -593,4 +539,3 @@ require_once 'header.php';
 <script src="js/product.js"></script> <!-- Укажите правильный путь к вашему файлу JS -->
 
 <?php require_once 'footer.php'; ?> 
-
