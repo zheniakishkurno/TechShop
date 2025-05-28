@@ -11,12 +11,15 @@ if (isset($_POST['refresh_table'])) {
         $allowed_tables = ['products', 'categories', 'users', 'orders', 'reviews'];
         
         if (in_array($table, $allowed_tables)) {
-            // Оптимизация таблицы
-            $stmt = $pdo->prepare("OPTIMIZE TABLE " . $table);
-            $stmt->execute();
+            // Устанавливаем режим автокоммита
+            $pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, 1);
             
             // Анализ таблицы
-            $stmt = $pdo->prepare("ANALYZE TABLE " . $table);
+            $stmt = $pdo->prepare("ANALYZE " . $table);
+            $stmt->execute();
+            
+            // Очистка таблицы в фоновом режиме
+            $stmt = $pdo->prepare("VACUUM " . $table);
             $stmt->execute();
             
             $_SESSION['message'] = "Таблица " . $table . " успешно обновлена!";
