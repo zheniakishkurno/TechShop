@@ -102,5 +102,44 @@ require_once 'header.php';
 
 <!-- Подключение JavaScript файла -->
 <script src="js/product.js"></script> <!-- Укажите правильный путь к вашему файлу JS -->
+<script>
+// Делаем функции глобальными
+window.removeFromCart = function(index) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartDisplay();
+};
 
+window.updateQuantity = function(index, action) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (action === 'minus' && cart[index].quantity > 1) {
+        cart[index].quantity -= 1;
+    } else if (action === 'plus') {
+        cart[index].quantity += 1;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartDisplay();
+};
+
+// Обработчики для кнопок количества
+document.querySelectorAll('.quantity-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const input = this.parentElement.querySelector('.quantity-input');
+        if (this.classList.contains('minus') && input.value > 1) {
+            input.value--;
+        } else if (this.classList.contains('plus')) {
+            const max = parseInt(input.getAttribute('max')) || 999;
+            if (input.value < max) input.value++;
+        }
+    });
+});
+
+// Проверка загрузки cart
+function updateCartDisplay() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    console.log('Current cart:', cart);
+}
+</script>
+<script src="profile.js"></script>
 <?php require_once 'footer.php'; ?> 
