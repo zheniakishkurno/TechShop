@@ -97,6 +97,25 @@ if (!file_exists('uploads')) {
     mkdir('uploads', 0777, true);
 }
 
+if (!file_exists('online-shop/images')) {
+    mkdir('online-shop/images', 0777, true);
+}
+
+// Обработка загрузки изображений для продуктов
+if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
+    $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
+    $upload_path = 'online-shop/images/' . $image_name; // Изменённый путь
+    
+    if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
+        // Создаем копию в папке uploads для админки
+        copy($upload_path, 'uploads/' . $image_name);
+        $image_url = 'online-shop/images/' . $image_name; // Изменённый путь в БД
+        $_SESSION['message'] = "Изображение успешно загружено!";
+    } else {
+        $_SESSION['error'] = "Ошибка при загрузке изображения.";
+    }
+}
+
 // Обработка POST-запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -166,6 +185,9 @@ $stmt->execute([
         }
 
         if (isset($_POST['delete_product'])) {
+            // Получаем имя файла из URL
+            $image_name = basename($product['image_url']);
+            
             // Удаляем изображение товара
             $stmt = $pdo->prepare("SELECT image_url FROM products WHERE id=?");
             $stmt->execute([$_POST['product_id']]);
@@ -185,8 +207,13 @@ $stmt->execute([
             $image_url = null;
             if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
                 $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-                $image_url = 'uploads/' . $image_name;
-                move_uploaded_file($_FILES['image_url']['tmp_name'], $image_url);
+                $upload_path = 'online-shop/images/' . $image_name;
+                
+                if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
+                    // Создаем копию в папке uploads для админки
+                    copy($upload_path, 'uploads/' . $image_name);
+                    $image_url = 'online-shop/images/' . $image_name;
+                }
             }
             
             $stmt = $pdo->prepare("INSERT INTO categories (name, image_url) VALUES (?, ?)");
@@ -198,13 +225,19 @@ $stmt->execute([
             $image_url = $_POST['current_image'];
             if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
                 // Удаляем старое изображение
-                if ($image_url && file_exists($image_url)) {
-                    unlink($image_url);
+                if ($image_url) {
+                    @unlink($image_url); // Прямой путь, так как уже содержит online-shop/images/
+                    @unlink('uploads/' . basename($image_url));
                 }
                 
                 $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-                $image_url = 'uploads/' . $image_name;
-                move_uploaded_file($_FILES['image_url']['tmp_name'], $image_url);
+                $upload_path = 'online-shop/images/' . $image_name;
+                
+                if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
+                    // Создаем копию в папке uploads для админки
+                    copy($upload_path, 'uploads/' . $image_name);
+                    $image_url = 'online-shop/images/' . $image_name;
+                }
             }
             
             $stmt = $pdo->prepare("UPDATE categories SET name=?, image_url=? WHERE id=?");
@@ -218,8 +251,10 @@ $stmt->execute([
             $stmt->execute([$_POST['category_id']]);
             $category = $stmt->fetch();
             
-            if ($category['image_url'] && file_exists($category['image_url'])) {
-                unlink($category['image_url']);
+            if ($category['image_url']) {
+                // Удаляем файл из обеих папок
+                @unlink($category['image_url']); // Прямой путь, так как уже содержит online-shop/images/
+                @unlink('uploads/' . basename($category['image_url']));
             }
             
             $stmt = $pdo->prepare("DELETE FROM categories WHERE id=?");
