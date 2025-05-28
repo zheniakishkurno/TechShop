@@ -139,4 +139,147 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 </script>
 
 <?php require_once 'footer.php'; ?>
+<script>
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
 
+.product-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    background: #f5f5f5;
+    overflow: hidden;
+}
+
+.product-image img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff3d00;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-info h3 {
+    font-size: 18px;
+    margin: 0 0 8px;
+    line-height: 1.3;
+}
+
+.product-meta {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-meta .availability.in-stock {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.product-meta .availability.out-of-stock {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.product-price {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.product-price .old-price {
+    color: #888;
+    text-decoration: line-through;
+    margin-right: 8px;
+}
+
+.product-price .current-price {
+    font-weight: bold;
+    color: #000;
+    font-size: 18px;
+}
+
+.product-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 10px;
+    gap: 10px;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 100px;
+}
+
+.quantity-btn {
+    background: #eee;
+    border: none;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.quantity-input {
+    width: 40px;
+    border: none;
+    text-align: center;
+}
+
+.btn.add-to-cart {
+    flex-grow: 1;
+    background: #1976d2;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn.add-to-cart:hover {
+    background: #125ea2;
+}
+
+</script>
