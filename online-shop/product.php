@@ -87,7 +87,8 @@ require_once 'header.php';
                 
                 <div class="product-description">
                     <h3>Описание</h3>
-                  $page_title = htmlspecialchars($product['name'] ?? '');
+                  <span><?= htmlspecialchars($product['name'] ?? '') ?></span>
+
                 </div>
             </div>
         </div>
