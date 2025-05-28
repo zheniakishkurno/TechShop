@@ -270,22 +270,31 @@ $order_id = $order_stmt->fetchColumn(); // вместо lastInsertId()
 }
 
 
-function searchProductsByName($searchQuery) { 
-    global $pdo;
-    
-    // Подготовим запрос для поиска по названию товара
-    $stmt = $pdo->prepare('
-        SELECT p.id, p.name, p.price, p.description, p.image_url, c.name AS category_name
-        FROM products p
-        LEFT JOIN categories c ON p.category_id = c.id
-        WHERE p.name LIKE :searchQuery
-    ');
-    
-    // Передаем запрос с подстановкой символов подстроки
-    $stmt->execute(['searchQuery' => "%" . $searchQuery . "%"]);
-    
+function searchProductsByName(string $query): array {
+    global $pdo; // предположим, $pdo — это подключение к БД из config.php
+
+    $query = trim($query);
+
+    // Если пустой запрос — сразу пустой массив
+    if ($query === '') {
+        return [];
+    }
+
+    // Подготовленный запрос с LIKE и подстановкой %
+    $stmt = $pdo->prepare("
+        SELECT *
+        FROM products
+        WHERE name LIKE :query COLLATE utf8mb4_general_ci
+        ORDER BY name ASC
+        LIMIT 50
+    ");
+
+    // Оборачиваем запрос в % для поиска вхождения
+    $stmt->execute(['query' => "%$query%"]);
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 // Функции безопасности
 function hashPassword($password) {
