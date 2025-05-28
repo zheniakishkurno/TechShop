@@ -270,28 +270,17 @@ $order_id = $order_stmt->fetchColumn(); // вместо lastInsertId()
 }
 
 
-function searchProductsByName(string $query): array {
-    global $pdo;
-
-    $query = trim($query);
-
-    if ($query === '') {
-        return [];
-    }
-
-    $stmt = $pdo->prepare("
-        SELECT *
-        FROM products
-        WHERE name ILIKE :query
-        ORDER BY name ASC
-        LIMIT 50
-    ");
-
-    $stmt->execute(['query' => "%$query%"]);
-
+function searchProductsByName($query) {
+    $db = getDBConnection();
+    $query = "%$query%";
+    $stmt = $db->prepare("SELECT * FROM products WHERE name LIKE ?");
+    $stmt->execute([$query]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function highlightSearchQuery($text, $query) {
+    return preg_replace("/($query)/iu", '<span class="highlight">$1</span>', htmlspecialchars($text));
+}
 
 // Функции безопасности
 function hashPassword($password) {
