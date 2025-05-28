@@ -97,16 +97,4 @@ document.querySelectorAll(".add-to-cart").forEach(button => {
     updateCartDisplay();
 
 });
-document.querySelectorAll(".quantity-btn").forEach(button => {
-    button.addEventListener("click", function () {
-        const input = this.parentElement.querySelector(".quantity-input");
-        let value = parseInt(input.value, 10);
-        const max = parseInt(input.max, 10);
 
-        if (this.classList.contains("plus") && value < max) {
-            input.value = value + 1;
-        } else if (this.classList.contains("minus") && value > 1) {
-            input.value = value - 1;
-        }
-    });
-});
