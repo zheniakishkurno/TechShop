@@ -161,11 +161,31 @@ require_once 'header.php';
             resize: vertical;
         }
         .star-rating {
+            display: inline-block;
             margin-bottom: 15px;
         }
+        .star-rating input {
+            display: none;
+        }
         .star-rating label {
+            float: right;
+            cursor: pointer;
+            color: #ddd;
             font-size: 28px;
             padding: 0 2px;
+        }
+        .star-rating label:before {
+            content: '★';
+        }
+        .star-rating input:checked ~ label {
+            color: #ffd700;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffd700;
+        }
+        .star-rating:not(:hover) input:checked ~ label {
+            color: #ffd700;
         }
         .reviews-list {
             display: grid;
@@ -290,7 +310,14 @@ require_once 'header.php';
             <div class="reviews-section">
                 <h2>Отзывы (<?= count($reviews) ?>)</h2>
                 <?php if ($avg_rating > 0): ?>
-                    <p>Средняя оценка: <span class="rating"><?= $avg_rating ?> ★</span></p>
+                    <p>Средняя оценка: 
+                        <span class="rating">
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <?= $i <= $avg_rating ? '★' : '☆' ?>
+                            <?php endfor; ?>
+                            (<?= $avg_rating ?>)
+                        </span>
+                    </p>
                 <?php endif; ?>
 
                 <?php if (isset($_SESSION['user_id'])): ?>
@@ -311,7 +338,7 @@ require_once 'header.php';
                                 <div class="star-rating">
                                     <?php for ($i = 5; $i >= 1; $i--): ?>
                                         <input type="radio" id="star<?= $i ?>" name="rating" value="<?= $i ?>" required>
-                                        <label for="star<?= $i ?>"></label>
+                                        <label for="star<?= $i ?>" title="<?= $i ?> звезд"></label>
                                     <?php endfor; ?>
                                 </div>
                             </div>
@@ -333,7 +360,7 @@ require_once 'header.php';
                         <div class="review">
                             <div class="rating">
                                 <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <?= $i <= $review['rating'] ? '★' : '☆' ?>
+                                    <span><?= $i <= $review['rating'] ? '★' : '☆' ?></span>
                                 <?php endfor; ?>
                             </div>
                             <p><strong><?= htmlspecialchars($review['first_name'] . ' ' . $review['last_name']) ?></strong></p>
