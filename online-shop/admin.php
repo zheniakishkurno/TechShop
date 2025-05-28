@@ -406,7 +406,6 @@ $reviews = $pdo->query("SELECT
     <div id="products" class="tab-content active">
         <h2>Управление товарами</h2>
         <div class="button-group">
-            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
             <form method="POST" id="products-form">
                 <input type="hidden" name="table_name" value="products">
                 <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
@@ -491,7 +490,6 @@ $reviews = $pdo->query("SELECT
     <div id="categories" class="tab-content">
         <h2>Управление категориями</h2>
         <div class="button-group">
-            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
             <form method="POST" id="categories-form">
                 <input type="hidden" name="table_name" value="categories">
                 <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
@@ -542,10 +540,9 @@ $reviews = $pdo->query("SELECT
     <div id="users" class="tab-content">
         <h2>Управление пользователями</h2>
         <div class="button-group">
-            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
-            <form method="POST" style="display: inline;">
+            <form method="POST" id="users-form">
                 <input type="hidden" name="table_name" value="users">
-                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
             </form>
         </div>
 
@@ -609,10 +606,9 @@ $reviews = $pdo->query("SELECT
     <div id="orders" class="tab-content">
         <h2>Управление заказами</h2>
         <div class="button-group">
-            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
-            <form method="POST" style="display: inline;">
+            <form method="POST" id="orders-form">
                 <input type="hidden" name="table_name" value="orders">
-                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
             </form>
         </div>
 
@@ -669,10 +665,9 @@ $reviews = $pdo->query("SELECT
     <div id="reviews" class="tab-content">
         <h2>Управление отзывами</h2>
         <div class="button-group">
-            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
-            <form method="POST" style="display: inline;">
+            <form method="POST" id="reviews-form">
                 <input type="hidden" name="table_name" value="reviews">
-                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
             </form>
         </div>
 
