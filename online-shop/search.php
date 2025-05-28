@@ -82,14 +82,14 @@ require_once 'header.php';
                                            data-id="<?= $product['id'] ?>">
                                     <button class="quantity-btn plus">+</button>
                                 </div>
-                                <button class="btn add-to-cart"
-                                        data-id="<?= $product['id'] ?>"
-                                        data-name="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>"
-                                        data-price="<?= !empty($product['discount']) 
-                                            ? $product['price'] * (1 - $product['discount'] / 100)
-                                            : $product['price'] ?>">
-                                    В корзину
-                                </button>
+<button class="btn add-to-cart"
+        data-id="<?= $product['id'] ?>"
+        data-name="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>"
+        data-price="<?= !empty($product['discount']) 
+            ? $product['price'] * (1 - $product['discount'] / 100)
+            : $product['price'] ?>">
+    В корзину
+</button>
                             </div>
                         </div>
                     </div>
@@ -107,10 +107,10 @@ require_once 'header.php';
 <script src="product.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Обработчики кнопок количества
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработчики для кнопок количества
     document.querySelectorAll('.quantity-btn').forEach(button => {
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function() {
             const input = this.parentElement.querySelector('.quantity-input');
             const max = parseInt(input.getAttribute('max')) || 999;
             let value = parseInt(input.value) || 1;
@@ -123,6 +123,47 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Обработчики для кнопок "В корзину"
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-id');
+            const quantityInput = this.closest('.product-actions').querySelector('.quantity-input');
+            const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+            
+            // Отправка запроса на сервер
+            fetch('add_to_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: quantity
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Успешно добавлен товар
+                    alert('Товар добавлен в корзину!');
+                    
+                    // Обновляем количество товаров в корзине на странице
+                    const cartCountElement = document.getElementById('cart-count');
+                    if (cartCountElement) {
+                        cartCountElement.textContent = data.total_items;
+                    }
+                } else {
+                    // Ошибка добавления товара
+                    alert('Ошибка при добавлении товара в корзину: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при добавлении товара в корзину.');
+            });
+        });
+    });
+});
 </script>
 
 <?php require_once 'footer.php'; ?>
