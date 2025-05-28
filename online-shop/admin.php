@@ -4,6 +4,27 @@ session_start();
 require_once 'config.php';
 require_once 'functions.php';
 
+// Обработчик обновления таблиц
+if (isset($_POST['refresh_table'])) {
+    try {
+        $table = $_POST['table_name'];
+        $allowed_tables = ['products', 'categories', 'users', 'orders', 'reviews'];
+        
+        if (in_array($table, $allowed_tables)) {
+            // Оптимизация таблицы
+            $stmt = $pdo->prepare("OPTIMIZE TABLE " . $table);
+            $stmt->execute();
+            
+            // Анализ таблицы
+            $stmt = $pdo->prepare("ANALYZE TABLE " . $table);
+            $stmt->execute();
+            
+            $_SESSION['message'] = "Таблица " . $table . " успешно обновлена!";
+        }
+    } catch (PDOException $e) {
+        $_SESSION['error'] = "Ошибка при обновлении таблицы: " . $e->getMessage();
+    }
+    
 // Проверка авторизации и прав администратора
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -260,7 +281,6 @@ $reviews = $pdo->query("SELECT
     JOIN products p ON r.product_id = p.id
     ORDER BY r.created_at DESC")->fetchAll();
 ?>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -284,6 +304,20 @@ $reviews = $pdo->query("SELECT
         
         .refresh-button:hover {
             background-color: #45a049;
+        }
+
+        .button-group {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-group form {
+            margin: 0;
+        }
+
+        .button-group .refresh-button {
+            margin-bottom: 0;
         }
     </style>
     <script src="js/admin.js" defer></script>
@@ -315,7 +349,13 @@ $reviews = $pdo->query("SELECT
     <!-- Управление товарами -->
     <div id="products" class="tab-content active">
         <h2>Управление товарами</h2>
-        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
+        <div class="button-group">
+            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
+            <form method="POST" style="display: inline;">
+                <input type="hidden" name="table_name" value="products">
+                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+            </form>
+        </div>
 
         <!-- Добавление товара -->
        <form method="POST" enctype="multipart/form-data" class="form">
@@ -396,7 +436,13 @@ $reviews = $pdo->query("SELECT
     <!-- Управление категориями -->
     <div id="categories" class="tab-content">
         <h2>Управление категориями</h2>
-        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
+        <div class="button-group">
+            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
+            <form method="POST" style="display: inline;">
+                <input type="hidden" name="table_name" value="categories">
+                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+            </form>
+        </div>
 
         <form method="POST" enctype="multipart/form-data" class="form">
             <h3>Добавить новую категорию</h3>
@@ -445,7 +491,13 @@ $reviews = $pdo->query("SELECT
     <!-- Управление пользователями -->
     <div id="users" class="tab-content">
         <h2>Управление пользователями</h2>
-        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
+        <div class="button-group">
+            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
+            <form method="POST" style="display: inline;">
+                <input type="hidden" name="table_name" value="users">
+                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+            </form>
+        </div>
 
        <form method="POST" class="form">
     <h3>Добавить нового пользователя</h3>
@@ -506,7 +558,13 @@ $reviews = $pdo->query("SELECT
     <!-- Управление заказами -->
     <div id="orders" class="tab-content">
         <h2>Управление заказами</h2>
-        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
+        <div class="button-group">
+            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
+            <form method="POST" style="display: inline;">
+                <input type="hidden" name="table_name" value="orders">
+                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+            </form>
+        </div>
 
         <h3>Список заказов</h3>
         <table>
@@ -560,7 +618,13 @@ $reviews = $pdo->query("SELECT
     <!-- Управление отзывами -->
     <div id="reviews" class="tab-content">
         <h2>Управление отзывами</h2>
-        <button onclick="window.location.reload();" class="refresh-button">Обновить таблицу</button>
+        <div class="button-group">
+            <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
+            <form method="POST" style="display: inline;">
+                <input type="hidden" name="table_name" value="reviews">
+                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+            </form>
+        </div>
 
         <h3>Список отзывов</h3>
         <table>
