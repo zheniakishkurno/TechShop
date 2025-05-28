@@ -11,21 +11,73 @@ if (isset($_POST['refresh_table'])) {
         $allowed_tables = ['products', 'categories', 'users', 'orders', 'reviews'];
         
         if (in_array($table, $allowed_tables)) {
-            // Устанавливаем режим автокоммита
-            $pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, 1);
+            switch($table) {
+                case 'products':
+                    foreach($_POST['products'] as $id => $product) {
+                        $stmt = $pdo->prepare("UPDATE products SET 
+                            name = ?, 
+                            category_id = ?, 
+                            price = ?, 
+                            stock = ?, 
+                            discount = ? 
+                            WHERE id = ?");
+                        $stmt->execute([
+                            $product['name'],
+                            $product['category_id'],
+                            $product['price'],
+                            $product['stock'],
+                            $product['discount'],
+                            $id
+                        ]);
+                    }
+                    break;
+
+                case 'categories':
+                    foreach($_POST['categories'] as $id => $category) {
+                        $stmt = $pdo->prepare("UPDATE categories SET name = ? WHERE id = ?");
+                        $stmt->execute([$category['name'], $id]);
+                    }
+                    break;
+
+                case 'users':
+                    foreach($_POST['users'] as $id => $user) {
+                        $stmt = $pdo->prepare("UPDATE users SET 
+                            first_name = ?, 
+                            last_name = ?, 
+                            email = ?, 
+                            phone = ?, 
+                            role = ? 
+                            WHERE id = ?");
+                        $stmt->execute([
+                            $user['first_name'],
+                            $user['last_name'],
+                            $user['email'],
+                            $user['phone'],
+                            $user['role'],
+                            $id
+                        ]);
+                    }
+                    break;
+
+                case 'orders':
+                    foreach($_POST['orders'] as $id => $order) {
+                        $stmt = $pdo->prepare("UPDATE orders SET status = ?, notes = ? WHERE id = ?");
+                        $stmt->execute([$order['status'], $order['notes'], $id]);
+                    }
+                    break;
+
+                case 'reviews':
+                    foreach($_POST['reviews'] as $id => $review) {
+                        $stmt = $pdo->prepare("UPDATE reviews SET rating = ?, comment = ? WHERE id = ?");
+                        $stmt->execute([$review['rating'], $review['comment'], $id]);
+                    }
+                    break;
+            }
             
-            // Анализ таблицы
-            $stmt = $pdo->prepare("ANALYZE " . $table);
-            $stmt->execute();
-            
-            // Очистка таблицы в фоновом режиме
-            $stmt = $pdo->prepare("VACUUM " . $table);
-            $stmt->execute();
-            
-            $_SESSION['message'] = "Таблица " . $table . " успешно обновлена!";
+            $_SESSION['message'] = "Данные в таблице " . $table . " успешно обновлены!";
         }
     } catch (PDOException $e) {
-        $_SESSION['error'] = "Ошибка при обновлении таблицы: " . $e->getMessage();
+        $_SESSION['error'] = "Ошибка при обновлении данных: " . $e->getMessage();
     }
 }
 
@@ -355,9 +407,9 @@ $reviews = $pdo->query("SELECT
         <h2>Управление товарами</h2>
         <div class="button-group">
             <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
-            <form method="POST" style="display: inline;">
+            <form method="POST" id="products-form">
                 <input type="hidden" name="table_name" value="products">
-                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
             </form>
         </div>
 
@@ -401,35 +453,33 @@ $reviews = $pdo->query("SELECT
             <tbody>
             <?php foreach ($products as $product): ?>
                 <tr>
-                    <form method="POST" enctype="multipart/form-data">
-                        <td><?= $product['id'] ?></td>
-                        <td><input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required /></td>
-                        <td>
-                            <select name="category_id" required>
-                                <option value="">Без категории</option>
-                                <?php foreach ($categories as $category): ?>
-                                    <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($category['name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
-                        <td><input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" min="0" required /></td>
-                        <td><input type="number" name="discount" value="<?= $product['discount'] ?>" min="0" max="100" /></td>
-                        <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
-                        <td>
-                            <?php if ($product['image_url']): ?>
-                                <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
-                            <?php endif; ?>
-                            <input type="hidden" name="current_image" value="<?= htmlspecialchars($product['image_url']) ?>" />
-                            <input type="file" name="image_url" />
-                        </td>
-                        <td class="actions">
-                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
-                            <button type="submit" name="update_product">Обновить</button>
-                            <button type="submit" name="delete_product" class="delete">Удалить</button>
-                        </td>
-                    </form>
+                    <td><?= $product['id'] ?></td>
+                    <td><input type="text" name="products[<?= $product['id'] ?>][name]" value="<?= htmlspecialchars($product['name']) ?>" required form="products-form" /></td>
+                    <td>
+                        <select name="products[<?= $product['id'] ?>][category_id]" required form="products-form">
+                            <option value="">Без категории</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($category['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                    <td><input type="number" name="products[<?= $product['id'] ?>][price]" value="<?= $product['price'] ?>" step="0.01" min="0" required form="products-form" /></td>
+                    <td><input type="number" name="products[<?= $product['id'] ?>][discount]" value="<?= $product['discount'] ?>" min="0" max="100" form="products-form" /></td>
+                    <td><input type="number" name="products[<?= $product['id'] ?>][stock]" value="<?= $product['stock'] ?>" min="0" required form="products-form" /></td>
+                    <td>
+                        <?php if ($product['image_url']): ?>
+                            <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
+                        <?php endif; ?>
+                        <input type="hidden" name="products[<?= $product['id'] ?>][current_image]" value="<?= htmlspecialchars($product['image_url']) ?>" />
+                        <input type="file" name="products[<?= $product['id'] ?>][image_url]" />
+                    </td>
+                    <td class="actions">
+                        <input type="hidden" name="products[<?= $product['id'] ?>][product_id]" value="<?= $product['id'] ?>" />
+                        <button type="submit" name="update_product">Обновить</button>
+                        <button type="submit" name="delete_product" class="delete">Удалить</button>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -442,9 +492,9 @@ $reviews = $pdo->query("SELECT
         <h2>Управление категориями</h2>
         <div class="button-group">
             <button onclick="window.location.reload();" class="refresh-button">Обновить страницу</button>
-            <form method="POST" style="display: inline;">
+            <form method="POST" id="categories-form">
                 <input type="hidden" name="table_name" value="categories">
-                <button type="submit" name="refresh_table" class="refresh-button">Обновить таблицу в БД</button>
+                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
             </form>
         </div>
 
@@ -468,24 +518,20 @@ $reviews = $pdo->query("SELECT
             <tbody>
             <?php foreach ($categories as $category): ?>
                 <tr>
-                    <form method="POST" enctype="multipart/form-data">
-                        <td><?= $category['id'] ?></td>
-                        <td><input type="text" name="name" value="<?= htmlspecialchars($category['name']) ?>" required /></td>
-                        <td>
-                            <?php if ($category['image_url']): ?>
-                                <img src="<?= htmlspecialchars($category['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
-                            <?php endif; ?>
-                            <input type="hidden" name="current_image" value="<?= htmlspecialchars($category['image_url']) ?>" />
-                            <input type="file" name="image_url" />
-                        </td>
-                      
-                            <td class="actions">
-                                <input type="hidden" name="category_id" value="<?= $category['id'] ?>" />
-                                <button type="submit" name="update_category">Обновить</button>
-                                <button type="submit" name="delete_category" class="delete">Удалить</button>
-                            </td>
-                      
-                    </form>
+                    <td><?= $category['id'] ?></td>
+                    <td><input type="text" name="categories[<?= $category['id'] ?>][name]" value="<?= htmlspecialchars($category['name']) ?>" required form="categories-form" /></td>
+                    <td>
+                        <?php if ($category['image_url']): ?>
+                            <img src="<?= htmlspecialchars($category['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
+                        <?php endif; ?>
+                        <input type="hidden" name="categories[<?= $category['id'] ?>][current_image]" value="<?= htmlspecialchars($category['image_url']) ?>" form="categories-form" />
+                        <input type="file" name="categories[<?= $category['id'] ?>][image_url]" form="categories-form" />
+                    </td>
+                    <td class="actions">
+                        <input type="hidden" name="categories[<?= $category['id'] ?>][category_id]" value="<?= $category['id'] ?>" form="categories-form" />
+                        <button type="submit" name="update_category">Обновить</button>
+                        <button type="submit" name="delete_category" class="delete">Удалить</button>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
