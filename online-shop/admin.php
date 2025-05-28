@@ -92,28 +92,132 @@ if (!isAdmin()) {
     exit('Доступ запрещен');
 }
 
-// Создаем папку для загрузок, если ее нет
-if (!file_exists('uploads')) {
-    mkdir('uploads', 0777, true);
+// Создание необходимых директорий с правами доступа
+$upload_dirs = ['uploads', 'online-shop/images'];
+foreach ($upload_dirs as $dir) {
+    if (!file_exists($dir)) {
+        if (!mkdir($dir, 0777, true)) {
+            $_SESSION['error'] = "Не удалось создать директорию: " . $dir;
+            error_log("Failed to create directory: " . $dir);
+        } else {
+            chmod($dir, 0777); // Установка прав доступа после создания
+        }
+    }
 }
 
-if (!file_exists('online-shop/images')) {
-    mkdir('online-shop/images', 0777, true);
+// Функция для безопасной загрузки изображения
+function handleImageUpload($file, $old_image = null) {
+    global $upload_dirs;
+    
+    try {
+        if (!isset($file['error']) || is_array($file['error'])) {
+            throw new Exception('Некорректные параметры файла.');
+        }
+
+        switch ($file['error']) {
+            case UPLOAD_ERR_OK:
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                return null;
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+                throw new Exception('Превышен размер файла.');
+            default:
+                throw new Exception('Неизвестная ошибка загрузки.');
+        }
+
+        if ($file['size'] > 5242880) { // 5MB
+            throw new Exception('Файл слишком большой.');
+        }
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime_type = $finfo->file($file['tmp_name']);
+
+        $allowed_types = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif'
+        ];
+
+        if (!array_key_exists($mime_type, $allowed_types)) {
+            throw new Exception('Неверный формат файла. Разрешены только JPG, PNG и GIF.');
+        }
+
+        // Генерируем уникальное имя файла
+        $extension = $allowed_types[$mime_type];
+        $image_name = uniqid() . '_' . time() . '.' . $extension;
+        $upload_path = 'online-shop/images/' . $image_name;
+
+        // Удаляем старое изображение, если оно существует
+        if ($old_image && file_exists($old_image)) {
+            unlink($old_image);
+            error_log("Deleted old image: " . $old_image);
+        }
+
+        // Перемещаем загруженный файл
+        if (!move_uploaded_file($file['tmp_name'], $upload_path)) {
+            throw new Exception('Не удалось сохранить файл.');
+        }
+
+        // Создаем копию в папке uploads
+        if (!copy($upload_path, 'uploads/' . $image_name)) {
+            error_log("Failed to create copy in uploads folder: " . $image_name);
+        }
+
+        error_log("Successfully uploaded image: " . $upload_path);
+        return $upload_path;
+
+    } catch (Exception $e) {
+        error_log("Image upload error: " . $e->getMessage());
+        throw $e;
+    }
 }
 
 // Обработка загрузки изображений для продуктов
-if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
-    $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-    $upload_path = 'online-shop/images/' . $image_name; // Изменённый путь
-    
-    if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
-        // Создаем копию в папке uploads для админки
-        copy($upload_path, 'uploads/' . $image_name);
-        $image_url = 'online-shop/images/' . $image_name; // Изменённый путь в БД
-        $_SESSION['message'] = "Изображение успешно загружено!";
-    } else {
-        $_SESSION['error'] = "Ошибка при загрузке изображения.";
+if (isset($_POST['add_product']) || isset($_POST['update_product'])) {
+    try {
+        $image_url = null;
+        
+        if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $old_image = isset($_POST['current_image']) ? $_POST['current_image'] : null;
+            $image_url = handleImageUpload($_FILES['image_url'], $old_image);
+        } elseif (isset($_POST['current_image'])) {
+            $image_url = $_POST['current_image'];
+        }
+
+        if (isset($_POST['add_product'])) {
+            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $_POST['name'],
+                $_POST['category_id'],
+                $_POST['price'],
+                $_POST['description'] ?? '',
+                $_POST['stock'],
+                $image_url,
+                $_POST['discount'] ?? 0
+            ]);
+            $_SESSION['message'] = "Товар успешно добавлен!";
+        } else {
+            $stmt = $pdo->prepare("UPDATE products SET name=?, category_id=?, price=?, stock=?, image_url=?, discount=? WHERE id=?");
+            $stmt->execute([
+                $_POST['name'],
+                $_POST['category_id'],
+                $_POST['price'],
+                $_POST['stock'],
+                $image_url,
+                $_POST['discount'] ?? 0,
+                $_POST['product_id']
+            ]);
+            $_SESSION['message'] = "Товар успешно обновлен!";
+        }
+        
+    } catch (Exception $e) {
+        $_SESSION['error'] = "Ошибка: " . $e->getMessage();
+        error_log("Product operation error: " . $e->getMessage());
     }
+    
+    header("Location: admin.php");
+    exit;
 }
 
 // Обработка POST-запросов
@@ -131,8 +235,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['message'] = "Товар и изображение успешно добавлены!";
                 } else {
                     $_SESSION['error'] = "Ошибка при загрузке изображения.";
-                    header("Location: admin.php");
-                    exit;
                 }
             }
             
@@ -403,7 +505,137 @@ $reviews = $pdo->query("SELECT
     <title>Админ панель</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/admin.css" />
+    <style>
+        /* Дополнительные стили для таблиц */
+        .table-responsive {
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
 
+        .table-wrapper {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        table th {
+            position: sticky;
+            top: 0;
+            background: #5c6bc0;
+            z-index: 10;
+        }
+
+        table td {
+            background: white;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .image-preview {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-input-button {
+            background: #5c6bc0;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .actions {
+            display: flex;
+            gap: 5px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .actions button {
+            min-width: 80px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-processing { background: #fff3cd; color: #856404; }
+        .status-shipped { background: #cce5ff; color: #004085; }
+        .status-delivered { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+
+        .tab-content {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .refresh-button {
+            margin: 20px 0;
+        }
+
+        /* Стили для мобильных устройств */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .actions button {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
     <script src="js/admin.js" defer></script>
 </head>
 <body>
