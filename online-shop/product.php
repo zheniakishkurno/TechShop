@@ -22,24 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
     } elseif (empty($comment)) {
         $review_error = 'Пожалуйста, напишите комментарий';
     } else {
-        // Проверяем, не оставлял ли пользователь уже отзыв
-        $check_stmt = $pdo->prepare("SELECT id FROM reviews WHERE user_id = ? AND product_id = ?");
-        $check_stmt->execute([$_SESSION['user_id'], $product_id]);
+        // Добавляем отзыв без проверки на существующий
+        $stmt = $pdo->prepare("
+            INSERT INTO reviews (product_id, user_id, rating, comment) 
+            VALUES (?, ?, ?, ?)
+        ");
         
-        if ($check_stmt->fetch()) {
-            $review_error = 'Вы уже оставляли отзыв к этому товару';
+        if ($stmt->execute([$product_id, $_SESSION['user_id'], $rating, $comment])) {
+            $review_success = 'Спасибо за ваш отзыв!';
         } else {
-            // Добавляем отзыв
-            $stmt = $pdo->prepare("
-                INSERT INTO reviews (product_id, user_id, rating, comment) 
-                VALUES (?, ?, ?, ?)
-            ");
-            
-            if ($stmt->execute([$product_id, $_SESSION['user_id'], $rating, $comment])) {
-                $review_success = 'Спасибо за ваш отзыв!';
-            } else {
-                $review_error = 'Произошла ошибка при добавлении отзыва';
-            }
+            $review_error = 'Произошла ошибка при добавлении отзыва';
         }
     }
 }
