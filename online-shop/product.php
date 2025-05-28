@@ -121,55 +121,111 @@ require_once 'header.php';
             height: auto;
         }
         .reviews-section {
-            margin-top: 30px;
+            margin-top: 50px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .reviews-section h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
         }
         .review-form {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
             margin-bottom: 30px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
+        }
+        .review-form h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: vertical;
+        }
+        .star-rating {
+            margin-bottom: 15px;
+        }
+        .star-rating label {
+            font-size: 28px;
+            padding: 0 2px;
+        }
+        .reviews-list {
+            display: grid;
+            gap: 20px;
         }
         .review {
-            border-bottom: 1px solid #ddd;
-            padding: 15px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .rating {
-            color: #ffd700;
-            font-size: 20px;
+        .review .rating {
+            margin-bottom: 10px;
+        }
+        .review strong {
+            color: #333;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .review p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .review small {
+            color: #888;
+            font-size: 12px;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #0056b3;
         }
         .alert {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        .alert-error {
-            background-color: #ffe6e6;
-            color: #dc3545;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
         }
         .alert-success {
             background-color: #d4edda;
             color: #155724;
+            border: 1px solid #c3e6cb;
         }
-        .star-rating {
-            display: inline-block;
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
-        .star-rating input {
-            display: none;
-        }
-        .star-rating label {
-            float: right;
-            cursor: pointer;
-            color: #ddd;
+        .rating {
             font-size: 24px;
-        }
-        .star-rating label:before {
-            content: '★';
-        }
-        .star-rating input:checked ~ label {
-            color: #ffd700;
-        }
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
             color: #ffd700;
         }
     </style>
@@ -198,11 +254,6 @@ require_once 'header.php';
                 <h1><?= htmlspecialchars($product['name']) ?></h1>
                 
                 <div class="product-meta">
-                    <div class="rating">
-                        <span class="stars">★★★★★</span>
-                        <span class="reviews"><?= $product['reviews_count'] ?> отзывов</span>
-                    </div>
-                    
                     <div class="availability <?= $product['stock'] > 0 ? 'in-stock' : 'out-of-stock' ?>">
                         <?= $product['stock'] > 0 ? 'В наличии' : 'Нет в наличии' ?>
                     </div>
