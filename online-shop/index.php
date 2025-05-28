@@ -6,21 +6,30 @@ require_once 'functions.php';
 $category_id = $_GET['category_id'] ?? null;
 $search_query = $_GET['q'] ?? null;
 $sort = $_GET['sort'] ?? 'newest';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$per_page = 12; // Количество товаров на странице
+
 $categories = getCategories();
 
-// Получаем товары с учетом фильтров
-// Получаем все товары, если нет фильтра категории или поиска
+// Получаем общее количество товаров
+$total_products = getTotalProducts($category_id);
+$total_pages = ceil($total_products / $per_page);
+
+// Убеждаемся, что номер страницы в допустимых пределах
+if ($page < 1) $page = 1;
+if ($page > $total_pages) $page = $total_pages;
+
+// Получаем товары с учетом пагинации
 if ($category_id) {
-    $products = getProducts($category_id);
+    $products = getProducts($category_id, $page, $per_page);
     $section_title = "Товары из выбранной категории";
 } elseif ($search_query) {
     $products = searchProductsByName($search_query);
     $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
-    $products = getProducts();  // Теперь выводим все товары
+    $products = getProducts(null, $page, $per_page);
     $section_title = "Все товары";
 }
-
 
 // Сортировка товаров
 if ($sort === 'price_asc') {
@@ -148,6 +157,32 @@ if ($sort === 'price_asc') {
                 <p>Нет товаров для отображения.</p>
             <?php endif; ?>
         </div>
+        <?php if ($total_pages > 1): ?>
+        <div class="pagination">
+            <?php if ($page > 1): ?>
+                <a href="?page=1<?= $category_id ? '&category_id='.$category_id : '' ?><?= $sort ? '&sort='.$sort : '' ?>" class="pagination-link">&laquo; Первая</a>
+                <a href="?page=<?= $page-1 ?><?= $category_id ? '&category_id='.$category_id : '' ?><?= $sort ? '&sort='.$sort : '' ?>" class="pagination-link">Предыдущая</a>
+            <?php endif; ?>
+
+            <?php
+            // Показываем максимум 5 страниц вокруг текущей
+            $start_page = max(1, $page - 2);
+            $end_page = min($total_pages, $page + 2);
+
+            for ($i = $start_page; $i <= $end_page; $i++):
+            ?>
+                <a href="?page=<?= $i ?><?= $category_id ? '&category_id='.$category_id : '' ?><?= $sort ? '&sort='.$sort : '' ?>" 
+                   class="pagination-link <?= $i === $page ? 'active' : '' ?>">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
+
+            <?php if ($page < $total_pages): ?>
+                <a href="?page=<?= $page+1 ?><?= $category_id ? '&category_id='.$category_id : '' ?><?= $sort ? '&sort='.$sort : '' ?>" class="pagination-link">Следующая</a>
+                <a href="?page=<?= $total_pages ?><?= $category_id ? '&category_id='.$category_id : '' ?><?= $sort ? '&sort='.$sort : '' ?>" class="pagination-link">Последняя &raquo;</a>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 
