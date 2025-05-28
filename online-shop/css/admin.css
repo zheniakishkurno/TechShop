@@ -100,8 +100,11 @@ h3 {
 }
 
 .tab-content {
-    display: none;
-    padding: 20px 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
 }
 
 .tab-content.active {
