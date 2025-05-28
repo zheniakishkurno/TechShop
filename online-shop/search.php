@@ -43,39 +43,37 @@ require_once 'header.php';
         <?php if (!empty($products)): ?>
             <div class="product-grid">
                 <?php foreach ($products as $product): ?>
-<a class="product-card" href="product.php?id=<?= urlencode($product['id']) ?>">
-    <div class="product-image">
-        <img src="<?= htmlspecialchars($product['image_url'] ?? 'images/no-image.jpg') ?>" 
-             alt="<?= htmlspecialchars($product['name']) ?>">
-        <?php if (!empty($product['discount'])): ?>
-            <span class="discount-badge">-<?= $product['discount'] ?>%</span>
-        <?php endif; ?>
-    </div>
-
-    <div class="product-info">
-        <h3><?= highlightSearchQuery($product['name'], $searchQuery) ?></h3>
-
-        <div class="product-meta">
-            <div class="availability <?= ($product['stock'] > 0) ? 'in-stock' : 'out-of-stock' ?>">
-                <?= ($product['stock'] > 0) ? 'В наличии' : 'Нет в наличии' ?>
-            </div>
-            <div class="rating">
-                <span class="stars">★★★★★</span>
-                <span class="reviews">(<?= $product['reviews_count'] ?? 0 ?>)</span>
-            </div>
-        </div>
-
-        <div class="product-price">
-            <?php if (!empty($product['discount'])): ?>
-                <span class="old-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
-                <span class="current-price"><?= number_format($product['price'] * (1 - $product['discount'] / 100), 2, '.', ' ') ?> ₽</span>
-            <?php else: ?>
-                <span class="current-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
-            <?php endif; ?>
-        </div>
-    </div>
-</a>
-
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="<?= htmlspecialchars($product['image_url'] ?? 'images/no-image.jpg') ?>" 
+                                 alt="<?= htmlspecialchars($product['name']) ?>">
+                            <?php if (!empty($product['discount'])): ?>
+                                <span class="discount-badge">-<?= $product['discount'] ?>%</span>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="product-info">
+                            <h3><?= highlightSearchQuery($product['name'], $searchQuery) ?></h3>
+                            
+                            <div class="product-meta">
+                                <div class="availability <?= ($product['stock'] > 0) ? 'in-stock' : 'out-of-stock' ?>">
+                                    <?= ($product['stock'] > 0) ? 'В наличии' : 'Нет в наличии' ?>
+                                </div>
+                                <div class="rating">
+                                    <span class="stars">★★★★★</span>
+                                    <span class="reviews">(<?= $product['reviews_count'] ?? 0 ?>)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="product-price">
+                                <?php if (!empty($product['discount'])): ?>
+                                    <span class="old-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
+                                    <span class="current-price"><?= number_format($product['price'] * (1 - $product['discount'] / 100), 2, '.', ' ') ?> ₽</span>
+                                <?php else: ?>
+                                    <span class="current-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
+                                <?php endif; ?>
+                            </div>
+                            
                             <div class="product-actions">
                                 <div class="quantity-control">
                                     <button class="quantity-btn minus">-</button>
@@ -171,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <?php require_once 'footer.php'; ?>
 
 <style>
-
 .search-results-page {
     padding: 2rem 0;
 }
@@ -189,10 +186,12 @@ document.addEventListener('DOMContentLoaded', function() {
     margin-top: 1.5rem;
 }
 
-   .product-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
+.product-card {
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .product-card:hover {
