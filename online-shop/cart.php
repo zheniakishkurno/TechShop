@@ -159,7 +159,6 @@ require_once 'header.php';
             <option value="">Выберите способ оплаты</option>
             <option value="card">Банковская карта</option>
             <option value="cash">Наличные при получении</option> 
-            <option value="online">Онлайн оплата</option>
         </select>
     </div>
     
