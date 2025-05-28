@@ -104,7 +104,7 @@ require_once 'header.php';
     </div>
 </div>
 
-<script src="profile.js"></script>
+<script src="product.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -122,37 +122,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-
-    // Обработчики кнопок "В корзину"
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', function () {
-            const productId = this.dataset.id;
-            const productName = this.dataset.name;
-            const productPrice = parseFloat(this.dataset.price);
-
-            // Получаем соответствующий input количества
-            const quantityInput = this.closest('.product-card').querySelector('.quantity-input');
-            const quantity = parseInt(quantityInput.value) || 1;
-
-            let cart = JSON.parse(localStorage.getItem('cart')) || {};
-
-            if (cart[productId]) {
-                cart[productId].quantity += quantity;
-            } else {
-                cart[productId] = {
-                    name: productName,
-                    price: productPrice,
-                    quantity: quantity
-                };
-            }
-
-            localStorage.setItem('cart', JSON.stringify(cart));
-
-            alert(`Добавлено в корзину:\n${productName}\nКоличество: ${quantity}\nЦена за единицу: ${productPrice} ₽`);
-        });
-    });
-});
-</script>
 
 
 
