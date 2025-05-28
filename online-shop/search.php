@@ -108,12 +108,12 @@ require_once 'header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Обработчик кнопок +/- количества
+    // Обработчики кнопок количества
     document.querySelectorAll('.quantity-btn').forEach(button => {
         button.addEventListener('click', function () {
-            const input = this.parentElement.querySelector('input[type="number"]');
-            let value = parseInt(input.value);
-            const max = parseInt(input.getAttribute('max')) || 99;
+            const input = this.parentElement.querySelector('.quantity-input');
+            const max = parseInt(input.getAttribute('max')) || 999;
+            let value = parseInt(input.value) || 1;
 
             if (this.classList.contains('minus') && value > 1) {
                 input.value = value - 1;
@@ -123,13 +123,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Обработчик всех кнопок "В корзину"
+    // Обработчики кнопок "В корзину"
     document.querySelectorAll('.add-to-cart').forEach(button => {
         button.addEventListener('click', function () {
             const productId = this.dataset.id;
             const productName = this.dataset.name;
             const productPrice = parseFloat(this.dataset.price);
-            const quantityInput = this.closest('.product-actions').querySelector('.quantity-input');
+
+            // Получаем соответствующий input количества
+            const quantityInput = this.closest('.product-card').querySelector('.quantity-input');
             const quantity = parseInt(quantityInput.value) || 1;
 
             let cart = JSON.parse(localStorage.getItem('cart')) || {};
@@ -151,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
 
 
 <?php require_once 'footer.php'; ?>
