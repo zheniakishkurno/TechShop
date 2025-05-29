@@ -626,9 +626,10 @@ $reviews = $pdo->query("SELECT
                 <?php foreach ($products as $product): ?>
                     <tr>
                         <td><?= $product['id'] ?></td>
-                        <td><input type="text" name="products[<?= $product['id'] ?>][name]" value="<?= htmlspecialchars($product['name']) ?>" required form="products-form" /></td>
+                        <form method="POST" enctype="multipart/form-data" class="update-form" accept-charset="utf-8">
+                        <td><input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required /></td>
                         <td>
-                            <select name="products[<?= $product['id'] ?>][category_id]" required form="products-form">
+                            <select name="category_id" required>
                                 <option value="">Без категории</option>
                                 <?php foreach ($categories as $category): ?>
                                     <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>>
@@ -637,20 +638,23 @@ $reviews = $pdo->query("SELECT
                                 <?php endforeach; ?>
                             </select>
                         </td>
-                        <td><input type="number" name="products[<?= $product['id'] ?>][price]" value="<?= $product['price'] ?>" step="0.01" min="0" required form="products-form" /></td>
-                        <td><input type="number" name="products[<?= $product['id'] ?>][discount]" value="<?= $product['discount'] ?>" min="0" max="100" form="products-form" /></td>
-                        <td><input type="number" name="products[<?= $product['id'] ?>][stock]" value="<?= $product['stock'] ?>" min="0" required form="products-form" /></td>
+                        <td><input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" min="0" required /></td>
+                        <td><input type="number" name="discount" value="<?= $product['discount'] ?>" min="0" max="100" /></td>
+                        <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
                         <td>
                             <?php if ($product['image_url']): ?>
                                 <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
                             <?php endif; ?>
-                            <input type="hidden" name="products[<?= $product['id'] ?>][current_image]" value="<?= htmlspecialchars($product['image_url']) ?>" form="products-form" />
+                            <input type="hidden" name="current_image" value="<?= htmlspecialchars($product['image_url']) ?>" />
                             <div class="file-input-wrapper">
                                 <button type="button" class="file-input-button">Изменить</button>
-                                <input type="file" name="products[<?= $product['id'] ?>][image_url]" form="products-form" />
+                                <input type="file" name="image_url" />
                             </div>
                         </td>
                         <td class="actions">
+                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
+                            <button type="submit" name="update_product">Обновить</button>
+                        </form>
                             <form method="POST" style="display: inline;" accept-charset="utf-8">
                                 <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
                                 <button type="submit" name="delete_product" class="delete" onclick="return confirm('Вы уверены, что хотите удалить этот товар?');">Удалить</button>
