@@ -191,65 +191,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (isset($_POST['update_product'])) {
-            try {
-                $product_id = $_POST['product_id'];
-                $name = $_POST['name'];
-                $category_id = $_POST['category_id'];
-                $price = $_POST['price'];
-                $stock = $_POST['stock'];
-                $discount = $_POST['discount'] ?? 0;
-                $image_url = $_POST['current_image'];
+            $product_id = $_POST['product_id'];
+            $name = $_POST['name'];
+            $category_id = $_POST['category_id'];
+            $price = $_POST['price'];
+            $stock = $_POST['stock'];
+            $discount = $_POST['discount'] ?? 0;
 
-                // Обработка нового изображения, если оно загружено
-                if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
-                    $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-                    $upload_path = 'online-shop/images/' . $image_name;
-                    
-                    if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
-                        // Удаляем старое изображение
-                        if (!empty($_POST['current_image']) && file_exists($_POST['current_image'])) {
-                            unlink($_POST['current_image']);
-                        }
-                        $image_url = $upload_path;
-                    }
+            // Обновляем основные данные товара
+            $stmt = $pdo->prepare("UPDATE products SET 
+                name = ?, 
+                category_id = ?, 
+                price = ?, 
+                stock = ?, 
+                discount = ? 
+                WHERE id = ?");
+            $stmt->execute([$name, $category_id, $price, $stock, $discount, $product_id]);
+
+            // Обработка загруженного изображения
+            if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
+                $image_url = handleImageUpload($_FILES['image_url'], $_POST['current_image']);
+                if ($image_url) {
+                    $stmt = $pdo->prepare("UPDATE products SET image_url = ? WHERE id = ?");
+                    $stmt->execute([$image_url, $product_id]);
                 }
-
-                // Обновляем данные в базе
-                $stmt = $pdo->prepare("UPDATE products SET name = ?, category_id = ?, price = ?, stock = ?, image_url = ?, discount = ? WHERE id = ?");
-                $stmt->execute([$name, $category_id, $price, $stock, $image_url, $discount, $product_id]);
-
-                $_SESSION['message'] = "Товар успешно обновлен!";
-            } catch (Exception $e) {
-                $_SESSION['error'] = "Ошибка при обновлении товара: " . $e->getMessage();
             }
-            
+
+            $_SESSION['message'] = "Товар успешно обновлен!";
             header("Location: admin.php");
             exit;
         }
 
         if (isset($_POST['delete_product'])) {
-            try {
-                $product_id = $_POST['product_id'];
-
-                // Получаем информацию о товаре перед удалением
-                $stmt = $pdo->prepare("SELECT image_url FROM products WHERE id = ?");
-                $stmt->execute([$product_id]);
-                $product = $stmt->fetch();
-
-                // Удаляем изображение, если оно существует
-                if (!empty($product['image_url']) && file_exists($product['image_url'])) {
-                    unlink($product['image_url']);
-                }
-
-                // Удаляем запись из базы данных
-                $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
-                $stmt->execute([$product_id]);
-
-                $_SESSION['message'] = "Товар успешно удален!";
-            } catch (Exception $e) {
-                $_SESSION['error'] = "Ошибка при удалении товара: " . $e->getMessage();
-            }
+            $product_id = $_POST['product_id'];
             
+            // Получаем информацию о товаре перед удалением
+            $stmt = $pdo->prepare("SELECT image_url FROM products WHERE id = ?");
+            $stmt->execute([$product_id]);
+            $product = $stmt->fetch();
+
+            // Удаляем изображение, если оно существует
+            if ($product && !empty($product['image_url']) && file_exists($product['image_url'])) {
+                unlink($product['image_url']);
+            }
+
+            // Удаляем запись из базы данных
+            $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
+            $stmt->execute([$product_id]);
+
+            $_SESSION['message'] = "Товар успешно удален!";
             header("Location: admin.php");
             exit;
         }
@@ -524,8 +514,8 @@ $reviews = $pdo->query("SELECT
                 <tbody>
                 <?php foreach ($products as $product): ?>
                     <tr>
+                        <form method="POST" enctype="multipart/form-data" accept-charset="utf-8">
                         <td><?= $product['id'] ?></td>
-                        <form method="POST" enctype="multipart/form-data" class="update-form" accept-charset="utf-8">
                         <td><input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required /></td>
                         <td>
                             <select name="category_id" required>
@@ -552,12 +542,12 @@ $reviews = $pdo->query("SELECT
                         </td>
                         <td class="actions">
                             <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
-                            <button type="submit" name="update_product">Обновить</button>
+                            <button type="submit" name="update_product" class="update-btn">Обновить</button>
                         </form>
-                            <form method="POST" style="display: inline;" accept-charset="utf-8">
-                                <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
-                                <button type="submit" name="delete_product" class="delete" onclick="return confirm('Вы уверены, что хотите удалить этот товар?');">Удалить</button>
-                            </form>
+                        <form method="POST" style="display: inline;" accept-charset="utf-8">
+                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
+                            <button type="submit" name="delete_product" class="delete" onclick="return confirm('Вы уверены, что хотите удалить этот товар?');">Удалить</button>
+                        </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>
