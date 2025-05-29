@@ -132,24 +132,30 @@ table {
 table th {
     background-color: #5B6ABF;
     color: white;
-    padding: 15px;
+    padding: 12px 15px;
     text-align: left;
     font-weight: normal;
-    border: none;
+    font-size: 14px;
 }
 
 /* Ячейки таблиц */
 table td {
-    padding: 15px;
+    padding: 10px 15px;
     text-align: left;
     vertical-align: middle;
     border-bottom: 1px solid #E5E5E5;
 }
 
+/* ID колонка */
+table td:first-child {
+    color: #666;
+    width: 50px;
+}
+
 /* Изображения в таблицах */
-td img, .image-preview {
-    max-width: 25px;
-    max-height: 25px;
+td img {
+    max-width: 30px;
+    max-height: 30px;
     width: auto;
     height: auto;
     vertical-align: middle;
@@ -158,73 +164,70 @@ td img, .image-preview {
 
 /* Кнопки в таблицах */
 .actions {
-    white-space: nowrap;
     text-align: right;
 }
 
+/* Стили для кнопок */
+button[type="submit"],
 .actions button {
-    padding: 8px 20px;
+    padding: 6px 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
-    margin: 0 5px;
+    font-weight: normal;
 }
 
 button[type="submit"]:not(.delete),
-.actions button.update-btn,
-button.update-btn {
+.actions button.update-btn {
     background-color: #4CAF50;
     color: white;
 }
 
-.actions button.delete,
-button.delete {
+.actions button.delete {
     background-color: #f44336;
     color: white;
+    margin-left: 5px;
 }
 
-/* Инпуты в таблицах */
-table input[type="text"],
-table input[type="number"],
-table input[type="email"],
-table select,
-table textarea {
+/* Стили для инпутов */
+table input[type="text"] {
     width: 100%;
-    padding: 8px;
+    padding: 6px 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    box-sizing: border-box;
     font-size: 14px;
 }
 
 /* Стили для file input */
-.file-input-wrapper {
-    display: inline-block;
-    position: relative;
-}
-
-input[type="file"] {
-    display: none;
-}
-
 .file-input-button {
     display: inline-block;
-    padding: 8px 16px;
+    padding: 6px 12px;
     background-color: #E9E9E9;
     color: #333;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-right: 10px;
     font-size: 14px;
 }
 
 .file-status {
     color: #666;
     font-size: 14px;
-    display: inline-block;
-    vertical-align: middle;
+    margin-left: 8px;
+}
+
+/* Убираем лишние границы и отступы */
+.table-wrapper {
+    border: none;
+    box-shadow: none;
+    margin: 0;
+}
+
+.tab-content {
+    padding: 0;
+    border: none;
+    box-shadow: none;
 }
 
 /* Стили для секций с таблицами */
