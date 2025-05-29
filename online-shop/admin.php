@@ -264,44 +264,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (isset($_POST['update_category'])) {
-            $image_url = $_POST['current_image'];
+            $category_id = $_POST['category_id'];
+            $name = $_POST['name'];
+            
+            // Обновляем основные данные категории
+            $stmt = $pdo->prepare("UPDATE categories SET name = ? WHERE id = ?");
+            $stmt->execute([$name, $category_id]);
+
+            // Обработка загруженного изображения
             if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
-                // Удаляем старое изображение
+                $image_url = handleImageUpload($_FILES['image_url'], $_POST['current_image']);
                 if ($image_url) {
-                    @unlink($image_url); // Прямой путь, так как уже содержит online-shop/images/
-                    @unlink('uploads/' . basename($image_url));
-                }
-                
-                $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-                $upload_path = 'online-shop/images/' . $image_name;
-                
-                if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
-                    // Создаем копию в папке uploads для админки
-                    copy($upload_path, 'uploads/' . $image_name);
-                    $image_url = 'online-shop/images/' . $image_name;
+                    $stmt = $pdo->prepare("UPDATE categories SET image_url = ? WHERE id = ?");
+                    $stmt->execute([$image_url, $category_id]);
                 }
             }
-            
-            $stmt = $pdo->prepare("UPDATE categories SET name=?, image_url=? WHERE id=?");
-            $stmt->execute([$_POST['name'], $image_url, $_POST['category_id']]);
+
             $_SESSION['message'] = "Категория успешно обновлена!";
+            header("Location: admin.php");
+            exit;
         }
 
         if (isset($_POST['delete_category'])) {
-            // Удаляем изображение категории
-            $stmt = $pdo->prepare("SELECT image_url FROM categories WHERE id=?");
-            $stmt->execute([$_POST['category_id']]);
+            $category_id = $_POST['category_id'];
+            
+            // Получаем информацию о категории перед удалением
+            $stmt = $pdo->prepare("SELECT image_url FROM categories WHERE id = ?");
+            $stmt->execute([$category_id]);
             $category = $stmt->fetch();
-            
-            if ($category['image_url']) {
-                // Удаляем файл из обеих папок
-                @unlink($category['image_url']); // Прямой путь, так как уже содержит online-shop/images/
-                @unlink('uploads/' . basename($category['image_url']));
+
+            // Удаляем изображение, если оно существует
+            if ($category && !empty($category['image_url'])) {
+                if (file_exists($category['image_url'])) {
+                    unlink($category['image_url']);
+                }
+                // Удаляем копию из папки uploads, если она существует
+                $uploads_path = 'uploads/' . basename($category['image_url']);
+                if (file_exists($uploads_path)) {
+                    unlink($uploads_path);
+                }
             }
-            
-            $stmt = $pdo->prepare("DELETE FROM categories WHERE id=?");
-            $stmt->execute([$_POST['category_id']]);
+
+            // Удаляем запись из базы данных
+            $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
+            $stmt->execute([$category_id]);
+
             $_SESSION['message'] = "Категория успешно удалена!";
+            header("Location: admin.php");
+            exit;
         }
 
         // Обработка пользователей
@@ -580,19 +590,27 @@ $reviews = $pdo->query("SELECT
             <tbody>
             <?php foreach ($categories as $category): ?>
                 <tr>
-                    <td><?= $category['id'] ?></td>
-                    <td><input type="text" name="categories[<?= $category['id'] ?>][name]" value="<?= htmlspecialchars($category['name']) ?>" required form="categories-form" /></td>
-                    <td>
-                        <?php if ($category['image_url']): ?>
-                            <img src="<?= htmlspecialchars($category['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
-                        <?php endif; ?>
-                        <input type="hidden" name="categories[<?= $category['id'] ?>][current_image]" value="<?= htmlspecialchars($category['image_url']) ?>" form="categories-form" />
-                        <input type="file" name="categories[<?= $category['id'] ?>][image_url]" form="categories-form" />
-                    </td>
-                    <td class="actions">
-                        <input type="hidden" name="categories[<?= $category['id'] ?>][category_id]" value="<?= $category['id'] ?>" form="categories-form" />
-                        <button type="submit" name="update_category">Обновить</button>
-                        <button type="submit" name="delete_category" class="delete">Удалить</button>
+                    <form method="POST" enctype="multipart/form-data" accept-charset="utf-8">
+                        <td><?= $category['id'] ?></td>
+                        <td><input type="text" name="name" value="<?= htmlspecialchars($category['name']) ?>" required /></td>
+                        <td>
+                            <?php if ($category['image_url']): ?>
+                                <img src="<?= htmlspecialchars($category['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
+                            <?php endif; ?>
+                            <input type="hidden" name="current_image" value="<?= htmlspecialchars($category['image_url']) ?>" />
+                            <div class="file-input-wrapper">
+                                <button type="button" class="file-input-button">Изменить</button>
+                                <input type="file" name="image_url" />
+                            </div>
+                        </td>
+                        <td class="actions">
+                            <input type="hidden" name="category_id" value="<?= $category['id'] ?>" />
+                            <button type="submit" name="update_category">Обновить</button>
+                        </form>
+                        <form method="POST" style="display: inline;" accept-charset="utf-8">
+                            <input type="hidden" name="category_id" value="<?= $category['id'] ?>" />
+                            <button type="submit" name="delete_category" class="delete" onclick="return confirm('Вы уверены, что хотите удалить эту категорию?');">Удалить</button>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
