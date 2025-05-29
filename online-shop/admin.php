@@ -15,22 +15,40 @@ if (isset($_POST['refresh_table'])) {
         if (in_array($table, $allowed_tables)) {
             switch($table) {
                 case 'products':
-                    foreach($_POST['products'] as $id => $product) {
-                        $stmt = $pdo->prepare("UPDATE products SET 
-                            name = ?, 
-                            category_id = ?, 
-                            price = ?, 
-                            stock = ?, 
-                            discount = ? 
-                            WHERE id = ?");
-                        $stmt->execute([
-                            $product['name'],
-                            $product['category_id'],
-                            $product['price'],
-                            $product['stock'],
-                            $product['discount'],
-                            $id
-                        ]);
+                    if (isset($_POST['products']) && is_array($_POST['products'])) {
+                        foreach($_POST['products'] as $id => $product) {
+                            $stmt = $pdo->prepare("UPDATE products SET 
+                                name = ?, 
+                                category_id = ?, 
+                                price = ?, 
+                                stock = ?, 
+                                discount = ? 
+                                WHERE id = ?");
+                            $stmt->execute([
+                                $product['name'],
+                                $product['category_id'],
+                                $product['price'],
+                                $product['stock'],
+                                $product['discount'],
+                                $id
+                            ]);
+                            
+                            // Обработка изображения, если оно было загружено
+                            if (isset($_FILES['products']['name'][$id]['image_url']) && $_FILES['products']['error'][$id]['image_url'] === UPLOAD_ERR_OK) {
+                                $image_url = handleImageUpload([
+                                    'name' => $_FILES['products']['name'][$id]['image_url'],
+                                    'type' => $_FILES['products']['type'][$id]['image_url'],
+                                    'tmp_name' => $_FILES['products']['tmp_name'][$id]['image_url'],
+                                    'error' => $_FILES['products']['error'][$id]['image_url'],
+                                    'size' => $_FILES['products']['size'][$id]['image_url']
+                                ], $product['current_image']);
+                                
+                                if ($image_url) {
+                                    $stmt = $pdo->prepare("UPDATE products SET image_url = ? WHERE id = ?");
+                                    $stmt->execute([$image_url, $id]);
+                                }
+                            }
+                        }
                     }
                     break;
 
@@ -584,7 +602,7 @@ $reviews = $pdo->query("SELECT
         </form>
 
         <!-- Кнопка обновления всех товаров -->
-        <form method="POST" id="products-form" accept-charset="utf-8">
+        <form method="POST" id="products-form" accept-charset="utf-8" enctype="multipart/form-data">
             <input type="hidden" name="table_name" value="products">
             <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
         </form>
@@ -608,12 +626,9 @@ $reviews = $pdo->query("SELECT
                 <?php foreach ($products as $product): ?>
                     <tr>
                         <td><?= $product['id'] ?></td>
+                        <td><input type="text" name="products[<?= $product['id'] ?>][name]" value="<?= htmlspecialchars($product['name']) ?>" required form="products-form" /></td>
                         <td>
-                            <form method="POST" enctype="multipart/form-data" class="update-form" accept-charset="utf-8">
-                                <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required />
-                        </td>
-                        <td>
-                            <select name="category_id" required>
+                            <select name="products[<?= $product['id'] ?>][category_id]" required form="products-form">
                                 <option value="">Без категории</option>
                                 <?php foreach ($categories as $category): ?>
                                     <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>>
@@ -622,23 +637,20 @@ $reviews = $pdo->query("SELECT
                                 <?php endforeach; ?>
                             </select>
                         </td>
-                        <td><input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" min="0" required /></td>
-                        <td><input type="number" name="discount" value="<?= $product['discount'] ?>" min="0" max="100" /></td>
-                        <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
+                        <td><input type="number" name="products[<?= $product['id'] ?>][price]" value="<?= $product['price'] ?>" step="0.01" min="0" required form="products-form" /></td>
+                        <td><input type="number" name="products[<?= $product['id'] ?>][discount]" value="<?= $product['discount'] ?>" min="0" max="100" form="products-form" /></td>
+                        <td><input type="number" name="products[<?= $product['id'] ?>][stock]" value="<?= $product['stock'] ?>" min="0" required form="products-form" /></td>
                         <td>
                             <?php if ($product['image_url']): ?>
                                 <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
                             <?php endif; ?>
-                            <input type="hidden" name="current_image" value="<?= htmlspecialchars($product['image_url']) ?>" />
+                            <input type="hidden" name="products[<?= $product['id'] ?>][current_image]" value="<?= htmlspecialchars($product['image_url']) ?>" form="products-form" />
                             <div class="file-input-wrapper">
                                 <button type="button" class="file-input-button">Изменить</button>
-                                <input type="file" name="image_url" />
+                                <input type="file" name="products[<?= $product['id'] ?>][image_url]" form="products-form" />
                             </div>
                         </td>
                         <td class="actions">
-                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
-                            <button type="submit" name="update_product" class="update-btn">Обновить</button>
-                            </form>
                             <form method="POST" style="display: inline;" accept-charset="utf-8">
                                 <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
                                 <button type="submit" name="delete_product" class="delete" onclick="return confirm('Вы уверены, что хотите удалить этот товар?');">Удалить</button>
