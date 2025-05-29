@@ -86,11 +86,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.25rem 0; /* было 0.5rem 0 */
+    padding: 0.25rem 0; /* уменьшили отступ сверху и снизу */
   }
   
   .logo a {
-    font-size: 1.2rem; /* ещё меньше логотип */
+    font-size: 1.1rem; /* уменьшили размер логотипа */
     font-weight: 700;
     color: var(--text);
   }
@@ -102,7 +102,7 @@
   .search-bar {
     flex-grow: 1;
     max-width: 600px;
-    margin: 0 2rem;
+    margin: 0 1.5rem; /* уменьшили боковые отступы */
   }
   
   .search-bar form {
@@ -111,7 +111,7 @@
   
   .search-bar input {
     flex-grow: 1;
-    padding: 0.4rem 0.6rem; /* уменьшили вертикальные отступы */
+    padding: 0.3rem 0.5rem; /* уменьшили внутренние отступы */
     border: 1px solid var(--gray-light);
     border-radius: 6px 0 0 6px;
     font-size: 0.85rem;
@@ -126,7 +126,7 @@
   .search-bar button {
     background-color: var(--primary);
     color: var(--white);
-    padding: 0 0.8rem; /* чуть меньше боковые отступы */
+    padding: 0 0.6rem; /* уменьшили боковые отступы кнопки */
     border-radius: 0 6px 6px 0;
     transition: background-color 0.2s;
     font-size: 0.85rem;
@@ -138,7 +138,7 @@
   
   .header-icons {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem; /* уменьшили отступ между иконками */
   }
   
   .header-icons .icon {
@@ -147,6 +147,7 @@
     gap: 0.5rem;
     font-weight: 500;
     transition: color 0.2s;
+    font-size: 0.85rem; /* уменьшили размер текста */
   }
   
   .header-icons .icon:hover {
@@ -154,17 +155,17 @@
   }
   
   .header-icons .icon i {
-    font-size: 0.9rem; /* уменьшили размер иконок */
+    font-size: 0.85rem; /* уменьшили размер иконок */
   }
   
   .main-nav {
     border-top: 1px solid var(--gray-light);
-    padding: 0.5rem 0;
+    padding: 0.25rem 0; /* уменьшили отступы навигации */
   }
   
   .main-nav ul {
     display: flex;
-    gap: 1.25rem;
+    gap: 1rem; /* уменьшили отступ между пунктами меню */
     list-style: none;
   }
   
@@ -172,7 +173,7 @@
     color: var(--text-secondary);
     font-weight: 500;
     transition: color 0.2s;
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* уменьшили размер текста в меню */
   }
   
   .main-nav a:hover {
