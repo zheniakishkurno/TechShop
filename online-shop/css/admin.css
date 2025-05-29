@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #fff;
     margin: 0;
-    padding: 20px;
+    padding: 20px 30px;
 }
 
 .container {
@@ -16,17 +16,19 @@ h1 {
     font-size: 20px;
     margin: 0 0 20px 0;
     font-weight: normal;
+    color: #333;
 }
 
 /* Навигация */
 .tabs {
-    margin: 0 0 30px 0;
+    margin: 0 -30px 20px;
+    padding: 0 30px;
     border-bottom: 1px solid #ddd;
-    padding: 0;
+    background: #f5f5f5;
 }
 
 .tab-button {
-    padding: 8px 15px;
+    padding: 10px 15px;
     background: none;
     border: none;
     cursor: pointer;
@@ -45,15 +47,16 @@ h1 {
     display: inline-block;
     color: #333;
     text-decoration: none;
-    margin: 0 0 30px 0;
+    margin: 0 0 20px 0;
     font-size: 14px;
 }
 
 /* Заголовок раздела */
 h2 {
     font-size: 16px;
-    margin: 0 0 20px 0;
+    margin: 0 0 15px 0;
     font-weight: normal;
+    color: #333;
 }
 
 /* Кнопка "Сохранить все изменения" */
@@ -62,7 +65,7 @@ button[name="refresh_table"] {
     color: white;
     border: none;
     padding: 8px 15px;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     font-size: 14px;
     margin-bottom: 20px;
@@ -71,8 +74,8 @@ button[name="refresh_table"] {
 /* Форма добавления */
 .form {
     background: #f9f9f9;
-    padding: 20px;
-    border-radius: 4px;
+    padding: 15px;
+    border-radius: 3px;
     margin-bottom: 20px;
 }
 
@@ -87,42 +90,24 @@ input[type="text"] {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 15px;
+    border-radius: 3px;
+    margin-bottom: 10px;
     font-size: 14px;
     box-sizing: border-box;
 }
 
-/* Кнопка добавления */
-button[type="submit"] {
-    background-color: #5B6ABF;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
 /* Таблица */
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    margin-top: 20px;
-}
-
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    table-layout: fixed;
+    margin-top: 10px;
 }
 
 /* Заголовки таблицы */
 table th {
     background-color: #5B6ABF;
     color: white;
-    padding: 12px 15px;
+    padding: 10px 15px;
     text-align: left;
     font-weight: normal;
     font-size: 14px;
@@ -130,7 +115,7 @@ table th {
 
 /* Ячейки таблицы */
 table td {
-    padding: 10px 15px;
+    padding: 8px 15px;
     border-bottom: 1px solid #E5E5E5;
     vertical-align: middle;
     font-size: 14px;
@@ -144,25 +129,27 @@ table td:first-child {
 
 /* Колонка названия */
 table td:nth-child(2) {
-    width: 200px;
+    width: 30%;
 }
 
 /* Колонка изображения */
 table td:nth-child(3) {
-    width: 250px;
+    width: 40%;
 }
 
 /* Колонка действий */
 table td:last-child {
-    width: 200px;
+    width: 30%;
     text-align: right;
+    white-space: nowrap;
 }
 
 /* Изображения в таблице */
 td img {
-    height: 40px;
+    height: 25px;
     width: auto;
     vertical-align: middle;
+    margin-right: 10px;
 }
 
 /* File input */
@@ -172,7 +159,7 @@ td img {
     background-color: #E9E9E9;
     color: #333;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     font-size: 14px;
 }
@@ -181,17 +168,14 @@ td img {
     color: #666;
     font-size: 14px;
     margin-left: 10px;
+    vertical-align: middle;
 }
 
 /* Кнопки действий */
-.actions {
-    white-space: nowrap;
-}
-
 .actions button {
     padding: 6px 16px;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     font-size: 14px;
     margin-left: 5px;
@@ -207,6 +191,17 @@ td img {
     color: white;
 }
 
+/* Кнопка добавления */
+button[type="submit"] {
+    background-color: #5B6ABF;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
 /* Список категорий */
 .categories-list {
     margin-top: 20px;
@@ -215,25 +210,20 @@ td img {
 /* Адаптивность */
 @media (max-width: 768px) {
     body {
-        padding: 10px;
+        padding: 15px;
     }
     
     .tabs {
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-    
-    .table-wrapper {
-        margin: 10px -10px;
-        width: calc(100% + 20px);
+        margin: 0 -15px 20px;
+        padding: 0 15px;
     }
     
     table {
-        min-width: 600px;
+        display: block;
+        overflow-x: auto;
     }
     
     .actions button {
         padding: 6px 12px;
-        font-size: 13px;
     }
 } 
