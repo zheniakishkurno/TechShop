@@ -270,11 +270,20 @@ $order_id = $order_stmt->fetchColumn(); // вместо lastInsertId()
 }
 
 function searchProductsByName($searchQuery) {
-    global $pdo;  // или как у тебя подключение к базе
+    global $pdo;
 
-    $sql = "SELECT * FROM products WHERE name LIKE :search";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['search' => '%' . $searchQuery . '%']);
+    if (empty($searchQuery)) {
+        // Если поисковый запрос пустой, возвращаем все товары
+        $sql = "SELECT * FROM products ORDER BY created_at DESC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+    } else {
+        // Если есть поисковый запрос, ищем по имени
+        $sql = "SELECT * FROM products WHERE name LIKE :search ORDER BY created_at DESC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['search' => '%' . $searchQuery . '%']);
+    }
+    
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
