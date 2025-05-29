@@ -677,10 +677,10 @@ $reviews = $pdo->query("SELECT
                 <label for="password">Пароль</label>
                 <div class="input-wrapper">
                     <input type="password" id="password" name="password" 
-                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                           title="Пароль должен содержать минимум 8 символов, включая цифры, строчные и заглавные буквы"
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}"
+                           title="Пароль должен содержать минимум 6 символов, включая цифры, строчные и заглавные буквы"
                            required />
-                    <span class="input-hint">Минимум 8 символов, включая цифры, строчные и заглавные буквы</span>
+                    <span class="input-hint">Минимум 6 символов, включая цифры, строчные и заглавные буквы</span>
                     <span class="error-message">Пароль должен соответствовать требованиям безопасности</span>
                 </div>
             </div>
