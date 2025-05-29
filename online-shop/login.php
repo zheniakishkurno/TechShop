@@ -39,31 +39,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-    <div class="auth-form">
-        <h1>Вход в систему</h1>
-        
-        <?php if ($error): ?>
-            <div class="alert error"><?= htmlspecialchars($error) ?></div>
-        <?php endif; ?>
-        
-        <form method="POST"> 
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required placeholder="Введите ваш email">
-                <div class="input-hint">Введите корректный email адрес</div>
-            </div>
+    <div class="auth-container">
+        <a href="index.php" class="back-link">← Вернуться на главную</a>
+        <div class="auth-form">
+            <h1>Вход в систему</h1>
             
-            <div class="form-group">
-                <label for="password">Пароль:</label>
-                <input type="password" id="password" name="password" required placeholder="Введите ваш пароль" minlength="6">
-                <div class="input-hint">Минимум 6 символов</div>
+            <?php if ($error): ?>
+                <div class="alert error"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+            
+            <form method="POST"> 
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required placeholder="Введите ваш email">
+                    <div class="input-hint">Введите корректный email адрес</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" required placeholder="Введите ваш пароль" minlength="6">
+                    <div class="input-hint">Минимум 6 символов</div>
+                </div>
+                 
+                <button type="submit" class="btn">Войти</button>
+            </form>
+            
+            <div class="auth-links">
+                <p>Нет аккаунта? <a href="register.php">Зарегистрироваться</a></p>
             </div>
-             
-            <button type="submit" class="btn">Войти</button>
-        </form>
-        
-        <div class="auth-links">
-            <p>Нет аккаунта?<a href="register.php">Зарегистрироваться</a></p>
         </div>
     </div>
 </body>
