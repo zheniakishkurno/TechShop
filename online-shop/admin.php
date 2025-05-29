@@ -470,56 +470,150 @@ $reviews = $pdo->query("SELECT
 
     <!-- Вкладка со всеми таблицами -->
     <div id="all_tables" class="tab-content <?= $_SESSION['active_tab'] == 'all_tables' ? 'active' : '' ?>">
-        <h2>Все таблицы</h2>
+        <h2>Обзор таблиц</h2>
         
-        <!-- Секция товаров -->
-        <div class="section">
-            <h3>Товары</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Название</th>
-                            <th>Категория</th>
-                            <th>Цена</th>
-                            <th>Скидка</th>
-                            <th>На складе</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($products as $product): ?>
-                        <tr>
-                            <form method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="current_tab" value="all_tables">
-                                <td><?= $product['id'] ?></td>
-                                <td><input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required /></td>
-                                <td>
-                                    <select name="category_id" required>
-                                        <?php foreach ($categories as $category): ?>
-                                            <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($category['name']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </td>
-                                <td><input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" min="0" required /></td>
-                                <td><input type="number" name="discount" value="<?= $product['discount'] ?>" min="0" max="100" /></td>
-                                <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
-                                <td class="actions">
-                                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
-                                    <button type="submit" name="update_product">Обновить</button>
-                                    <button type="submit" name="delete_product" onclick="return confirm('Вы уверены?')">Удалить</button>
-                                </td>
-                            </form>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+        <div class="dashboard-grid">
+            <!-- Блок товаров -->
+            <div class="dashboard-card">
+                <h3>Товары</h3>
+                <div class="stats">
+                    <p>Всего товаров: <strong><?= count($products) ?></strong></p>
+                    <?php
+                    $total_stock = array_sum(array_column($products, 'stock'));
+                    $out_of_stock = count(array_filter($products, function($p) { return $p['stock'] == 0; }));
+                    ?>
+                    <p>Общее количество на складе: <strong><?= $total_stock ?></strong></p>
+                    <p>Нет в наличии: <strong><?= $out_of_stock ?></strong></p>
+                </div>
+                <a href="#" class="dashboard-link" onclick="switchTab('products')">Управление товарами →</a>
+            </div>
+
+            <!-- Блок категорий -->
+            <div class="dashboard-card">
+                <h3>Категории</h3>
+                <div class="stats">
+                    <p>Всего категорий: <strong><?= count($categories) ?></strong></p>
+                    <?php
+                    $categories_with_products = array_filter($categories, function($c) use ($products) {
+                        return count(array_filter($products, function($p) use ($c) {
+                            return $p['category_id'] == $c['id'];
+                        })) > 0;
+                    });
+                    ?>
+                    <p>Активных категорий: <strong><?= count($categories_with_products) ?></strong></p>
+                </div>
+                <a href="#" class="dashboard-link" onclick="switchTab('categories')">Управление категориями →</a>
+            </div>
+
+            <!-- Блок пользователей -->
+            <div class="dashboard-card">
+                <h3>Пользователи</h3>
+                <div class="stats">
+                    <p>Всего пользователей: <strong><?= count($users) ?></strong></p>
+                    <?php
+                    $admins = count(array_filter($users, function($u) { return $u['role'] === 'admin'; }));
+                    ?>
+                    <p>Администраторов: <strong><?= $admins ?></strong></p>
+                    <p>Клиентов: <strong><?= count($users) - $admins ?></strong></p>
+                </div>
+                <a href="#" class="dashboard-link" onclick="switchTab('users')">Управление пользователями →</a>
+            </div>
+
+            <!-- Блок заказов -->
+            <div class="dashboard-card">
+                <h3>Заказы</h3>
+                <div class="stats">
+                    <p>Всего заказов: <strong><?= count($orders) ?></strong></p>
+                    <?php
+                    $processing = count(array_filter($orders, function($o) { return $o['status'] === 'processing'; }));
+                    $completed = count(array_filter($orders, function($o) { return $o['status'] === 'delivered'; }));
+                    ?>
+                    <p>В обработке: <strong><?= $processing ?></strong></p>
+                    <p>Выполнено: <strong><?= $completed ?></strong></p>
+                </div>
+                <a href="#" class="dashboard-link" onclick="switchTab('orders')">Управление заказами →</a>
+            </div>
+
+            <!-- Блок отзывов -->
+            <div class="dashboard-card">
+                <h3>Отзывы</h3>
+                <div class="stats">
+                    <p>Всего отзывов: <strong><?= count($reviews) ?></strong></p>
+                    <?php
+                    $avg_rating = count($reviews) > 0 ? 
+                        round(array_sum(array_column($reviews, 'rating')) / count($reviews), 1) : 0;
+                    ?>
+                    <p>Средняя оценка: <strong><?= $avg_rating ?></strong></p>
+                </div>
+                <a href="#" class="dashboard-link" onclick="switchTab('reviews')">Управление отзывами →</a>
             </div>
         </div>
     </div>
+
+    <style>
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px 0;
+    }
+
+    .dashboard-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .dashboard-card h3 {
+        color: #2c3e50;
+        margin-top: 0;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e1e8ed;
+    }
+
+    .stats {
+        margin-bottom: 20px;
+    }
+
+    .stats p {
+        margin: 8px 0;
+        color: #666;
+    }
+
+    .stats strong {
+        color: #2c3e50;
+        font-size: 1.1em;
+    }
+
+    .dashboard-link {
+        display: inline-block;
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+
+    .dashboard-link:hover {
+        color: #0056b3;
+    }
+    </style>
+
+    <script>
+    function switchTab(tabId) {
+        const button = document.querySelector(`[data-tab="${tabId}"]`);
+        if (button) {
+            button.click();
+        }
+    }
+    </script>
 
     <!-- Обновляем остальные вкладки -->
     <div id="products" class="tab-content <?= $_SESSION['active_tab'] == 'products' ? 'active' : '' ?>">
