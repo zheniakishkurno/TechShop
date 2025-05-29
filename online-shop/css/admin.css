@@ -154,10 +154,15 @@ table td:first-child {
 
 /* Изображения в таблицах */
 td img, .image-preview {
-    width: 20px;
-    height: 20px;
-    object-fit: cover;
+    height: 40px;
+    width: auto;
     vertical-align: middle;
+}
+
+/* Ячейка с названием товара */
+td:nth-child(2) {
+    width: 25%;
+    min-width: 200px;
 }
 
 /* Кнопки в таблицах */
@@ -191,10 +196,12 @@ button[type="submit"]:not(.delete),
 /* Стили для инпутов */
 table input[type="text"] {
     width: 100%;
+    min-width: 200px;
     padding: 6px 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
+    box-sizing: border-box;
 }
 
 /* Стили для file input */
