@@ -153,13 +153,11 @@ table td:first-child {
 }
 
 /* Изображения в таблицах */
-td img {
-    max-width: 30px;
-    max-height: 30px;
-    width: auto;
-    height: auto;
+td img, .image-preview {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
     vertical-align: middle;
-    object-fit: contain;
 }
 
 /* Кнопки в таблицах */
