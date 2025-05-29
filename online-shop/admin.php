@@ -3,6 +3,17 @@ ob_start();
 session_start();
 header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('UTF-8');
+
+// Инициализация активной вкладки
+if (!isset($_SESSION['active_tab'])) {
+    $_SESSION['active_tab'] = 'all_tables';
+}
+
+// Обновление активной вкладки при отправке формы
+if (isset($_POST['current_tab'])) {
+    $_SESSION['active_tab'] = $_POST['current_tab'];
+}
+
 require_once 'config.php';
 require_once 'functions.php';
 
@@ -448,16 +459,70 @@ $reviews = $pdo->query("SELECT
 
     <!-- Навигация по разделам -->
     <div class="tabs">
-        <button class="tab-button active" data-tab="products">Товары</button>
-        <button class="tab-button" data-tab="categories">Категории</button>
-        <button class="tab-button" data-tab="users">Пользователи</button>
-        <button class="tab-button" data-tab="orders">Заказы</button>
-        <button class="tab-button" data-tab="reviews">Отзывы</button>
+        <button class="tab-button <?= $_SESSION['active_tab'] == 'all_tables' ? 'active' : '' ?>" data-tab="all_tables">Все таблицы</button>
+        <button class="tab-button <?= $_SESSION['active_tab'] == 'products' ? 'active' : '' ?>" data-tab="products">Товары</button>
+        <button class="tab-button <?= $_SESSION['active_tab'] == 'categories' ? 'active' : '' ?>" data-tab="categories">Категории</button>
+        <button class="tab-button <?= $_SESSION['active_tab'] == 'users' ? 'active' : '' ?>" data-tab="users">Пользователи</button>
+        <button class="tab-button <?= $_SESSION['active_tab'] == 'orders' ? 'active' : '' ?>" data-tab="orders">Заказы</button>
+        <button class="tab-button <?= $_SESSION['active_tab'] == 'reviews' ? 'active' : '' ?>" data-tab="reviews">Отзывы</button>
     </div>
     <a href="index.php" class="back-button">← Назад на сайт</a>
 
-    <!-- Управление товарами -->
-    <div id="products" class="tab-content active">
+    <!-- Вкладка со всеми таблицами -->
+    <div id="all_tables" class="tab-content <?= $_SESSION['active_tab'] == 'all_tables' ? 'active' : '' ?>">
+        <h2>Все таблицы</h2>
+        
+        <!-- Секция товаров -->
+        <div class="section">
+            <h3>Товары</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Категория</th>
+                            <th>Цена</th>
+                            <th>Скидка</th>
+                            <th>На складе</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($products as $product): ?>
+                        <tr>
+                            <form method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="current_tab" value="all_tables">
+                                <td><?= $product['id'] ?></td>
+                                <td><input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required /></td>
+                                <td>
+                                    <select name="category_id" required>
+                                        <?php foreach ($categories as $category): ?>
+                                            <option value="<?= $category['id'] ?>" <?= $category['id'] == $product['category_id'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($category['name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td><input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" min="0" required /></td>
+                                <td><input type="number" name="discount" value="<?= $product['discount'] ?>" min="0" max="100" /></td>
+                                <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
+                                <td class="actions">
+                                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
+                                    <button type="submit" name="update_product">Обновить</button>
+                                    <button type="submit" name="delete_product" onclick="return confirm('Вы уверены?')">Удалить</button>
+                                </td>
+                            </form>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Обновляем остальные вкладки -->
+    <div id="products" class="tab-content <?= $_SESSION['active_tab'] == 'products' ? 'active' : '' ?>">
         <h2>Управление товарами</h2>
         
         <!-- Форма добавления товара -->
@@ -566,8 +631,7 @@ $reviews = $pdo->query("SELECT
         </div>
     </div>
 
-    <!-- Управление категориями -->
-    <div id="categories" class="tab-content">
+    <div id="categories" class="tab-content <?= $_SESSION['active_tab'] == 'categories' ? 'active' : '' ?>">
         <h2>Управление категориями</h2>
 
         <form method="POST" enctype="multipart/form-data" class="form" accept-charset="utf-8">
@@ -618,8 +682,7 @@ $reviews = $pdo->query("SELECT
         </table>
     </div>
 
-    <!-- Управление пользователями -->
-    <div id="users" class="tab-content">
+    <div id="users" class="tab-content <?= $_SESSION['active_tab'] == 'users' ? 'active' : '' ?>">
         <h2>Управление пользователями</h2>
 
         <form method="POST" class="form">
@@ -749,8 +812,7 @@ $reviews = $pdo->query("SELECT
         </table>
     </div>
 
-    <!-- Управление заказами -->
-    <div id="orders" class="tab-content">
+    <div id="orders" class="tab-content <?= $_SESSION['active_tab'] == 'orders' ? 'active' : '' ?>">
         <h2>Управление заказами</h2>
 
         <h3>Список заказов</h3>
@@ -802,8 +864,7 @@ $reviews = $pdo->query("SELECT
         </table>
     </div>
 
-    <!-- Управление отзывами -->
-    <div id="reviews" class="tab-content">
+    <div id="reviews" class="tab-content <?= $_SESSION['active_tab'] == 'reviews' ? 'active' : '' ?>">
         <h2>Управление отзывами</h2>
 
         <h3>Список отзывов</h3>
@@ -849,5 +910,42 @@ $reviews = $pdo->query("SELECT
         </table>
     </div>
 </div>
+
+<script>
+    // Переключение между вкладками
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.dataset.tab;
+            
+            // Убираем активный класс у всех кнопок и контента
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Добавляем активный класс нажатой кнопке и соответствующему контенту
+            button.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            
+            // Сохраняем активную вкладку в сессии через AJAX
+            fetch('admin.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'current_tab=' + tabId
+            });
+        });
+    });
+
+    // Добавляем скрытое поле current_tab ко всем формам
+    document.querySelectorAll('form').forEach(form => {
+        if (!form.querySelector('input[name="current_tab"]')) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'current_tab';
+            input.value = '<?= $_SESSION['active_tab'] ?>';
+            form.appendChild(input);
+        }
+    });
+</script>
 </body>
 </html>
