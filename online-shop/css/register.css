@@ -40,12 +40,44 @@ input {
     border-radius: 8px;
     font-size: 15px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #f8f9fa;
 }
 
 input:focus {
     border-color: #007bff;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
     outline: none;
+}
+
+input:invalid {
+    border-color: #dc3545;
+    background-color: #fff8f8;
+}
+
+input:invalid:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+}
+
+.input-hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+}
+
+input:invalid + .error-message {
+    display: block;
+}
+
+input:hover {
+    border-color: #80bdff;
 }
 
 .btn {
@@ -59,10 +91,15 @@ input:focus {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn:hover {
     background-color: #0056b3;
+}
+
+.btn:active {
+    transform: translateY(1px);
 }
 
 .alert.error {
