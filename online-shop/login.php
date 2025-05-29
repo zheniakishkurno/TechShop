@@ -49,12 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST"> 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" required placeholder="Введите ваш email">
+                <div class="input-hint">Введите корректный email адрес</div>
             </div>
             
             <div class="form-group">
                 <label for="password">Пароль:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required placeholder="Введите ваш пароль" minlength="6">
+                <div class="input-hint">Минимум 6 символов</div>
             </div>
              
             <button type="submit" class="btn">Войти</button>
