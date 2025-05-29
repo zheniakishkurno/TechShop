@@ -625,7 +625,7 @@ $reviews = $pdo->query("SELECT
                         <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
                         <td>
                             <?php if ($product['image_url']): ?>
-                                <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" class="image-preview" />
+                                <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
                             <?php endif; ?>
                             <input type="hidden" name="current_image" value="<?= htmlspecialchars($product['image_url']) ?>" />
                             <div class="file-input-wrapper">
