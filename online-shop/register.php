@@ -43,10 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Пожалуйста, введите пароль';
     } elseif (strlen($password) < 6) {
         $error = 'Пароль должен содержать минимум 6 символов';
-    } elseif (!preg_match('/[A-ZА-Я]/', $password)) {
-        $error = 'Пароль должен содержать хотя бы одну заглавную букву';
-    } elseif (!preg_match('/[0-9]/', $password)) {
-        $error = 'Пароль должен содержать хотя бы одну цифру';
     } elseif ($password !== $confirm_password) {
         $error = 'Пароли не совпадают';
     } else {
@@ -139,13 +135,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="password" id="password" name="password" 
                        minlength="6"
                        required>
-                <div class="error-message">Пароль должен содержать минимум 6 символов</div>
                 <div class="input-hint">Минимум 6 символов</div>
             </div>
 
             <div class="form-group">
                 <label for="confirm_password">Подтвердите пароль:</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
+                <input type="password" id="confirm_password" name="confirm_password" 
+                       minlength="6"
+                       required>
                 <div class="error-message">Пароли должны совпадать</div>
             </div>
 
