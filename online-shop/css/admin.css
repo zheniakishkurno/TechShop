@@ -1,1 +1,207 @@
+/* Основные стили */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+}
 
+h1 {
+    font-size: 24px;
+    margin: 0 0 20px 0;
+    font-weight: normal;
+}
+
+/* Стили для вкладок */
+.tabs {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tab-button {
+    padding: 10px 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+}
+
+.tab-button.active {
+    background-color: #5B6ABF;
+    color: white;
+}
+
+/* Кнопка "Назад на сайт" */
+.back-button {
+    display: inline-block;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.back-button:before {
+    content: "← ";
+}
+
+/* Заголовок раздела */
+h2 {
+    font-size: 18px;
+    margin: 0 0 20px 0;
+    font-weight: normal;
+}
+
+/* Кнопка "Сохранить все изменения" */
+button[name="refresh_table"] {
+    background-color: #5B6ABF;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+/* Форма добавления */
+.form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+}
+
+.form h3 {
+    font-size: 16px;
+    margin: 0 0 20px 0;
+    font-weight: normal;
+}
+
+/* Стили для инпутов */
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Стили для file input */
+.file-input-button {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #E9E9E9;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.file-status {
+    color: #666;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+/* Кнопка добавления */
+button[type="submit"] {
+    background-color: #5B6ABF;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Таблица */
+.table-wrapper {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+/* Заголовки таблицы */
+table th {
+    background-color: #5B6ABF;
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+/* Ячейки таблицы */
+table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #E5E5E5;
+    vertical-align: middle;
+}
+
+/* ID колонка */
+table td:first-child {
+    width: 40px;
+    color: #666;
+}
+
+/* Изображения в таблице */
+td img {
+    height: 40px;
+    width: auto;
+    vertical-align: middle;
+}
+
+/* Кнопки действий */
+.actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.actions button {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.actions button.update-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.actions button.delete {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .actions button {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+} 
