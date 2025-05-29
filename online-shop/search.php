@@ -63,10 +63,6 @@ require_once 'header.php';
                                     <div class="availability <?= ($product['stock'] > 0) ? 'in-stock' : 'out-of-stock' ?>">
                                         <?= ($product['stock'] > 0) ? 'В наличии' : 'Нет в наличии' ?>
                                     </div>
-                                    <div class="rating">
-                                        <span class="stars">★★★★★</span>
-                                        <span class="reviews">(<?= $product['reviews_count'] ?? 0 ?>)</span>
-                                    </div>
                                 </div>
                                 
                                 <div class="product-price">
@@ -277,20 +273,11 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .rating {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.stars {
-    color: #f59e0b;
-    font-size: 0.9rem;
+    display: none;
 }
 
 .reviews {
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    margin-left: 0.5rem;
+    display: none;
 }
 
 .product-price {
