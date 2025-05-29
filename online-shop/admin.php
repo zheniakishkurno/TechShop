@@ -6,101 +6,6 @@ mb_internal_encoding('UTF-8');
 require_once 'config.php';
 require_once 'functions.php';
 
-// Обработчик обновления таблиц
-if (isset($_POST['refresh_table'])) {
-    try {
-        $table = $_POST['table_name'];
-        $allowed_tables = ['products', 'categories', 'users', 'orders', 'reviews'];
-        
-        if (in_array($table, $allowed_tables)) {
-            switch($table) {
-                case 'products':
-                    if (isset($_POST['products']) && is_array($_POST['products'])) {
-                        foreach($_POST['products'] as $id => $product) {
-                            $stmt = $pdo->prepare("UPDATE products SET 
-                                name = ?, 
-                                category_id = ?, 
-                                price = ?, 
-                                stock = ?, 
-                                discount = ? 
-                                WHERE id = ?");
-                            $stmt->execute([
-                                $product['name'],
-                                $product['category_id'],
-                                $product['price'],
-                                $product['stock'],
-                                $product['discount'],
-                                $id
-                            ]);
-                            
-                            // Обработка изображения, если оно было загружено
-                            if (isset($_FILES['products']['name'][$id]['image_url']) && $_FILES['products']['error'][$id]['image_url'] === UPLOAD_ERR_OK) {
-                                $image_url = handleImageUpload([
-                                    'name' => $_FILES['products']['name'][$id]['image_url'],
-                                    'type' => $_FILES['products']['type'][$id]['image_url'],
-                                    'tmp_name' => $_FILES['products']['tmp_name'][$id]['image_url'],
-                                    'error' => $_FILES['products']['error'][$id]['image_url'],
-                                    'size' => $_FILES['products']['size'][$id]['image_url']
-                                ], $product['current_image']);
-                                
-                                if ($image_url) {
-                                    $stmt = $pdo->prepare("UPDATE products SET image_url = ? WHERE id = ?");
-                                    $stmt->execute([$image_url, $id]);
-                                }
-                            }
-                        }
-                    }
-                    break;
-
-                case 'categories':
-                    foreach($_POST['categories'] as $id => $category) {
-                        $stmt = $pdo->prepare("UPDATE categories SET name = ? WHERE id = ?");
-                        $stmt->execute([$category['name'], $id]);
-                    }
-                    break;
-
-                case 'users':
-                    foreach($_POST['users'] as $id => $user) {
-                        $stmt = $pdo->prepare("UPDATE users SET 
-                            first_name = ?, 
-                            last_name = ?, 
-                            email = ?, 
-                            phone = ?, 
-                            role = ? 
-                            WHERE id = ?");
-                        $stmt->execute([
-                            $user['first_name'],
-                            $user['last_name'],
-                            $user['email'],
-                            $user['phone'],
-                            $user['role'],
-                            $id
-                        ]);
-                    }
-                    break;
-
-                case 'orders':
-                    foreach($_POST['orders'] as $id => $order) {
-                        $stmt = $pdo->prepare("UPDATE orders SET status = ?, notes = ? WHERE id = ?");
-                        $stmt->execute([$order['status'], $order['notes'], $id]);
-                    }
-                    break;
-
-                case 'reviews':
-                    foreach($_POST['reviews'] as $id => $review) {
-                        $stmt = $pdo->prepare("UPDATE reviews SET rating = ?, comment = ? WHERE id = ?");
-                        $stmt->execute([$review['rating'], $review['comment'], $id]);
-                    }
-                    break;
-            }
-            
-            $_SESSION['message'] = "Данные в таблице " . $table . " успешно обновлены!";
-        }
-    } catch (PDOException $e) {
-        $_SESSION['error'] = "Ошибка при обновлении данных: " . $e->getMessage();
-    }
-}
-
 // Проверка авторизации и прав администратора
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -601,12 +506,6 @@ $reviews = $pdo->query("SELECT
             <button type="submit" name="add_product">Добавить товар</button>
         </form>
 
-        <!-- Кнопка обновления всех товаров -->
-        <form method="POST" id="products-form" accept-charset="utf-8" enctype="multipart/form-data">
-            <input type="hidden" name="table_name" value="products">
-            <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
-        </form>
-
         <!-- Таблица товаров -->
         <div class="table-wrapper">
             <table>
@@ -670,12 +569,6 @@ $reviews = $pdo->query("SELECT
     <!-- Управление категориями -->
     <div id="categories" class="tab-content">
         <h2>Управление категориями</h2>
-        <div class="button-group">
-            <form method="POST" id="categories-form" accept-charset="utf-8">
-                <input type="hidden" name="table_name" value="categories">
-                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
-            </form>
-        </div>
 
         <form method="POST" enctype="multipart/form-data" class="form" accept-charset="utf-8">
             <h3>Добавить новую категорию</h3>
@@ -720,26 +613,20 @@ $reviews = $pdo->query("SELECT
     <!-- Управление пользователями -->
     <div id="users" class="tab-content">
         <h2>Управление пользователями</h2>
-        <div class="button-group">
-            <form method="POST" id="users-form" accept-charset="utf-8">
-                <input type="hidden" name="table_name" value="users">
-                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
-            </form>
-        </div>
 
-       <form method="POST" class="form" accept-charset="utf-8">
-    <h3>Добавить нового пользователя</h3>
-    <input type="text" name="first_name" placeholder="Имя" required />
-    <input type="text" name="last_name" placeholder="Фамилия" required />
-    <input type="email" name="email" placeholder="Email" required />
-    <input type="text" name="phone" placeholder="Телефон" required />
-    <input type="password" name="password" placeholder="Пароль" required />
-    <select name="role">
-        <option value="user">Пользователь</option>
-        <option value="admin">Администратор</option>
-    </select>
-    <button type="submit" name="add_user">Добавить</button>
-</form>
+        <form method="POST" class="form">
+            <h3>Добавить нового пользователя</h3>
+            <input type="text" name="first_name" placeholder="Имя" required />
+            <input type="text" name="last_name" placeholder="Фамилия" required />
+            <input type="email" name="email" placeholder="Email" required />
+            <input type="text" name="phone" placeholder="Телефон" required />
+            <input type="password" name="password" placeholder="Пароль" required />
+            <select name="role">
+                <option value="user">Пользователь</option>
+                <option value="admin">Администратор</option>
+            </select>
+            <button type="submit" name="add_user">Добавить</button>
+        </form>
 
         <h3>Список пользователей</h3>
         <table>
@@ -786,12 +673,6 @@ $reviews = $pdo->query("SELECT
     <!-- Управление заказами -->
     <div id="orders" class="tab-content">
         <h2>Управление заказами</h2>
-        <div class="button-group">
-            <form method="POST" id="orders-form" accept-charset="utf-8">
-                <input type="hidden" name="table_name" value="orders">
-                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
-            </form>
-        </div>
 
         <h3>Список заказов</h3>
         <table>
@@ -845,12 +726,6 @@ $reviews = $pdo->query("SELECT
     <!-- Управление отзывами -->
     <div id="reviews" class="tab-content">
         <h2>Управление отзывами</h2>
-        <div class="button-group">
-            <form method="POST" id="reviews-form" accept-charset="utf-8">
-                <input type="hidden" name="table_name" value="reviews">
-                <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
-            </form>
-        </div>
 
         <h3>Список отзывов</h3>
         <table>
