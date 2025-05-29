@@ -136,10 +136,13 @@ table td {
 }
 
 /* Стили для изображений в таблице */
-td img {
+td img, .image-preview {
+    max-width: 40px;
     max-height: 40px;
     width: auto;
+    height: auto;
     vertical-align: middle;
+    object-fit: contain;
 }
 
 /* Стили для кнопок в таблице */
