@@ -2,10 +2,13 @@
 require_once 'config.php';
 require_once 'functions.php';
 
-$searchQuery = trim($_GET['q'] ?? '');
+$searchQuery = isset($_GET['q']) ? trim($_GET['q']) : '';
 $products = [];
 
-if (!empty($searchQuery)) {
+// Если поисковый запрос пустой, показываем все товары
+if (empty($searchQuery)) {
+    $products = getProducts(); // Получаем все товары
+} else {
     $products = searchProductsByName($searchQuery);
 
     // Если найден ровно один товар — редиректим на страницу товара
@@ -16,7 +19,7 @@ if (!empty($searchQuery)) {
     }
 }
 
-$page_title = 'Результаты поиска: ' . htmlspecialchars($searchQuery);
+$page_title = empty($searchQuery) ? 'Все товары' : 'Результаты поиска: ' . htmlspecialchars($searchQuery);
 require_once 'header.php';
 ?>
 
