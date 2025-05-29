@@ -627,7 +627,10 @@ $reviews = $pdo->query("SELECT
             <input type="text" name="first_name" placeholder="Имя" required />
             <input type="text" name="last_name" placeholder="Фамилия" required />
             <input type="email" name="email" placeholder="Email" required />
-            <input type="tel" name="phone" placeholder="Телефон" pattern="[0-9]+" title="Пожалуйста, введите только цифры" required />
+            <input type="tel" name="phone" placeholder="+375 (29) 999-99-99" 
+                   pattern="\+375\s?\(?(17|29|33|44|25)\)?\s?\d{3}[-\s]?\d{2}[-\s]?\d{2}" 
+                   title="Введите номер в формате: +375 (29) 999-99-99" required />
+            <span class="phone-hint">Формат: +375 (29/33/44/25/17) XXX-XX-XX</span>
             <input type="password" name="password" placeholder="Пароль" required />
             <select name="role">
                 <option value="user">Пользователь</option>
@@ -657,7 +660,14 @@ $reviews = $pdo->query("SELECT
                         <td><input type="text" name="first_name" value="<?= htmlspecialchars($user['first_name']) ?>" required /></td>
                         <td><input type="text" name="last_name" value="<?= htmlspecialchars($user['last_name']) ?>" required /></td>
                         <td><input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required /></td>
-                        <td><input type="tel" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" pattern="[0-9]+" title="Пожалуйста, введите только цифры" required /></td>
+                        <td>
+                            <input type="tel" name="phone" 
+                                   value="<?= htmlspecialchars($user['phone']) ?>" 
+                                   pattern="\+375\s?\(?(17|29|33|44|25)\)?\s?\d{3}[-\s]?\d{2}[-\s]?\d{2}" 
+                                   title="Введите номер в формате: +375 (29) 999-99-99" 
+                                   placeholder="+375 (29) 999-99-99" required />
+                            <span class="phone-hint">Формат: +375 (29/33/44/25/17) XXX-XX-XX</span>
+                        </td>
                         <td>
                             <select name="role">
                                 <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>Пользователь</option>
