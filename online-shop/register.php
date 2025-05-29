@@ -15,20 +15,40 @@ $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $first_name = $_POST['first_name'] ?? '';
-    $last_name = $_POST['last_name'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $phone = $_POST['phone'] ?? '';
+    $first_name = trim($_POST['first_name'] ?? '');
+    $last_name = trim($_POST['last_name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
-    // Валидация
-    if (empty($first_name) || empty($last_name) || empty($email) || empty($phone) || empty($password)) {
-        $error = 'Все поля обязательны для заполнения';
-    } elseif ($password !== $confirm_password) {
-        $error = 'Пароли не совпадают';
+    // Расширенная валидация
+    if (empty($first_name)) {
+        $error = 'Пожалуйста, введите ваше имя';
+    } elseif (strlen($first_name) < 2) {
+        $error = 'Имя должно содержать минимум 2 символа';
+    } elseif (empty($last_name)) {
+        $error = 'Пожалуйста, введите вашу фамилию';
+    } elseif (strlen($last_name) < 2) {
+        $error = 'Фамилия должна содержать минимум 2 символа';
+    } elseif (empty($email)) {
+        $error = 'Пожалуйста, введите email';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Пожалуйста, введите корректный email';
+    } elseif (empty($phone)) {
+        $error = 'Пожалуйста, введите номер телефона';
+    } elseif (!preg_match('/^\+375(17|25|29|33|44)[0-9]{7}$/', preg_replace('/[\s-()]/', '', $phone))) {
+        $error = 'Пожалуйста, введите корректный белорусский номер телефона (+375)';
+    } elseif (empty($password)) {
+        $error = 'Пожалуйста, введите пароль';
     } elseif (strlen($password) < 6) {
         $error = 'Пароль должен содержать минимум 6 символов';
+    } elseif (!preg_match('/[A-ZА-Я]/', $password)) {
+        $error = 'Пароль должен содержать хотя бы одну заглавную букву';
+    } elseif (!preg_match('/[0-9]/', $password)) {
+        $error = 'Пароль должен содержать хотя бы одну цифру';
+    } elseif ($password !== $confirm_password) {
+        $error = 'Пароли не совпадают';
     } else {
         global $pdo;
 
@@ -77,35 +97,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="alert success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
-        <form method="POST">
+        <form method="POST" novalidate>
             <div class="form-group">
                 <label for="first_name">Имя:</label>
-                <input type="text" id="first_name" name="first_name" required>
+                <input type="text" id="first_name" name="first_name" 
+                       pattern=".{2,}" 
+                       value="<?= htmlspecialchars($first_name ?? '') ?>"
+                       required>
+                <div class="error-message">Имя должно содержать минимум 2 символа</div>
             </div>
 
             <div class="form-group">
                 <label for="last_name">Фамилия:</label>
-                <input type="text" id="last_name" name="last_name" required>
+                <input type="text" id="last_name" name="last_name" 
+                       pattern=".{2,}" 
+                       value="<?= htmlspecialchars($last_name ?? '') ?>"
+                       required>
+                <div class="error-message">Фамилия должна содержать минимум 2 символа</div>
             </div>
 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" 
+                       value="<?= htmlspecialchars($email ?? '') ?>"
+                       required>
+                <div class="error-message">Введите корректный email адрес</div>
             </div>
 
             <div class="form-group">
                 <label for="phone">Телефон:</label>
-                <input type="tel" id="phone" name="phone" required>
+                <input type="tel" id="phone" name="phone" 
+                       pattern="\+375(17|25|29|33|44)[0-9]{7}"
+                       value="<?= htmlspecialchars($phone ?? '') ?>"
+                       required>
+                <div class="error-message">Введите корректный белорусский номер телефона</div>
+                <div class="input-hint">Формат: +375 (xx) xxx-xx-xx, где xx: 17, 25, 29, 33 или 44</div>
             </div>
 
             <div class="form-group">
-                <label for="password">Пароль (минимум 6 символов):</label>
-                <input type="password" id="password" name="password" minlength="6" required>
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" 
+                       minlength="6"
+                       required>
+                <div class="error-message">Пароль должен содержать минимум 6 символов</div>
+                <div class="input-hint">Минимум 6 символов</div>
             </div>
 
             <div class="form-group">
                 <label for="confirm_password">Подтвердите пароль:</label>
                 <input type="password" id="confirm_password" name="confirm_password" required>
+                <div class="error-message">Пароли должны совпадать</div>
             </div>
 
             <button type="submit" class="btn">Зарегистрироваться</button>
