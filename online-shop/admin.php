@@ -1,6 +1,8 @@
 <?php
 ob_start();
 session_start();
+header('Content-Type: text/html; charset=utf-8');
+mb_internal_encoding('UTF-8');
 require_once 'config.php';
 require_once 'functions.php';
 
@@ -536,7 +538,7 @@ $reviews = $pdo->query("SELECT
         <h2>Управление товарами</h2>
         
         <!-- Форма добавления товара -->
-        <form method="POST" enctype="multipart/form-data" class="form">
+        <form method="POST" enctype="multipart/form-data" class="form" accept-charset="utf-8">
             <h3>Добавить новый товар</h3>
             <div class="form-row">
                 <div class="form-group">
@@ -582,7 +584,7 @@ $reviews = $pdo->query("SELECT
         </form>
 
         <!-- Кнопка обновления всех товаров -->
-        <form method="POST" id="products-form">
+        <form method="POST" id="products-form" accept-charset="utf-8">
             <input type="hidden" name="table_name" value="products">
             <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
         </form>
@@ -607,7 +609,7 @@ $reviews = $pdo->query("SELECT
                     <tr>
                         <td><?= $product['id'] ?></td>
                         <td>
-                            <form method="POST" enctype="multipart/form-data" class="update-form">
+                            <form method="POST" enctype="multipart/form-data" class="update-form" accept-charset="utf-8">
                                 <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required />
                         </td>
                         <td>
@@ -637,7 +639,7 @@ $reviews = $pdo->query("SELECT
                             <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
                             <button type="submit" name="update_product" class="update-btn">Обновить</button>
                             </form>
-                            <form method="POST" style="display: inline;">
+                            <form method="POST" style="display: inline;" accept-charset="utf-8">
                                 <input type="hidden" name="product_id" value="<?= $product['id'] ?>" />
                                 <button type="submit" name="delete_product" class="delete" onclick="return confirm('Вы уверены, что хотите удалить этот товар?');">Удалить</button>
                             </form>
@@ -653,13 +655,13 @@ $reviews = $pdo->query("SELECT
     <div id="categories" class="tab-content">
         <h2>Управление категориями</h2>
         <div class="button-group">
-            <form method="POST" id="categories-form">
+            <form method="POST" id="categories-form" accept-charset="utf-8">
                 <input type="hidden" name="table_name" value="categories">
                 <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
             </form>
         </div>
 
-        <form method="POST" enctype="multipart/form-data" class="form">
+        <form method="POST" enctype="multipart/form-data" class="form" accept-charset="utf-8">
             <h3>Добавить новую категорию</h3>
             <input type="text" name="name" placeholder="Название категории" required />
             <input type="file" name="image_url" />
@@ -703,13 +705,13 @@ $reviews = $pdo->query("SELECT
     <div id="users" class="tab-content">
         <h2>Управление пользователями</h2>
         <div class="button-group">
-            <form method="POST" id="users-form">
+            <form method="POST" id="users-form" accept-charset="utf-8">
                 <input type="hidden" name="table_name" value="users">
                 <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
             </form>
         </div>
 
-       <form method="POST" class="form">
+       <form method="POST" class="form" accept-charset="utf-8">
     <h3>Добавить нового пользователя</h3>
     <input type="text" name="first_name" placeholder="Имя" required />
     <input type="text" name="last_name" placeholder="Фамилия" required />
@@ -769,7 +771,7 @@ $reviews = $pdo->query("SELECT
     <div id="orders" class="tab-content">
         <h2>Управление заказами</h2>
         <div class="button-group">
-            <form method="POST" id="orders-form">
+            <form method="POST" id="orders-form" accept-charset="utf-8">
                 <input type="hidden" name="table_name" value="orders">
                 <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
             </form>
@@ -828,7 +830,7 @@ $reviews = $pdo->query("SELECT
     <div id="reviews" class="tab-content">
         <h2>Управление отзывами</h2>
         <div class="button-group">
-            <form method="POST" id="reviews-form">
+            <form method="POST" id="reviews-form" accept-charset="utf-8">
                 <input type="hidden" name="table_name" value="reviews">
                 <button type="submit" name="refresh_table" class="refresh-button">Сохранить все изменения</button>
             </form>
