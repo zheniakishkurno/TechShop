@@ -627,7 +627,7 @@ $reviews = $pdo->query("SELECT
             <input type="text" name="first_name" placeholder="Имя" required />
             <input type="text" name="last_name" placeholder="Фамилия" required />
             <input type="email" name="email" placeholder="Email" required />
-            <input type="text" name="phone" placeholder="Телефон" required />
+            <input type="tel" name="phone" placeholder="Телефон" pattern="[0-9]+" title="Пожалуйста, введите только цифры" required />
             <input type="password" name="password" placeholder="Пароль" required />
             <select name="role">
                 <option value="user">Пользователь</option>
@@ -657,19 +657,17 @@ $reviews = $pdo->query("SELECT
                         <td><input type="text" name="first_name" value="<?= htmlspecialchars($user['first_name']) ?>" required /></td>
                         <td><input type="text" name="last_name" value="<?= htmlspecialchars($user['last_name']) ?>" required /></td>
                         <td><input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required /></td>
-                        <td><input type="text" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" /></td>
+                        <td><input type="tel" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" pattern="[0-9]+" title="Пожалуйста, введите только цифры" required /></td>
                         <td>
                             <select name="role">
                                 <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>Пользователь</option>
                                 <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Администратор</option>
                             </select>
                         </td>
-                     
-                            <td class="actions">
+                        <td class="actions">
                             <input type="hidden" name="user_id" value="<?= $user['id'] ?>" />
                             <button type="submit" name="update_user">Обновить</button>
-                            <button type="submit" name="delete_user" class="delete">Удалить</button>
-                       
+                            <button type="submit" name="delete_user" class="delete" onclick="return confirm('Вы уверены, что хотите удалить этого пользователя?');">Удалить</button>
                         </td>
                     </form>
                 </tr>
