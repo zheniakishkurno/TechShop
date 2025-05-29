@@ -111,7 +111,16 @@ h3 {
     display: block;
 }
 
-/* Стили для таблиц */
+/* Общие стили для всех таблиц */
+.table-wrapper {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -119,6 +128,7 @@ table {
     background: white;
 }
 
+/* Заголовки таблиц */
 table th {
     background-color: #5B6ABF;
     color: white;
@@ -128,6 +138,7 @@ table th {
     border: none;
 }
 
+/* Ячейки таблиц */
 table td {
     padding: 15px;
     text-align: left;
@@ -135,17 +146,17 @@ table td {
     border-bottom: 1px solid #E5E5E5;
 }
 
-/* Стили для изображений в таблице */
+/* Изображения в таблицах */
 td img, .image-preview {
-    max-width: 10px;
-    max-height: 10px;
+    max-width: 25px;
+    max-height: 25px;
     width: auto;
     height: auto;
     vertical-align: middle;
     object-fit: contain;
 }
 
-/* Стили для кнопок в таблице */
+/* Кнопки в таблицах */
 .actions {
     white-space: nowrap;
     text-align: right;
@@ -161,26 +172,38 @@ td img, .image-preview {
 }
 
 button[type="submit"]:not(.delete),
-.actions button.update-btn {
+.actions button.update-btn,
+button.update-btn {
     background-color: #4CAF50;
     color: white;
 }
 
-.actions button.delete {
+.actions button.delete,
+button.delete {
     background-color: #f44336;
     color: white;
 }
 
-/* Стили для инпутов в таблице */
-table input[type="text"] {
+/* Инпуты в таблицах */
+table input[type="text"],
+table input[type="number"],
+table input[type="email"],
+table select,
+table textarea {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
+    font-size: 14px;
 }
 
 /* Стили для file input */
+.file-input-wrapper {
+    display: inline-block;
+    position: relative;
+}
+
 input[type="file"] {
     display: none;
 }
@@ -194,11 +217,37 @@ input[type="file"] {
     border-radius: 4px;
     cursor: pointer;
     margin-right: 10px;
+    font-size: 14px;
 }
 
 .file-status {
     color: #666;
     font-size: 14px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Стили для секций с таблицами */
+.tab-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Стили для форм добавления */
+.form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 /* Стили для форм */
@@ -208,10 +257,6 @@ input[type="file"] {
     border-radius: 8px;
     margin-bottom: 30px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.form h3 {
-    margin-top: 0;
 }
 
 .form-row {
@@ -289,16 +334,6 @@ form button:hover {
     background-color: #e0e0e0;
 }
 
-/* Стили для контейнера таблицы */
-.table-wrapper {
-    width: 100%;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow-x: auto;
-    margin: 20px 0;
-}
-
 /* Адаптивность */
 @media (max-width: 768px) {
     .container {
@@ -347,5 +382,19 @@ form button:hover {
     .actions button {
         width: 100%;
         margin: 2px 0;
+    }
+
+    .table-wrapper {
+        margin: 10px 0;
+    }
+
+    table td, 
+    table th {
+        padding: 10px;
+    }
+
+    .file-input-button {
+        padding: 6px 12px;
+        font-size: 13px;
     }
 } 
