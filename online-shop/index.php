@@ -98,11 +98,11 @@ if ($sort === 'price_asc') {
             <div class="sort-options">
                 <span>Сортировка:</span>
                 <select id="sort-select" onchange="window.location.href=this.value">
-                    <option value="?sort=newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Новинки</option>
-                    <option value="?sort=price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Цена по возрастанию</option>
-                    <option value="?sort=price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Цена по убыванию</option>
-                    <option value="?sort=name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Название А-Я</option>
-                    <option value="?sort=name_desc" <?= $sort === 'name_desc' ? 'selected' : '' ?>>Название Я-А</option>
+                    <option value="?<?= $category_id ? 'category_id='.$category_id.'&' : '' ?>sort=newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Новинки</option>
+                    <option value="?<?= $category_id ? 'category_id='.$category_id.'&' : '' ?>sort=price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Цена по возрастанию</option>
+                    <option value="?<?= $category_id ? 'category_id='.$category_id.'&' : '' ?>sort=price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Цена по убыванию</option>
+                    <option value="?<?= $category_id ? 'category_id='.$category_id.'&' : '' ?>sort=name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Название А-Я</option>
+                    <option value="?<?= $category_id ? 'category_id='.$category_id.'&' : '' ?>sort=name_desc" <?= $sort === 'name_desc' ? 'selected' : '' ?>>Название Я-А</option>
                 </select>
             </div>
         </div>
