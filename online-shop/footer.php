@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechShop</title>
 
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/favicon.ico" />
 
     <!-- Подключение CSS -->
     <link rel="stylesheet" href="/online-shop/css/style.css">
