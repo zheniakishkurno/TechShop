@@ -38,6 +38,9 @@ $total = $subtotal + $tax + $shipping;
 <head>
     <meta charset="UTF-8">
     <title>Оформление заказа</title>
+
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
