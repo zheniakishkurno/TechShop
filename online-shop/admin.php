@@ -122,26 +122,41 @@ if (isset($_POST['add_product']) || isset($_POST['update_product'])) {
         }
 
         if (isset($_POST['add_product'])) {
-            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount, views, reviews_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $_POST['name'],
                 $_POST['category_id'],
                 $_POST['price'],
-                $_POST['description'] ?? '',
-                $_POST['stock'],
-                $image_url,
-                $_POST['discount'] ?? 0
-            ]);
-            $_SESSION['message'] = "Товар успешно добавлен!";
-        } else {
-            $stmt = $pdo->prepare("UPDATE products SET name=?, category_id=?, price=?, stock=?, image_url=?, discount=? WHERE id=?");
-            $stmt->execute([
-                $_POST['name'],
-                $_POST['category_id'],
-                $_POST['price'],
+                $_POST['description'],
                 $_POST['stock'],
                 $image_url,
                 $_POST['discount'] ?? 0,
+                $_POST['views'] ?? 0,
+                $_POST['reviews_count'] ?? 0
+            ]);
+            $_SESSION['message'] = "Товар успешно добавлен!";
+        } else {
+            $stmt = $pdo->prepare("UPDATE products SET 
+                name = ?, 
+                category_id = ?, 
+                price = ?, 
+                description = ?,
+                stock = ?, 
+                image_url = ?, 
+                discount = ?,
+                views = ?,
+                reviews_count = ?
+                WHERE id = ?");
+            $stmt->execute([
+                $_POST['name'],
+                $_POST['category_id'],
+                $_POST['price'],
+                $_POST['description'],
+                $_POST['stock'],
+                $image_url,
+                $_POST['discount'] ?? 0,
+                $_POST['views'],
+                $_POST['reviews_count'],
                 $_POST['product_id']
             ]);
             $_SESSION['message'] = "Товар успешно обновлен!";
@@ -175,15 +190,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             try {
-                $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount, views, reviews_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 $stmt->execute([
                     $_POST['name'],
                     $_POST['category_id'],
                     $_POST['price'],
-                    $_POST['description'] ?? '',
+                    $_POST['description'],
                     $_POST['stock'],
                     $image_url,
-                    $_POST['discount'] ?? 0
+                    $_POST['discount'] ?? 0,
+                    $_POST['views'] ?? 0,
+                    $_POST['reviews_count'] ?? 0
                 ]);
                 
                 if (!isset($_SESSION['message'])) {
@@ -643,7 +660,7 @@ $reviews = $pdo->query("SELECT
                     <input type="number" name="price" step="0.01" min="0" required />
                 </div>
                 <div class="form-group">
-                    <label>Количество</label>
+                    <label>Количество на складе</label>
                     <input type="number" name="stock" min="0" required />
                 </div>
                 <div class="form-group">
@@ -654,6 +671,14 @@ $reviews = $pdo->query("SELECT
             <div class="form-group">
                 <label>Описание</label>
                 <textarea name="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Просмотры</label>
+                <input type="number" name="views" min="0" value="0" />
+            </div>
+            <div class="form-group">
+                <label>Количество отзывов</label>
+                <input type="number" name="reviews_count" min="0" value="0" />
             </div>
             <div class="form-group">
                 <label>Изображение</label>
@@ -674,8 +699,12 @@ $reviews = $pdo->query("SELECT
                         <th>Название</th>
                         <th>Категория</th>
                         <th>Цена</th>
+                        <th>Описание</th>
                         <th>Скидка</th>
                         <th>На складе</th>
+                        <th>Просмотры</th>
+                        <th>Кол-во отзывов</th>
+                        <th>Дата создания</th>
                         <th>Изображение</th>
                         <th>Действия</th>
                     </tr>
@@ -697,8 +726,12 @@ $reviews = $pdo->query("SELECT
                             </select>
                         </td>
                         <td><input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" min="0" required /></td>
+                        <td><textarea name="description" required><?= htmlspecialchars($product['description']) ?></textarea></td>
                         <td><input type="number" name="discount" value="<?= $product['discount'] ?>" min="0" max="100" /></td>
                         <td><input type="number" name="stock" value="<?= $product['stock'] ?>" min="0" required /></td>
+                        <td><input type="number" name="views" value="<?= $product['views'] ?>" min="0" readonly /></td>
+                        <td><input type="number" name="reviews_count" value="<?= $product['reviews_count'] ?>" min="0" readonly /></td>
+                        <td><?= $product['created_at'] ?></td>
                         <td>
                             <?php if ($product['image_url']): ?>
                                 <img src="<?= htmlspecialchars($product['image_url']) ?>" alt="" style="height:40px;vertical-align:middle" />
