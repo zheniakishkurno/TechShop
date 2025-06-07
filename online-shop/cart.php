@@ -76,7 +76,7 @@ require_once 'header.php';
     <meta name="description" content="TechShop - лучший магазин электроники с огромным выбором гаджетов по доступным ценам.">
     <title>TechShop</title>
 
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/favicon.ico" />
 
     <link rel="stylesheet" href="css/style.css">
 </head>
