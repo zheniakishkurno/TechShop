@@ -6,40 +6,47 @@ require_once 'functions.php';
 $category_id = $_GET['category_id'] ?? null;
 $search_query = $_GET['q'] ?? null;
 $sort = $_GET['sort'] ?? 'newest';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$per_page = 12; // Количество товаров на странице
 $categories = getCategories();
 
 // Получаем товары с учетом фильтров
-// Получаем все товары, если нет фильтра категории или поиска
 if ($category_id) {
-    $products = getProducts($category_id);
+    $all_products = getProducts($category_id);
     $section_title = "Товары из выбранной категории";
 } elseif ($search_query) {
-    $products = searchProductsByName($search_query);
+    $all_products = searchProductsByName($search_query);
     $section_title = "Результаты поиска: " . htmlspecialchars($search_query);
 } else {
-    $products = getProducts();  // Теперь выводим все товары
+    $all_products = getProducts();
     $section_title = "Все товары";
 }
 
-
 // Сортировка товаров
 if ($sort === 'price_asc') {
-    usort($products, function($a, $b) {
+    usort($all_products, function($a, $b) {
         return $a['price'] <=> $b['price'];
     });
 } elseif ($sort === 'price_desc') { 
-    usort($products, function($a, $b) {
+    usort($all_products, function($a, $b) {
         return $b['price'] <=> $a['price'];
     });
 } elseif ($sort === 'name_asc') {
-    usort($products, function($a, $b) {
+    usort($all_products, function($a, $b) {
         return strcmp($a['name'], $b['name']);
     });
 } elseif ($sort === 'name_desc') {
-    usort($products, function($a, $b) {
+    usort($all_products, function($a, $b) {
         return strcmp($b['name'], $a['name']);
     });
 }
+
+// Пагинация
+$total_products = count($all_products);
+$total_pages = ceil($total_products / $per_page);
+$page = max(1, min($page, $total_pages)); // Убедимся, что страница в допустимом диапазоне
+$offset = ($page - 1) * $per_page;
+$products = array_slice($all_products, $offset, $per_page);
 
 ?>
 
@@ -148,6 +155,36 @@ if ($sort === 'price_asc') {
                 <p>Нет товаров для отображения.</p>
             <?php endif; ?>
         </div>
+
+        <?php if ($total_pages > 1): ?>
+        <div class="pagination">
+            <?php if ($page > 1): ?>
+                <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>" class="pagination-link">&laquo; Предыдущая</a>
+            <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <?php if (
+                    $i == 1 || // Первая страница
+                    $i == $total_pages || // Последняя страница
+                    abs($i - $page) <= 2 // Страницы рядом с текущей
+                ): ?>
+                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>" 
+                       class="pagination-link <?= $i === $page ? 'active' : '' ?>">
+                        <?= $i ?>
+                    </a>
+                <?php elseif (
+                    ($i == 2 && $page > 4) || // Многоточие после первой страницы
+                    ($i == $total_pages - 1 && $page < $total_pages - 3) // Многоточие перед последней страницей
+                ): ?>
+                    <span class="pagination-dots">...</span>
+                <?php endif; ?>
+            <?php endfor; ?>
+
+            <?php if ($page < $total_pages): ?>
+                <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>" class="pagination-link">Следующая &raquo;</a>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 
