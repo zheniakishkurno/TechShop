@@ -88,7 +88,7 @@ function getOrderStatusBadge($status) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page_title ?? 'Онлайн магазин' ?></title>
     
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/online-shop/favicon.ico" type="image/x-icon" />
 
     <!-- Подключение CSS -->
     <link rel="stylesheet" href="css/profile.css">
