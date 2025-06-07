@@ -458,7 +458,7 @@ $reviews = $pdo->query("SELECT
     <title>Админ панель</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
 
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/online-shop/favicon.ico" type="image/x-icon" />
     
     <link rel="stylesheet" href="css/admin.css" />
     <script src="js/admin.js" defer></script>
