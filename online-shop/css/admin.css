@@ -216,13 +216,80 @@ form textarea {
     font-size: 15px;
     transition: all 0.3s ease;
     background-color: #fff;
-    height: 45px; /* Фиксированная высота для всех полей */
     box-sizing: border-box; /* Учитываем padding и border в общей ширине */
 }
 
-form input:focus,
-form select:focus,
+/* Специальные стили для текстовых полей */
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="password"] {
+    height: 45px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* При фокусе показываем полный текст */
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="tel"]:focus,
+form input[type="password"]:focus {
+    height: auto;
+    min-height: 45px;
+    white-space: normal;
+    overflow: visible;
+}
+
+/* Стили для textarea */
+form textarea {
+    height: 100px;
+    resize: vertical;
+    min-height: 100px;
+    max-height: 300px;
+    white-space: normal;
+    line-height: 1.5;
+}
+
+/* При фокусе увеличиваем высоту textarea */
 form textarea:focus {
+    height: 200px;
+}
+
+/* Стили для полей в таблице */
+table input[type="text"],
+table input[type="number"],
+table input[type="email"],
+table input[type="tel"],
+table textarea {
+    width: 100%;
+    min-width: 150px;
+}
+
+/* При фокусе поле в таблице разворачивается поверх других */
+table input:focus,
+table textarea:focus {
+    position: relative;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(92, 107, 192, 0.2);
+    background-color: white;
+}
+
+/* Стили для длинных текстовых полей в таблице */
+table td textarea {
+    height: 60px;
+    min-height: 60px;
+}
+
+table td textarea:focus {
+    height: 150px;
+    position: absolute;
+    width: auto;
+    min-width: 300px;
+}
+
+form input:focus,
+form select:focus {
     border-color: #5c6bc0;
     box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.2);
     outline: none;
