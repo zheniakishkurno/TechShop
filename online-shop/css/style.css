@@ -1090,7 +1090,6 @@ ul li strong {
     flex-wrap: wrap;
     width: 100%;
     text-align: center;
-    position: relative;
     padding: 2rem 0;
 }
 
@@ -1102,50 +1101,48 @@ ul li strong {
     height: 3rem;
     padding: 0 1rem;
     background-color: var(--white);
-    border: 2px solid var(--gray-light);
-    border-radius: 50%;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
     color: var(--text);
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none;
     transition: all 0.3s ease;
     font-size: 1.1rem;
-    position: relative;
 }
 
 .pagination-link:hover {
     background-color: var(--primary);
     border-color: var(--primary);
     color: var(--white);
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transform: translateY(-2px);
 }
 
 .pagination-link.active {
     background-color: var(--primary);
     border-color: var(--primary);
     color: var(--white);
-    transform: scale(1.15);
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
     font-weight: 700;
+    position: relative;
+    transform: none;
 }
 
-.pagination-link.active::after {
+.pagination-link.active::before {
     content: '';
     position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    background-color: var(--primary);
-    border-radius: 50%;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    opacity: 0.3;
 }
 
 .pagination-dots {
     padding: 0 0.75rem;
     color: var(--text-secondary);
-    font-weight: bold;
-    font-size: 1.2rem;
+    font-weight: 500;
+    font-size: 1.1rem;
 }
 
 @media (max-width: 480px) {
@@ -1160,10 +1157,6 @@ ul li strong {
         height: 2.5rem;
         padding: 0 0.5rem;
         font-size: 1rem;
-    }
-
-    .pagination-link.active {
-        transform: scale(1.1);
     }
 
     .pagination-dots {
