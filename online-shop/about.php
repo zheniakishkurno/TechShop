@@ -11,7 +11,8 @@ require_once 'header.php';
     <meta name="description" content="TechShop - лучший магазин электроники с огромным выбором гаджетов по доступным ценам.">
     <title><?= isset($page_title) ? "$page_title | " : "" ?>TechShop</title>
     
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/online-shop/favicon.ico" type="image/x-icon" />
+
     <!-- Подключение основного CSS файла -->
     <link rel="stylesheet" href="/css/style.css">
 </head>
