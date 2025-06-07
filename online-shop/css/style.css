@@ -1085,82 +1085,80 @@ ul li strong {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
-    margin: 2rem auto;
+    gap: 0.3rem;
+    margin: 1.5rem auto;
     flex-wrap: wrap;
     width: 100%;
     text-align: center;
-    padding: 1rem 0;
+    padding: 0.75rem 0;
 }
 
 .pagination-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 2.2rem;
-    height: 2.2rem;
-    padding: 0 0.5rem;
+    min-width: 1.8rem;
+    height: 1.8rem;
+    padding: 0 0.3rem;
     background-color: var(--white);
     border: 1px solid #e2e8f0;
-    border-radius: 6px;
+    border-radius: 4px;
     color: var(--text);
-    font-weight: 500;
+    font-weight: 400;
     text-decoration: none;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    font-size: 0.8rem;
 }
 
 .pagination-link:hover {
     background-color: var(--primary);
     border-color: var(--primary);
     color: var(--white);
-    transform: translateY(-1px);
 }
 
 .pagination-link.active {
     background-color: var(--primary);
     border-color: var(--primary);
     color: var(--white);
-    font-weight: 600;
+    font-weight: 500;
     position: relative;
-    transform: none;
 }
 
 .pagination-link.active::before {
     content: '';
     position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
     border: 1px solid var(--primary);
-    border-radius: 8px;
+    border-radius: 5px;
     opacity: 0.3;
 }
 
 .pagination-dots {
-    padding: 0 0.4rem;
+    padding: 0 0.2rem;
     color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.9rem;
+    font-weight: 400;
+    font-size: 0.8rem;
 }
 
 @media (max-width: 480px) {
     .pagination {
-        gap: 0.3rem;
-        margin: 1.5rem auto;
+        gap: 0.2rem;
+        margin: 1rem auto;
         padding: 0.5rem 0;
     }
 
     .pagination-link {
-        min-width: 2rem;
-        height: 2rem;
-        padding: 0 0.4rem;
-        font-size: 0.85rem;
+        min-width: 1.6rem;
+        height: 1.6rem;
+        padding: 0 0.2rem;
+        font-size: 0.75rem;
     }
 
     .pagination-dots {
-        padding: 0 0.3rem;
-        font-size: 0.85rem;
+        padding: 0 0.2rem;
+        font-size: 0.75rem;
     }
 }
