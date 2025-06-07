@@ -1088,63 +1088,86 @@ ul li strong {
     gap: 0.75rem;
     margin: 3rem auto;
     flex-wrap: wrap;
-    max-width: 800px;
-    padding: 0 1rem;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    padding: 2rem 0;
 }
 
 .pagination-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 2.8rem;
-    height: 2.8rem;
-    padding: 0 0.75rem;
+    min-width: 3rem;
+    height: 3rem;
+    padding: 0 1rem;
     background-color: var(--white);
     border: 2px solid var(--gray-light);
-    border-radius: 8px;
+    border-radius: 50%;
     color: var(--text);
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s ease;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    position: relative;
 }
 
 .pagination-link:hover {
     background-color: var(--primary);
     border-color: var(--primary);
     color: var(--white);
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .pagination-link.active {
     background-color: var(--primary);
     border-color: var(--primary);
     color: var(--white);
-    transform: scale(1.1);
-    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.3);
+    transform: scale(1.15);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+    font-weight: 700;
+}
+
+.pagination-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: var(--primary);
+    border-radius: 50%;
 }
 
 .pagination-dots {
-    padding: 0 0.5rem;
+    padding: 0 0.75rem;
     color: var(--text-secondary);
     font-weight: bold;
+    font-size: 1.2rem;
 }
 
 @media (max-width: 480px) {
     .pagination {
         gap: 0.5rem;
         margin: 2rem auto;
+        padding: 1rem 0;
     }
 
     .pagination-link {
-        min-width: 2.4rem;
-        height: 2.4rem;
+        min-width: 2.5rem;
+        height: 2.5rem;
         padding: 0 0.5rem;
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     .pagination-link.active {
-        transform: scale(1.05);
+        transform: scale(1.1);
+    }
+
+    .pagination-dots {
+        padding: 0 0.5rem;
+        font-size: 1rem;
     }
 }
