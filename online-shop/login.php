@@ -35,10 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход | TechShop</title>
     
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
+    <title>Вход | TechShop</title>
+    
     <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
