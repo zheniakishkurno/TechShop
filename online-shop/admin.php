@@ -29,7 +29,7 @@ if (!isAdmin()) {
 }
 
 // Создание необходимых директорий с правами доступа
-$upload_dirs = ['uploads', 'online-shop/images'];
+$upload_dirs = ['images'];
 foreach ($upload_dirs as $dir) {
     if (!file_exists($dir)) {
         if (!mkdir($dir, 0777, true)) {
@@ -43,8 +43,6 @@ foreach ($upload_dirs as $dir) {
 
 // Функция для безопасной загрузки изображения
 function handleImageUpload($file, $old_image = null) {
-    global $upload_dirs;
-    
     try {
         if (!isset($file['error']) || is_array($file['error'])) {
             throw new Exception('Некорректные параметры файла.');
@@ -82,7 +80,7 @@ function handleImageUpload($file, $old_image = null) {
         // Генерируем уникальное имя файла
         $extension = $allowed_types[$mime_type];
         $image_name = uniqid() . '_' . time() . '.' . $extension;
-        $upload_path = 'online-shop/images/' . $image_name;
+        $upload_path = 'images/' . $image_name;
 
         // Удаляем старое изображение, если оно существует
         if ($old_image && file_exists($old_image)) {
@@ -93,11 +91,6 @@ function handleImageUpload($file, $old_image = null) {
         // Перемещаем загруженный файл
         if (!move_uploaded_file($file['tmp_name'], $upload_path)) {
             throw new Exception('Не удалось сохранить файл.');
-        }
-
-        // Создаем копию в папке uploads
-        if (!copy($upload_path, 'uploads/' . $image_name)) {
-            error_log("Failed to create copy in uploads folder: " . $image_name);
         }
 
         error_log("Successfully uploaded image: " . $upload_path);
@@ -179,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image_url = null;
             if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
                 $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-                $upload_path = 'online-shop/images/' . $image_name;
+                $upload_path = 'images/' . $image_name;
                 
                 if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
                     $image_url = $upload_path;
@@ -277,12 +270,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $image_url = null;
             if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === UPLOAD_ERR_OK) {
                 $image_name = uniqid() . '_' . basename($_FILES['image_url']['name']);
-                $upload_path = 'online-shop/images/' . $image_name;
+                $upload_path = 'images/' . $image_name;
                 
                 if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
-                    // Создаем копию в папке uploads для админки
-                    copy($upload_path, 'uploads/' . $image_name);
-                    $image_url = 'online-shop/images/' . $image_name;
+                    $image_url = $upload_path;
                 }
             }
             
@@ -325,11 +316,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($category && !empty($category['image_url'])) {
                 if (file_exists($category['image_url'])) {
                     unlink($category['image_url']);
-                }
-                // Удаляем копию из папки uploads, если она существует
-                $uploads_path = 'uploads/' . basename($category['image_url']);
-                if (file_exists($uploads_path)) {
-                    unlink($uploads_path);
                 }
             }
 
@@ -625,6 +611,18 @@ $reviews = $pdo->query("SELECT
     .dashboard-link:hover {
         color: #0056b3;
     }
+
+    .input-hint {
+        display: block;
+        font-size: 0.85em;
+        color: #666;
+        margin-top: 5px;
+        font-style: italic;
+    }
+
+    .file-input-wrapper {
+        margin: 10px 0;
+    }
     </style>
 
     <script>
@@ -689,6 +687,7 @@ $reviews = $pdo->query("SELECT
                 <div class="file-input-wrapper">
                     <button type="button" class="file-input-button">Выберите файл</button>
                     <input type="file" name="image_url" required />
+                    <span class="input-hint">Допустимые форматы: JPG, PNG, GIF. Максимальный размер: 5MB</span>
                 </div>
             </div>
             <button type="submit" name="add_product">Добавить товар</button>
@@ -744,6 +743,7 @@ $reviews = $pdo->query("SELECT
                             <div class="file-input-wrapper">
                                 <button type="button" class="file-input-button">Изменить</button>
                                 <input type="file" name="image_url" />
+                                <span class="input-hint">Допустимые форматы: JPG, PNG, GIF. Максимальный размер: 5MB</span>
                             </div>
                         </td>
                         <td class="actions">
@@ -768,7 +768,10 @@ $reviews = $pdo->query("SELECT
         <form method="POST" enctype="multipart/form-data" class="form" accept-charset="utf-8">
             <h3>Добавить новую категорию</h3>
             <input type="text" name="name" placeholder="Название категории" required />
-            <input type="file" name="image_url" />
+            <div class="file-input-wrapper">
+                <input type="file" name="image_url" />
+                <span class="input-hint">Допустимые форматы: JPG, PNG, GIF. Максимальный размер: 5MB</span>
+            </div>
             <button type="submit" name="add_category">Добавить</button>
         </form>
 
@@ -796,6 +799,7 @@ $reviews = $pdo->query("SELECT
                             <div class="file-input-wrapper">
                                 <button type="button" class="file-input-button">Изменить</button>
                                 <input type="file" name="image_url" />
+                                <span class="input-hint">Допустимые форматы: JPG, PNG, GIF. Максимальный размер: 5MB</span>
                             </div>
                         </td>
                         <td class="actions">
