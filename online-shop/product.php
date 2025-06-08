@@ -338,11 +338,11 @@ require_once 'header.php';
                 
                 <div class="product-price">
                     <?php if ($product['discount'] > 0): ?>
-                        <span class="old-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
-                        <span class="current-price"><?= number_format($product['price'] * (1 - $product['discount']/100), 2, '.', ' ') ?> ₽</span>
+                        <span class="old-price"><?= number_format($product['price'], 2, '.', ' ') ?> BYN</span>
+                        <span class="current-price"><?= number_format($product['price'] * (1 - $product['discount']/100), 2, '.', ' ') ?> BYN</span>
                         <span class="discount">-<?= $product['discount'] ?>%</span>
                     <?php else: ?>
-                        <span class="current-price"><?= number_format($product['price'], 2, '.', ' ') ?> ₽</span>
+                        <span class="current-price"><?= number_format($product['price'], 2, '.', ' ') ?> BYN</span>
                     <?php endif; ?>
                 </div>
                 
