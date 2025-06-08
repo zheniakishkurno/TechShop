@@ -942,7 +942,6 @@ $reviews = $pdo->query("SELECT
         <table>
             <thead>
             <tr>
-                <th>ID</th>
                 <th>Клиент</th>
                 <th>Товары</th>
                 <th>Сумма</th>
