@@ -958,7 +958,6 @@ $reviews = $pdo->query("SELECT
             <?php foreach ($orders as $order): ?>
               <tr>
     <form method="POST">
-        <td><?= $order['id'] ?></td>
         <td><?= htmlspecialchars($order['customer_name']) ?> (<?= htmlspecialchars($order['customer_email']) ?>)</td>
         <td>
             <?php
