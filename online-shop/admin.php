@@ -944,6 +944,7 @@ $reviews = $pdo->query("SELECT
             <tr>
                 <th>ID</th>
                 <th>Клиент</th>
+                <th>Товары</th>
                 <th>Сумма</th>
                 <th>Статус</th>
                 <th>Метод оплаты</th>
@@ -960,6 +961,21 @@ $reviews = $pdo->query("SELECT
     <form method="POST">
         <td><?= $order['id'] ?></td>
         <td><?= htmlspecialchars($order['customer_name']) ?> (<?= htmlspecialchars($order['customer_email']) ?>)</td>
+        <td>
+            <?php
+            $stmt = $pdo->prepare("
+                SELECT p.name, oi.quantity 
+                FROM order_items oi 
+                JOIN products p ON oi.product_id = p.id 
+                WHERE oi.order_id = ?
+            ");
+            $stmt->execute([$order['id']]);
+            $items = $stmt->fetchAll();
+            foreach ($items as $item) {
+                echo htmlspecialchars($item['name']) . ' (' . $item['quantity'] . ' шт.)<br>';
+            }
+            ?>
+        </td>
         <td><?= $order['total'] ?></td>
         <td>
             <select name="status">
