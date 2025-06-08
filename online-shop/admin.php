@@ -115,7 +115,7 @@ if (isset($_POST['add_product']) || isset($_POST['update_product'])) {
         }
 
         if (isset($_POST['add_product'])) {
-            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount, views, reviews_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id");
+            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id");
             $stmt->execute([
                 $_POST['name'],
                 $_POST['category_id'],
@@ -123,9 +123,7 @@ if (isset($_POST['add_product']) || isset($_POST['update_product'])) {
                 $_POST['description'],
                 $_POST['stock'],
                 $image_url,
-                $_POST['discount'] ?? 0,
-                $_POST['views'] ?? 0,
-                $_POST['reviews_count'] ?? 0
+                $_POST['discount'] ?? 0
             ]);
             $_SESSION['message'] = "Товар успешно добавлен!";
         } else {
@@ -183,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             try {
-                $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount, views, reviews_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id");
                 $stmt->execute([
                     $_POST['name'],
                     $_POST['category_id'],
@@ -191,9 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_POST['description'],
                     $_POST['stock'],
                     $image_url,
-                    $_POST['discount'] ?? 0,
-                    $_POST['views'] ?? 0,
-                    $_POST['reviews_count'] ?? 0
+                    $_POST['discount'] ?? 0
                 ]);
                 
                 if (!isset($_SESSION['message'])) {
@@ -673,14 +669,6 @@ $reviews = $pdo->query("SELECT
             <div class="form-group">
                 <label>Описание</label>
                 <textarea name="description" required></textarea>
-            </div>
-            <div class="form-group">
-                <label>Просмотры</label>
-                <input type="number" name="views" min="0" value="0" />
-            </div>
-            <div class="form-group">
-                <label>Количество отзывов</label>
-                <input type="number" name="reviews_count" min="0" value="0" />
             </div>
             <div class="form-group">
                 <label>Изображение</label>
