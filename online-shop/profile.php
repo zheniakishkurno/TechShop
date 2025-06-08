@@ -203,6 +203,12 @@ function getOrderStatusBadge($status) {
             <span><?= htmlspecialchars($order['delivery_address']) ?></span>
         </div>
     <?php endif; ?>
+    <?php if (!empty($order['notes'])): ?>
+        <div class="summary-row">
+            <span>Примечания:</span>
+            <span><?= htmlspecialchars($order['notes']) ?></span>
+        </div>
+    <?php endif; ?>
 </div>
 
                                 </div>
