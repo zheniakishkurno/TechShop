@@ -185,7 +185,7 @@ function getOrderStatusBadge($status) {
                                     <div class="order-summary">
     <div class="summary-row">
         <span>Сумма заказа:</span>
-        <span class="order-total"><?= number_format($order['total'], 2, '.', ' ') ?> ₽</span>
+        <span class="order-total"><?= number_format($order['total'], 2, '.', ' ') ?> BYN</span>
     </div>
     <div class="summary-row">
         <span>Способ оплаты:</span>
