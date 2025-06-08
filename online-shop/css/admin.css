@@ -124,7 +124,6 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
-    min-width: 800px;
     margin: 0;
 }
 
@@ -133,88 +132,11 @@ table th, table td {
     text-align: left;
     border-bottom: 1px solid #ddd;
     vertical-align: middle;
-    white-space: normal;
-    word-wrap: break-word;
-}
-
-/* Задаем максимальную ширину для ячеек */
-table td {
-    max-width: 200px;
-}
-
-/* Специальные стили для колонок */
-table td:nth-child(1) { /* ID */
-    width: 50px;
-    min-width: 50px;
-}
-
-table td:nth-child(2) { /* Клиент */
-    width: 150px;
-    min-width: 150px;
-}
-
-table td:nth-child(3) { /* Товары */
-    width: 250px;
-    min-width: 250px;
-}
-
-table td:nth-child(4) { /* Сумма */
-    width: 100px;
-    min-width: 100px;
-}
-
-table td:nth-child(5) { /* Статус */
-    width: 120px;
-    min-width: 120px;
-}
-
-table td:nth-child(6) { /* Метод оплаты */
-    width: 120px;
-    min-width: 120px;
-}
-
-table td:nth-child(7) { /* Дата */
-    width: 120px;
-    min-width: 120px;
-}
-
-table td:nth-child(8) { /* Дата доставки */
-    width: 120px;
-    min-width: 120px;
-}
-
-table td:nth-child(9) { /* Адрес доставки */
-    width: 200px;
-    min-width: 200px;
-}
-
-table td:nth-child(10) { /* Примечания */
-    width: 200px;
-    min-width: 200px;
-}
-
-/* Стили для текста в ячейках */
-table td {
+    max-width: 200px; /* Максимальная ширина для всех ячеек */
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-/* Стили для textarea в таблице */
-table textarea {
-    width: 100%;
-    min-height: 60px;
-    resize: vertical;
-    padding: 5px;
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-    .table-wrapper {
-        margin: 10px -10px;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-    }
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 /* Стили для заголовков таблицы */
@@ -235,6 +157,78 @@ table tr:nth-child(even) {
 /* Стили при наведении на строку */
 table tr:hover {
     background-color: #f5f5f5;
+}
+
+/* Стили для textarea в таблице */
+table textarea {
+    width: 100%;
+    min-height: 60px;
+    max-height: 100px;
+    resize: vertical;
+    padding: 5px;
+}
+
+/* Стили для действий */
+.actions {
+    white-space: nowrap;
+    width: 150px;
+    min-width: 150px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .table-wrapper {
+        margin: 10px -10px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+    
+    table th, table td {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
+
+/* Стили для input в таблице */
+table input[type="text"],
+table input[type="number"],
+table input[type="email"],
+table input[type="tel"],
+table select {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+/* Фиксированная ширина для определенных колонок */
+table td:first-child { /* ID */
+    width: 60px;
+    min-width: 60px;
+}
+
+table td:nth-child(2) { /* Имя/Email */
+    width: 180px;
+    min-width: 180px;
+}
+
+table td:nth-child(3) { /* Описание/Контент */
+    width: 200px;
+    min-width: 200px;
+}
+
+/* Стили для длинного текста */
+.truncate {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Показывать полный текст при наведении */
+.truncate:hover {
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 /* Стили для форм */
