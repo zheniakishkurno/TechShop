@@ -122,11 +122,11 @@ require_once 'header.php';
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="price"><?= number_format($item['price'], 2, '.', ' ') ?> ₽</td>
+                                    <td class="price"><?= number_format($item['price'], 2, '.', ' ') ?> BYN</td>
                                     <td class="quantity">
                                         <input type="number" value="<?= $item['quantity'] ?>" min="1" max="<?= $item['stock'] ?>" data-id="<?= $item['id'] ?>" readonly>
                                     </td>
-                                    <td class="subtotal"><?= number_format($item['subtotal'], 2, '.', ' ') ?> ₽</td>
+                                    <td class="subtotal"><?= number_format($item['subtotal'], 2, '.', ' ') ?> BYN</td>
                                     <td class="remove">
                                         <button class="remove-item" data-id="<?= $item['id'] ?>"><i class="fas fa-times"></i></button>
                                     </td>
