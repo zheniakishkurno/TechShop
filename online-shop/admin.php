@@ -115,7 +115,7 @@ if (isset($_POST['add_product']) || isset($_POST['update_product'])) {
         }
 
         if (isset($_POST['add_product'])) {
-            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount, views, reviews_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO products (name, category_id, price, description, stock, image_url, discount, views, reviews_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id");
             $stmt->execute([
                 $_POST['name'],
                 $_POST['category_id'],
