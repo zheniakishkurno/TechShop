@@ -142,10 +142,10 @@ $products = array_slice($all_products, $offset, $per_page);
                     </h3>
                     <div class="product-price">
                         <?php if ($product['discount'] > 0): ?>
-                            <span class="old-price"><?= $old_price ?> ₽</span>
-                            <span class="current-price"><?= $new_price ?> ₽</span>
+                            <span class="old-price"><?= $old_price ?> BYN</span>
+                            <span class="current-price"><?= $new_price ?> BYN</span>
                         <?php else: ?>
-                            <span class="current-price"><?= $old_price ?> ₽</span>
+                            <span class="current-price"><?= $old_price ?> BYN</span>
                         <?php endif; ?>
                     </div>
 <div class="product-actions">
