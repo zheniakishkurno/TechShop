@@ -112,11 +112,46 @@ h3 {
 }
 
 /* Стили для таблиц */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+    position: relative;
+}
+
 table {
     width: 100%;
+    min-width: 1200px;
     border-collapse: collapse;
-    margin-top: 20px;
     font-size: 14px;
+}
+
+/* Фиксируем заголовок таблицы */
+table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff;
+}
+
+table th {
+    background-color: #5c6bc0;
+    color: #fff;
+    font-weight: 500;
+    white-space: nowrap;
+    position: relative;
+}
+
+/* Добавляем тень для эффекта прокрутки */
+.table-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 5px;
+    background: linear-gradient(to right, transparent, rgba(0,0,0,0.1));
+    pointer-events: none;
 }
 
 table th, table td {
@@ -126,18 +161,56 @@ table th, table td {
     vertical-align: middle;
 }
 
-table th {
-    background-color: #5c6bc0;
-    color: #fff;
-    font-weight: 500;
+/* Делаем ячейки с фиксированной шириной */
+table td {
+    min-width: 150px;
+    max-width: 300px;
 }
 
+/* Добавляем стили для прокрутки на мобильных устройствах */
+@media (max-width: 768px) {
+    .table-wrapper {
+        margin: 0 -10px;
+        padding: 0 10px;
+        width: calc(100% + 20px);
+    }
+
+    table {
+        min-width: 800px;
+    }
+}
+
+/* Стили для наведения и четных строк */
 table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
 table tr:hover {
     background-color: #f1f1f1;
+}
+
+/* Стили для полей ввода в таблице */
+table input[type="text"],
+table input[type="number"],
+table input[type="email"],
+table input[type="tel"],
+table select,
+table textarea {
+    width: 100%;
+    min-width: 100px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Стили для действий в таблице */
+.actions {
+    white-space: nowrap;
+    min-width: 150px;
+}
+
+/* Добавляем плавную прокрутку */
+.table-wrapper {
+    scroll-behavior: smooth;
 }
 
 /* Стили для форм */
@@ -346,18 +419,6 @@ form select:invalid:focus {
     cursor: pointer;
     transition: all 0.3s; 
 }
-/* Обёртка для таблицы */
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-}
-
-/* Таблица остаётся адаптивной внутри обёртки */
-table {
-    width: 100%;
-    min-width: 800px; /* при необходимости можно задать минимальную ширину */
-    overflow-x: auto;
-}
 
 .actions button[type="submit"] {
     background-color: #4CAF50;
@@ -395,42 +456,6 @@ table {
 
 .back-button:hover {
     background-color: #e0e0e0;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        padding: 10px;
-        margin: 0;
-        border-radius: 0;
-    }
-    
-    table {
-        font-size: 12px;
-    }
-    
-    table th, table td {
-        padding: 8px;
-    }
-    
-    .tabs {
-        flex-direction: column;
-    }
-    
-    .tab-button {
-        margin-right: 0;
-        margin-bottom: 5px;
-        border-radius: 4px;
-    }
-    
-    .tab-button.active {
-        border-radius: 4px;
-    }
-    
-    .tab-button.active:after {
-        display: none;
-    }
 }
 
 /* Стили для select */
