@@ -112,19 +112,11 @@ h3 {
 }
 
 /* Стили для таблиц */
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    margin: 20px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
     font-size: 14px;
-    margin: 0;
 }
 
 table th, table td {
@@ -132,103 +124,20 @@ table th, table td {
     text-align: left;
     border-bottom: 1px solid #ddd;
     vertical-align: middle;
-    max-width: 200px; /* Максимальная ширина для всех ячеек */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    word-wrap: break-word;
 }
 
-/* Стили для заголовков таблицы */
 table th {
     background-color: #5c6bc0;
     color: #fff;
     font-weight: 500;
-    position: sticky;
-    top: 0;
-    z-index: 1;
 }
 
-/* Стили для четных строк */
 table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-/* Стили при наведении на строку */
 table tr:hover {
-    background-color: #f5f5f5;
-}
-
-/* Стили для textarea в таблице */
-table textarea {
-    width: 100%;
-    min-height: 60px;
-    max-height: 100px;
-    resize: vertical;
-    padding: 5px;
-}
-
-/* Стили для действий */
-.actions {
-    white-space: nowrap;
-    width: 150px;
-    min-width: 150px;
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-    .table-wrapper {
-        margin: 10px -10px;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-    }
-    
-    table th, table td {
-        padding: 8px;
-        font-size: 12px;
-    }
-}
-
-/* Стили для input в таблице */
-table input[type="text"],
-table input[type="number"],
-table input[type="email"],
-table input[type="tel"],
-table select {
-    width: 100%;
-    padding: 6px;
-    box-sizing: border-box;
-}
-
-/* Фиксированная ширина для определенных колонок */
-table td:first-child { /* ID */
-    width: 60px;
-    min-width: 60px;
-}
-
-table td:nth-child(2) { /* Имя/Email */
-    width: 180px;
-    min-width: 180px;
-}
-
-table td:nth-child(3) { /* Описание/Контент */
-    width: 200px;
-    min-width: 200px;
-}
-
-/* Стили для длинного текста */
-.truncate {
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* Показывать полный текст при наведении */
-.truncate:hover {
-    white-space: normal;
-    word-wrap: break-word;
+    background-color: #f1f1f1;
 }
 
 /* Стили для форм */
@@ -436,6 +345,18 @@ form select:invalid:focus {
     border-radius: 3px;
     cursor: pointer;
     transition: all 0.3s; 
+}
+/* Обёртка для таблицы */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Таблица остаётся адаптивной внутри обёртки */
+table {
+    width: 100%;
+    min-width: 800px; /* при необходимости можно задать минимальную ширину */
+    overflow-x: auto;
 }
 
 .actions button[type="submit"] {
