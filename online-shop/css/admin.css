@@ -112,32 +112,186 @@ h3 {
 }
 
 /* Стили для таблиц */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
 table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
     font-size: 14px;
 }
 
 table th, table td {
-    padding: 12px;
+    padding: 15px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #edf2f7;
     vertical-align: middle;
 }
 
 table th {
-    background-color: #5c6bc0;
-    color: #fff;
+    background-color: #f8fafc;
+    color: #4a5568;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+table tr:last-child td {
+    border-bottom: none;
+}
+
+table tbody tr {
+    transition: all 0.2s ease;
+}
+
+table tbody tr:hover {
+    background-color: #f7fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Стили для ячеек с действиями */
+.actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.actions button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.actions button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.actions button[type="submit"]:hover {
+    background-color: #43a047;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.2);
+}
+
+.actions button.delete {
+    background-color: #ef4444;
+    color: white;
+}
+
+.actions button.delete:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.2);
+}
+
+/* Стили для полей ввода в таблице */
+table input[type="text"],
+table input[type="number"],
+table input[type="email"],
+table input[type="tel"],
+table select,
+table textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background-color: white;
+}
+
+table input:focus,
+table select:focus,
+table textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    outline: none;
+}
+
+/* Стили для select в таблице */
+table select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%234a5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+/* Адаптивность для таблиц */
+@media (max-width: 768px) {
+    .table-wrapper {
+        margin: 10px -15px;
+        border-radius: 0;
+    }
+
+    table th, table td {
+        padding: 12px;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .actions button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Стили для изображений в таблице */
+table img {
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+}
+
+/* Стили для статусов заказов */
+table select[name="status"] {
     font-weight: 500;
 }
 
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+table select[name="status"] option[value="processing"] {
+    color: #eab308;
 }
 
-table tr:hover {
-    background-color: #f1f1f1;
+table select[name="status"] option[value="shipped"] {
+    color: #3b82f6;
+}
+
+table select[name="status"] option[value="delivered"] {
+    color: #22c55e;
+}
+
+table select[name="status"] option[value="cancelled"] {
+    color: #ef4444;
+}
+
+/* Стили для рейтинга в таблице отзывов */
+table select[name="rating"] {
+    width: 80px;
+    text-align: center;
+    font-weight: 500;
+    color: #f59e0b;
 }
 
 /* Стили для форм */
@@ -345,38 +499,6 @@ form select:invalid:focus {
     border-radius: 3px;
     cursor: pointer;
     transition: all 0.3s; 
-}
-/* Обёртка для таблицы */
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-}
-
-/* Таблица остаётся адаптивной внутри обёртки */
-table {
-    width: 100%;
-    min-width: 800px; /* при необходимости можно задать минимальную ширину */
-    overflow-x: auto;
-}
-
-.actions button[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-}
-
-.actions button[type="submit"]:hover {
-    background-color: #3e8e41;
-}
-
-.actions button.delete {
-    background-color: #f44336;
-    color: white;
-    border: none;
-}
-
-.actions button.delete:hover {
-    background-color: #d32f2f;
 }
 
 /* Стиль для кнопки назад */
