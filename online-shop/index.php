@@ -150,7 +150,11 @@ $products = array_slice($all_products, $offset, $per_page);
                     </div>
 <div class="product-actions">
     <a href="product.php?id=<?= $product['id'] ?>" class="btn btn-outline">Подробнее</a>
-   <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
+    <?php if ($product['stock'] > 0): ?>
+        <button class="btn btn-primary btn-buy-now" data-id="<?= $product['id'] ?>">Купить</button>
+    <?php else: ?>
+        <button class="btn btn-primary" disabled>Нет в наличии</button>
+    <?php endif; ?>
 </div>
                 </div>
             </div>
@@ -200,6 +204,13 @@ $products = array_slice($all_products, $offset, $per_page);
 <script>
     // Добавить в корзину и сразу перейти в cart.php
     function buyNow(productId, quantity = 1) {
+        // Проверяем наличие товара перед отправкой запроса
+        const button = document.querySelector(`.btn-buy-now[data-id="${productId}"]`);
+        if (!button || button.disabled) {
+            alert('Товар отсутствует в наличии');
+            return;
+        }
+
         fetch('add_to_cart.php', {
             method: 'POST',
             headers: {
