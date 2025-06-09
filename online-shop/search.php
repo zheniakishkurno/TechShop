@@ -86,14 +86,18 @@ require_once 'header.php';
                                        data-id="<?= $product['id'] ?>">
                                 <button class="quantity-btn plus">+</button>
                             </div>
-<button class="btn add-to-cart"
-        data-id="<?= $product['id'] ?>"
-        data-name="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>"
-        data-price="<?= !empty($product['discount']) 
-            ? $product['price'] * (1 - $product['discount'] / 100)
-            : $product['price'] ?>">
-    В корзину
-</button>
+                            <?php if ($product['stock'] > 0): ?>
+                                <button class="btn add-to-cart"
+                                        data-id="<?= $product['id'] ?>"
+                                        data-name="<?= htmlspecialchars($product['name'], ENT_QUOTES) ?>"
+                                        data-price="<?= !empty($product['discount']) 
+                                            ? $product['price'] * (1 - $product['discount'] / 100)
+                                            : $product['price'] ?>">
+                                    В корзину
+                                </button>
+                            <?php else: ?>
+                                <button class="btn" disabled>Нет в наличии</button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -129,9 +133,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчики для кнопок "В корзину"
     document.querySelectorAll('.add-to-cart').forEach(button => {
         button.addEventListener('click', function() {
+            if (this.disabled) {
+                alert('Товар отсутствует в наличии');
+                return;
+            }
+
             const productId = this.getAttribute('data-id');
             const quantityInput = this.closest('.product-actions').querySelector('.quantity-input');
             const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+            const maxStock = quantityInput ? parseInt(quantityInput.getAttribute('max')) : 0;
+
+            if (maxStock < quantity) {
+                alert('Недостаточно товара на складе');
+                return;
+            }
             
             // Отправка запроса на сервер
             fetch('add_to_cart.php', {
