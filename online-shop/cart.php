@@ -142,7 +142,7 @@ require_once 'header.php';
                         
                         <div class="summary-row">
                             <span>Товары (<?= count($cart_items) ?>)</span>
-                            <span><?= number_format($total, 2, '.', ' ') ?> ₽</span>
+                            <span><?= number_format($total, 2, '.', ' ') ?> BYN</span>
                         </div>
                         
                         <div class="summary-row">
@@ -152,7 +152,7 @@ require_once 'header.php';
                         
                         <div class="summary-row total">
                             <span>Общая сумма</span>
-                            <span><?= number_format($total, 2, '.', ' ') ?> ₽</span>
+                            <span><?= number_format($total, 2, '.', ' ') ?> BYN</span>
                         </div>
                         
                         <form method="POST" class="checkout-form">
