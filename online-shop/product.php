@@ -296,6 +296,27 @@ require_once 'header.php';
                 padding: 20px;
             }
         }
+
+        .add-to-cart-button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .add-to-cart-button:hover:not(.disabled) {
+            background-color: #0b5ed7;
+        }
+
+        .add-to-cart-button.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -354,7 +375,15 @@ require_once 'header.php';
                         <button class="quantity-btn plus">+</button>
                     </div>
                     
-                    <button class="btn add-to-cart" data-id="<?= $product['id'] ?>">В корзину</button>
+                    <?php if ($product['stock'] > 0): ?>
+                        <button class="add-to-cart-button" onclick="addToCart(<?= $product['id'] ?>)">
+                            В корзину
+                        </button>
+                    <?php else: ?>
+                        <button class="add-to-cart-button disabled" disabled>
+                            Нет в наличии
+                        </button>
+                    <?php endif; ?>
                 </div>
                 
                 <div class="product-description">
