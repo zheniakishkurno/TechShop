@@ -247,6 +247,10 @@ table td {
     background: white;
     transition: all 0.2s ease;
     line-height: 1.4;
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* ID колонка */
@@ -282,6 +286,7 @@ table tbody tr:nth-child(even) td {
     display: flex;
     gap: 8px;
     justify-content: flex-end;
+    min-width: max-content;
 }
 
 .actions button {
@@ -507,29 +512,40 @@ table input[type="email"],
 table input[type="tel"],
 table textarea {
     width: 100%;
-    min-width: 150px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* При фокусе поле в таблице разворачивается поверх других */
 table input:focus,
 table textarea:focus {
-    position: relative;
+    position: absolute;
     z-index: 1000;
     box-shadow: 0 0 10px rgba(92, 107, 192, 0.2);
     background-color: white;
+    width: auto;
+    min-width: 250px;
+    white-space: normal;
 }
 
 /* Стили для длинных текстовых полей в таблице */
 table td textarea {
     height: 60px;
     min-height: 60px;
+    resize: both;
 }
 
 table td textarea:focus {
     height: 150px;
-    position: absolute;
-    width: auto;
-    min-width: 300px;
+    width: 300px;
+    max-width: none;
+}
+
+/* Добавляем стили для ячеек с фиксированной шириной */
+table td[data-fixed-width] {
+    width: 1%;
+    white-space: nowrap;
 }
 
 form input:focus,
