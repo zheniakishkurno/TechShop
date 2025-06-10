@@ -123,39 +123,74 @@ h3 {
     overflow-y: auto;
 }
 
-/* Общие стили для всех таблиц */
-table {
-    width: 100%;
-    border-spacing: 0;
-    font-size: 14px;
-    min-width: 1200px;
-}
-
-/* Стили для заголовков */
-table th {
-    background: white;
-    color: #333;
-    font-weight: 500;
-    padding: 16px;
-    text-align: left;
-    border-bottom: 2px solid #e2e8f0;
+/* Стили для заголовка таблицы */
+table thead {
     position: sticky;
     top: 0;
     z-index: 10;
+    background: white;
+}
+
+table thead::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 /* Стили для ячеек */
+table th,
 table td {
-    padding: 16px;
+    padding: 12px;
+    text-align: left;
     border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
 }
 
-/* Стили для полей ввода в таблицах */
+table th {
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* Стили для строк */
+table tbody tr {
+    transition: all 0.2s ease;
+}
+
+table tbody tr:hover {
+    background-color: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Стили для чередующихся строк */
+table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Стили для полей ввода в таблице */
 table input[type="text"],
 table input[type="number"],
 table input[type="email"],
 table input[type="tel"],
+table input[type="datetime-local"],
 table select,
 table textarea {
     width: 100%;
@@ -163,30 +198,34 @@ table textarea {
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     font-size: 14px;
-    background-color: white;
+    line-height: 1.4;
+    color: #1e293b;
+    background-color: #f8fafc;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
-/* Стили при наведении на поля ввода */
+/* Стили при наведении */
 table input:hover,
 table select:hover,
 table textarea:hover {
     border-color: #cbd5e1;
-    background-color: #f8fafc;
+    background-color: #f1f5f9;
 }
 
-/* Стили при фокусе на полях ввода */
+/* Стили при фокусе */
 table input:focus,
 table select:focus,
 table textarea:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     outline: none;
+    background-color: white;
 }
 
 /* Стили для textarea */
 table textarea {
-    min-height: 60px;
+    min-height: 38px;
     resize: vertical;
 }
 
@@ -194,36 +233,125 @@ table textarea {
 .actions {
     display: flex;
     gap: 8px;
-    justify-content: flex-start;
+    justify-content: flex-end;
+    min-width: max-content;
 }
 
 .actions button {
-    padding: 8px 16px;
+    padding: 6px 12px;
     border-radius: 6px;
     font-size: 13px;
     font-weight: 500;
-    cursor: pointer;
     border: none;
-    color: white;
+    cursor: pointer;
     transition: all 0.2s ease;
+    white-space: nowrap;
+    color: white;
 }
 
 .actions button[type="submit"],
 .actions .update {
-    background: #22c55e;
-}
-
-.actions button[type="submit"]:hover,
-.actions .update:hover {
-    background: #16a34a;
+    background: linear-gradient(to right, #4ade80, #22c55e);
 }
 
 .actions .delete {
-    background: #ef4444;
+    background: linear-gradient(to right, #f87171, #ef4444);
 }
 
-.actions .delete:hover {
-    background: #dc2626;
+.actions button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для изображений */
+table img {
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+/* Стили для статусов */
+table select[name="status"] {
+    font-weight: 500;
+    min-width: 140px;
+}
+
+/* Адаптивность */
+@media (max-width: 1400px) {
+    table {
+        font-size: 13px;
+    }
+    
+    table th, 
+    table td {
+        padding: 10px 8px;
+    }
+    
+    .actions button {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-wrapper {
+        margin: 10px -15px;
+        border-radius: 0;
+    }
+    
+    table th, 
+    table td {
+        padding: 8px;
+    }
+    
+    .actions {
+        flex-direction: column;
+    }
+    
+    .actions button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Стили для подсказок */
+.input-hint {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* Стили для обязательных полей */
+table input:required,
+table select:required,
+table textarea:required {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4"><circle cx="2" cy="2" r="2" fill="%23ef4444"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px top 8px;
+    padding-right: 20px;
+}
+
+/* Скроллбар */
+.table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 /* Стили для информации о клиенте */
@@ -290,28 +418,6 @@ input[type="datetime-local"] {
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     font-size: 14px;
-}
-
-/* Адаптивность */
-@media (max-width: 1400px) {
-    table {
-        font-size: 13px;
-    }
-    
-    table th,
-    table td {
-        padding: 12px;
-    }
-}
-
-@media (max-width: 768px) {
-    .actions {
-        flex-direction: column;
-    }
-    
-    .actions button {
-        width: 100%;
-    }
 }
 
 /* Стили для форм */
@@ -537,42 +643,6 @@ form select:invalid:focus {
 
 .back-button:hover {
     background-color: #e0e0e0;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        padding: 10px;
-        margin: 0;
-        border-radius: 0;
-    }
-    
-    table {
-        font-size: 12px;
-    }
-    
-    table th, table td {
-        padding: 8px;
-    }
-    
-    .tabs {
-        flex-direction: column;
-    }
-    
-    .tab-button {
-        margin-right: 0;
-        margin-bottom: 5px;
-        border-radius: 4px;
-    }
-    
-    .tab-button.active {
-        border-radius: 4px;
-    }
-    
-    .tab-button.active:after {
-        display: none;
-    }
 }
 
 /* Стили для select */
