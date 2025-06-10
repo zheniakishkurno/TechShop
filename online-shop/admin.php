@@ -380,13 +380,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->execute([$customer_id]);
                 }
                 
-                // 3. Удаляем записи из корзины пользователя (если есть)
-                $stmt = $pdo->prepare("DELETE FROM cart_items WHERE user_id = ?");
-                $stmt->execute([$user_id]);
-                
-                // 4. Удаляем избранное пользователя (если есть)
-                $stmt = $pdo->prepare("DELETE FROM favorites WHERE user_id = ?");
-                $stmt->execute([$user_id]);
+                // 5. Удаляем связанного клиента
+                if ($customer_id) {
+                    $stmt = $pdo->prepare("DELETE FROM customers WHERE id = ?");
+                    $stmt->execute([$customer_id]);
+                }
                 
                 // 5. Наконец, удаляем самого пользователя
                 $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
