@@ -700,12 +700,27 @@ input:invalid + .error-message {
 }
 
 /* Обновленные стили для таблицы заказов */
+.orders-wrapper {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+.orders-wrapper .table-wrapper {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
 .orders-table {
     width: 100%;
     background: white;
     border-spacing: 0;
-    margin: 20px 0;
     font-size: 14px;
+    min-width: 1200px; /* Минимальная ширина для горизонтальной прокрутки */
 }
 
 .orders-table th {
@@ -715,12 +730,57 @@ input:invalid + .error-message {
     padding: 12px 16px;
     text-align: left;
     border-bottom: 2px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
 }
 
 .orders-table td {
     padding: 16px;
     border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
+}
+
+/* Фиксированные ширины для столбцов */
+.orders-table .client-column {
+    width: 200px;
+}
+
+.orders-table .products-column {
+    width: 250px;
+}
+
+.orders-table .price-column {
+    width: 100px;
+}
+
+.orders-table .status-column {
+    width: 150px;
+}
+
+.orders-table .payment-column {
+    width: 120px;
+}
+
+.orders-table .date-column {
+    width: 180px;
+}
+
+.orders-table .delivery-date-column {
+    width: 180px;
+}
+
+.orders-table .address-column {
+    width: 150px;
+}
+
+.orders-table .notes-column {
+    width: 150px;
+}
+
+.orders-table .actions-column {
+    width: 200px;
 }
 
 /* Стили для клиента */
