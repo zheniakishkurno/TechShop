@@ -114,11 +114,31 @@ h3 {
 /* Улучшенные стили для таблиц */
 .table-wrapper {
     width: 100%;
+    overflow-x: auto;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     margin: 20px 0;
     position: relative;
+}
+
+/* Стили для скроллбара */
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 /* Стили для заголовка таблицы */
@@ -140,6 +160,7 @@ table thead::after {
 }
 
 table {
+    min-width: 1200px; /* Минимальная ширина таблицы */
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
@@ -152,7 +173,7 @@ table {
 /* Фиксированные ширины колонок */
 table th:first-child,
 table td:first-child {
-    width: 40px; /* ID */
+    width: 60px; /* ID */
     text-align: center;
     padding-left: 4px;
     padding-right: 4px;
@@ -160,54 +181,53 @@ table td:first-child {
 
 table th:nth-child(2),
 table td:nth-child(2) {
-    width: 15%; /* Клиент */
+    width: 180px; /* Клиент */
 }
 
 table th:nth-child(3),
 table td:nth-child(3) {
-    width: 25%; /* Товары */
+    width: 300px; /* Товары */
 }
 
 table th:nth-child(4),
 table td:nth-child(4) {
-    width: 80px; /* Сумма */
+    width: 100px; /* Сумма */
     text-align: right;
 }
 
 table th:nth-child(5),
 table td:nth-child(5) {
-    width: 80px; /* Статус */
+    width: 100px; /* Статус */
 }
 
 table th:nth-child(6),
 table td:nth-child(6) {
-    width: 100px; /* Метод оплаты */
+    width: 120px; /* Метод оплаты */
 }
 
 table th:nth-child(7),
 table td:nth-child(7) {
-    width: 100px; /* Дата создания */
+    width: 120px; /* Дата создания */
 }
 
 table th:nth-child(8),
 table td:nth-child(8) {
-    width: 100px; /* Дата доставки */
+    width: 120px; /* Дата доставки */
 }
 
 table th:nth-child(9),
 table td:nth-child(9) {
-    width: 15%; /* Адрес доставки */
+    width: 200px; /* Адрес доставки */
 }
 
 table th:last-child,
 table td:last-child {
-    width: 90px; /* Действия */
+    width: 100px; /* Действия */
 }
 
 /* Стили для ID колонки */
 table td:first-child {
     font-family: monospace; /* Моноширинный шрифт для цифр */
-    font-size: 13px;
     font-weight: 500;
     color: #666;
     background: #f8fafc;
@@ -215,13 +235,15 @@ table td:first-child {
 
 /* Стили для ячеек */
 table th, table td {
-    padding: 8px;
+    padding: 12px;
     text-align: left;
     border-bottom: 1px solid #edf2f7;
     vertical-align: middle;
     position: relative;
+    white-space: nowrap;
 }
 
+/* Стили для заголовков */
 table th {
     background-color: #f8fafc;
     color: #1e293b;
@@ -229,14 +251,11 @@ table th {
     text-transform: uppercase;
     font-size: 12px;
     letter-spacing: 0.5px;
-    white-space: nowrap;
 }
 
 /* Стили для текста в ячейках */
 table td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: #333;
 }
 
 /* При наведении показываем полный текст */
@@ -265,12 +284,6 @@ table tbody tr {
     transition: all 0.2s ease;
 }
 
-table tbody tr:hover {
-    background-color: #f8fafc;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
 /* Стили для чередующихся строк */
 table tbody tr:nth-child(even) {
     background-color: #fafafa;
@@ -279,19 +292,19 @@ table tbody tr:nth-child(even) {
 /* Стили для кнопок действий */
 .actions {
     display: flex;
-    gap: 4px;
+    gap: 6px;
     justify-content: flex-end;
 }
 
 .actions button {
-    padding: 4px 8px;
+    padding: 6px 12px;
     border-radius: 4px;
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
     border: none;
     color: white;
-    min-width: 40px;
+    min-width: 50px;
 }
 
 .actions button[type="submit"] {
@@ -395,8 +408,9 @@ table tbody tr:nth-child(even) {
     }
     
     .actions button {
-        padding: 3px 6px;
+        padding: 4px 8px;
         font-size: 11px;
+        min-width: 40px;
     }
 }
 
