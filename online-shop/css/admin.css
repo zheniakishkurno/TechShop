@@ -152,44 +152,61 @@ table {
 /* Фиксированные ширины колонок */
 table th:first-child,
 table td:first-child {
-    width: 20%; /* Клиент */
+    width: 50px; /* Фиксированная ширина для ID */
+    text-align: center;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 
 table th:nth-child(2),
 table td:nth-child(2) {
-    width: 20%; /* Товары */
+    width: 20%; /* Клиент */
 }
 
 table th:nth-child(3),
 table td:nth-child(3) {
-    width: 8%; /* Сумма */
+    width: 20%; /* Товары */
 }
 
 table th:nth-child(4),
 table td:nth-child(4) {
-    width: 7%; /* Статус */
+    width: 8%; /* Сумма */
 }
 
 table th:nth-child(5),
 table td:nth-child(5) {
-    width: 10%; /* Метод оплаты */
+    width: 7%; /* Статус */
 }
 
 table th:nth-child(6),
-table td:nth-child(6),
+table td:nth-child(6) {
+    width: 10%; /* Метод оплаты */
+}
+
 table th:nth-child(7),
-table td:nth-child(7) {
+table td:nth-child(7),
+table th:nth-child(8),
+table td:nth-child(8) {
     width: 10%; /* Даты */
 }
 
-table th:nth-child(8),
-table td:nth-child(8) {
+table th:nth-child(9),
+table td:nth-child(9) {
     width: 8%; /* Адрес */
 }
 
 table th:last-child,
 table td:last-child {
     width: 100px; /* Действия */
+}
+
+/* Стили для ID колонки */
+table td:first-child {
+    font-family: monospace; /* Моноширинный шрифт для цифр */
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    background: #f8fafc;
 }
 
 /* Стили для ячеек */
@@ -331,7 +348,8 @@ table tbody tr:nth-child(even) {
     
     table th:first-child,
     table td:first-child {
-        width: 30%;
+        width: 40px; /* Уменьшаем на мобильных */
+        font-size: 12px;
     }
     
     table th:nth-child(2),
