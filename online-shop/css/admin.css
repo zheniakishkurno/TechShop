@@ -699,24 +699,22 @@ input:invalid + .error-message {
     display: block;
 }
 
-/* Стили для таблицы заказов */
+/* Обновленные стили для таблицы заказов */
 .orders-table {
     width: 100%;
     background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-spacing: 0;
     margin: 20px 0;
+    font-size: 14px;
 }
 
 .orders-table th {
-    background: #f8fafc;
-    color: #1e293b;
-    font-weight: 600;
-    padding: 16px;
+    background: white;
+    color: #333;
+    font-weight: 500;
+    padding: 12px 16px;
     text-align: left;
     border-bottom: 2px solid #e2e8f0;
-    white-space: nowrap;
 }
 
 .orders-table td {
@@ -725,178 +723,153 @@ input:invalid + .error-message {
     vertical-align: middle;
 }
 
-/* Стили для столбцов */
-.orders-table .column-id {
-    width: 80px;
-    text-align: center;
-}
-
-.orders-table .column-date {
-    width: 140px;
-}
-
-.orders-table .column-customer {
-    width: 200px;
-}
-
-.orders-table .column-status {
-    width: 120px;
-}
-
-.orders-table .column-total {
-    width: 100px;
-    text-align: right;
-}
-
-/* Стили для статусов заказа */
-.order-status {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.order-status.new {
-    background-color: #f0f9ff;
-    color: #0369a1;
-}
-
-.order-status.processing {
-    background-color: #fef3c7;
-    color: #d97706;
-}
-
-.order-status.completed {
-    background-color: #dcfce7;
-    color: #16a34a;
-}
-
-.order-status.cancelled {
-    background-color: #fee2e2;
-    color: #dc2626;
-}
-
-/* Стили для деталей заказа */
-.order-items {
-    font-size: 13px;
-    color: #64748b;
-    line-height: 1.5;
-}
-
-.order-items span {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 300px;
-}
-
-/* Стили для цены */
-.order-price {
-    font-weight: 600;
-    color: #1e293b;
-}
-
-/* Стили для контактов клиента */
-.customer-info {
+/* Стили для клиента */
+.orders-table .client-info {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.customer-name {
-    font-weight: 500;
-    color: #1e293b;
+.orders-table .client-name {
+    color: #333;
 }
 
-.customer-contact {
+.orders-table .client-email {
+    color: #666;
     font-size: 13px;
-    color: #64748b;
 }
 
-/* Стили для действий */
+/* Стили для товаров */
+.orders-table .product-info {
+    color: #333;
+}
+
+.orders-table .product-quantity {
+    color: #666;
+    font-size: 13px;
+}
+
+/* Стили для суммы */
+.orders-table .price {
+    font-weight: 500;
+    color: #333;
+}
+
+/* Стили для методов оплаты */
+.orders-table .payment-method {
+    color: #666;
+}
+
+/* Стили для дат */
+.orders-table .date {
+    color: #666;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Стили для адреса */
+.orders-table .address {
+    color: #333;
+    max-width: 200px;
+}
+
+/* Стили для примечаний */
+.orders-table .notes {
+    color: #333;
+    max-width: 150px;
+}
+
+/* Стили для кнопок действий */
 .orders-table .actions {
     display: flex;
     gap: 8px;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .orders-table .actions button {
     padding: 8px 16px;
     border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: normal;
     cursor: pointer;
-    transition: all 0.2s ease;
     border: none;
-}
-
-.orders-table .actions .view {
-    background: #f1f5f9;
-    color: #1e293b;
-    border: 1px solid #e2e8f0;
-}
-
-.orders-table .actions .view:hover {
-    background: #e2e8f0;
-}
-
-.orders-table .actions .edit {
-    background: linear-gradient(to right, #4ade80, #22c55e);
     color: white;
+    transition: all 0.2s ease;
 }
 
-.orders-table .actions .edit:hover {
-    background: linear-gradient(to right, #22c55e, #16a34a);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(34, 197, 94, 0.2);
+.orders-table .actions .update {
+    background: #22c55e;
+}
+
+.orders-table .actions .update:hover {
+    background: #16a34a;
 }
 
 .orders-table .actions .delete {
-    background: linear-gradient(to right, #f87171, #ef4444);
-    color: white;
+    background: #ef4444;
 }
 
 .orders-table .actions .delete:hover {
-    background: linear-gradient(to right, #ef4444, #dc2626);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+    background: #dc2626;
 }
 
-/* Адаптивность для таблицы заказов */
-@media (max-width: 1200px) {
-    .orders-table .column-date,
-    .orders-table .column-total {
-        display: none;
+/* Стили для статуса */
+.orders-table .status-select {
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background: white;
+    color: #333;
+    font-size: 14px;
+    width: 100%;
+    max-width: 200px;
+}
+
+/* Адаптивность */
+@media (max-width: 1400px) {
+    .orders-table {
+        font-size: 13px;
     }
     
-    .order-items span {
-        max-width: 200px;
-    }
-}
-
-@media (max-width: 768px) {
     .orders-table th,
     .orders-table td {
         padding: 12px;
     }
+}
 
-    .orders-table .column-status {
+@media (max-width: 1200px) {
+    .orders-table .date-column,
+    .orders-table .address-column {
         display: none;
     }
+}
 
-    .order-items span {
-        max-width: 150px;
+@media (max-width: 768px) {
+    .orders-table .payment-column,
+    .orders-table .notes-column {
+        display: none;
     }
-
+    
     .orders-table .actions {
         flex-direction: column;
     }
-
+    
     .orders-table .actions button {
         width: 100%;
-        text-align: center;
     }
+}
+
+/* Заголовок страницы */
+.page-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.page-subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 16px;
+    font-weight: normal;
 }
