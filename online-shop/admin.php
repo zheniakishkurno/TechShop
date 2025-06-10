@@ -973,68 +973,72 @@ $reviews = $pdo->query("SELECT
 
     <div id="orders" class="tab-content <?= $_SESSION['active_tab'] == 'orders' ? 'active' : '' ?>">
         <h2>Управление заказами</h2>
-
-        <h3>Список заказов</h3>
-        <table>
-            <thead>
-            <tr>
-                <th>Клиент</th>
-                <th>Товары</th>
-                <th>Сумма</th>
-                <th>Статус</th>
-                <th>Метод оплаты</th>
-                <th>Дата</th>
-                <th>Дата доставки</th>
-                <th>Адрес доставки</th>
-                <th>Примечания</th>
-                <th>Действия</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($orders as $order): ?>
-              <tr>
-    <form method="POST">
-        <td><?= htmlspecialchars($order['customer_name']) ?> (<?= htmlspecialchars($order['customer_email']) ?>)</td>
-        <td>
-            <?php
-            $stmt = $pdo->prepare("
-                SELECT p.name, oi.quantity 
-                FROM order_items oi 
-                JOIN products p ON oi.product_id = p.id 
-                WHERE oi.order_id = ?
-            ");
-            $stmt->execute([$order['id']]);
-            $items = $stmt->fetchAll();
-            foreach ($items as $item) {
-                echo htmlspecialchars($item['name']) . ' (' . $item['quantity'] . ' шт.)<br>';
-            }
-            ?>
-        </td>
-        <td><?= $order['total'] ?></td>
-        <td>
-            <select name="status">
-                <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>В обработке</option>
-                <option value="shipped" <?= $order['status'] === 'shipped' ? 'selected' : '' ?>>Отправлен</option>
-                <option value="delivered" <?= $order['status'] === 'delivered' ? 'selected' : '' ?>>Доставлен</option>
-                <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Отменен</option>
-            </select>
-        </td>
-        <td><?= htmlspecialchars($order['payment_method']) ?></td>
-        <td><?= $order['created_at'] ?></td>
-<td><?= isset($order['delivery_date']) ? $order['delivery_date'] : 'Не указана' ?></td>
-<td><?= isset($order['delivery_address']) ? htmlspecialchars($order['delivery_address']) : 'Не указан' ?></td>
-        <td><textarea name="notes"><?= htmlspecialchars($order['notes']) ?></textarea></td>
-        <td class="actions">
-            <input type="hidden" name="order_id" value="<?= $order['id'] ?>" />
-            <button type="submit" name="update_order">Обновить</button>
-            <button type="submit" name="delete_order" class="delete">Удалить</button>
-        </td>
-    </form>
-</tr>
-
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Клиент</th>
+                        <th>Товары</th>
+                        <th>Сумма</th>
+                        <th>Статус</th>
+                        <th>Дата заказа</th>
+                        <th>Дата доставки</th>
+                        <th>Адрес</th>
+                        <th>Примечания</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($orders as $order): ?>
+                    <tr>
+                        <form method="POST">
+                            <td><?= $order['id'] ?></td>
+                            <td>
+                                <input type="text" value="<?= htmlspecialchars($order['customer_name']) ?>" readonly />
+                                <input type="email" value="<?= htmlspecialchars($order['customer_email']) ?>" readonly />
+                            </td>
+                            <td>
+                                <div class="order-items">
+                                <?php
+                                $stmt = $pdo->prepare("
+                                    SELECT p.name, oi.quantity 
+                                    FROM order_items oi 
+                                    JOIN products p ON oi.product_id = p.id 
+                                    WHERE oi.order_id = ?
+                                ");
+                                $stmt->execute([$order['id']]);
+                                $items = $stmt->fetchAll();
+                                foreach ($items as $item): ?>
+                                    <div><?= htmlspecialchars($item['name']) ?> (<?= $item['quantity'] ?> шт.)</div>
+                                <?php endforeach; ?>
+                                </div>
+                            </td>
+                            <td><input type="number" value="<?= $order['total'] ?>" readonly /></td>
+                            <td>
+                                <select name="status" required>
+                                    <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>В обработке</option>
+                                    <option value="shipped" <?= $order['status'] === 'shipped' ? 'selected' : '' ?>>Отправлен</option>
+                                    <option value="delivered" <?= $order['status'] === 'delivered' ? 'selected' : '' ?>>Доставлен</option>
+                                    <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Отменен</option>
+                                </select>
+                            </td>
+                            <td><input type="text" value="<?= $order['created_at'] ?>" readonly /></td>
+                            <td><input type="datetime-local" name="delivery_date" value="<?= $order['delivery_date'] ?? '' ?>" /></td>
+                            <td><input type="text" name="delivery_address" value="<?= htmlspecialchars($order['delivery_address']) ?>" /></td>
+                            <td><textarea name="notes"><?= htmlspecialchars($order['notes']) ?></textarea></td>
+                            <td class="actions">
+                                <input type="hidden" name="order_id" value="<?= $order['id'] ?>" />
+                                <button type="submit" name="update_order">Обновить</button>
+                                <button type="submit" name="delete_order" class="delete" onclick="return confirm('Вы уверены, что хотите удалить этот заказ?');">Удалить</button>
+                            </td>
+                        </form>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div id="reviews" class="tab-content <?= $_SESSION['active_tab'] == 'reviews' ? 'active' : '' ?>">
