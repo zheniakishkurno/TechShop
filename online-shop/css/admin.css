@@ -111,7 +111,7 @@ h3 {
     display: block;
 }
 
-/* Основные стили таблицы */
+/* Улучшенные стили для таблиц */
 .table-wrapper {
     width: 100%;
     overflow-x: auto;
@@ -120,6 +120,26 @@ h3 {
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     margin: 20px 0;
     position: relative;
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+/* Стили для заголовка таблицы */
+table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+}
+
+table thead::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
 }
 
 table {
@@ -128,59 +148,92 @@ table {
     border-spacing: 0;
     margin: 0;
     font-size: 14px;
-    table-layout: fixed;
+    line-height: 1.6;
 }
 
-/* Стили для ячеек */
-table th,
-table td {
-    padding: 12px;
+table th, table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #edf2f7;
     vertical-align: middle;
-    position: relative;
-    overflow: hidden;
-    text-overflow: ellipsis;
+}
+
+table th {
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
     white-space: nowrap;
 }
 
-/* Фиксированные ширины для стандартных колонок */
-table th:first-child,
-table td:first-child {  /* ID */
-    width: 60px;
+/* Улучшенные стили для строк */
+table tbody tr {
+    transition: all 0.2s ease;
 }
 
-table th:nth-child(2),
-table td:nth-child(2) {  /* Пользователь */
-    width: 180px;
+table tbody tr:hover {
+    background-color: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-table th:last-child,
-table td:last-child {  /* Действия */
-    width: 160px;
-    white-space: nowrap;
+/* Стили для чередующихся строк */
+table tbody tr:nth-child(even) {
+    background-color: #fafafa;
 }
 
-table th:nth-last-child(2),
-table td:nth-last-child(2) {  /* Дата */
-    width: 160px;
+/* Улучшенные стили для ячеек с действиями */
+.actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 8px 0;
 }
 
-/* Оценка */
-table th[data-type="rating"],
-table td[data-type="rating"] {
-    width: 100px;
+.actions button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Комментарий - растягивается на оставшееся пространство */
-table th[data-type="comment"],
-table td[data-type="comment"] {
-    min-width: 200px;
-    max-width: 400px;
+.actions button[type="submit"] {
+    background: linear-gradient(to right, #4ade80, #22c55e);
+    color: white;
 }
 
-/* Стили для полей ввода в таблице */
+.actions button[type="submit"]:hover {
+    background: linear-gradient(to right, #22c55e, #16a34a);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(34, 197, 94, 0.2);
+}
+
+.actions button.delete {
+    background: linear-gradient(to right, #f87171, #ef4444);
+    color: white;
+}
+
+.actions button.delete:hover {
+    background: linear-gradient(to right, #ef4444, #dc2626);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+}
+
+/* Улучшенные стили для полей ввода в таблице */
 table input[type="text"],
 table input[type="number"],
 table input[type="email"],
+table input[type="tel"],
 table select,
 table textarea {
     width: 100%;
@@ -188,150 +241,128 @@ table textarea {
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     font-size: 14px;
-    line-height: 1.4;
-    color: #1e293b;
-    background-color: #f8fafc;
     transition: all 0.2s ease;
-    box-sizing: border-box;
+    background-color: white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Специальные стили для textarea в таблице */
-table textarea {
-    height: 38px; /* Высота как у обычных инпутов */
-    min-height: 38px;
-    resize: none;
-    overflow: hidden;
-}
-
-/* Стили при фокусе */
 table input:focus,
 table select:focus,
 table textarea:focus {
-    position: absolute;
-    top: 50%;
-    left: 12px;
-    transform: translateY(-50%);
-    width: calc(100% - 24px);
-    max-width: 400px;
-    z-index: 1000;
-    background-color: white;
-    border-color: #5c6bc0;
-    box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.2);
-    white-space: normal;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    outline: none;
 }
 
-/* Специальные стили для textarea при фокусе */
-table textarea:focus {
-    height: auto;
-    min-height: 100px;
-    max-height: 200px;
-    resize: vertical;
-    transform: none;
-    top: 0;
-}
-
-/* Стили для кнопок действий */
-.actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-    min-width: max-content;
-}
-
-.actions button {
-    padding: 6px 12px;
+/* Улучшенные стили для изображений */
+table img {
     border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
     transition: all 0.2s ease;
-    white-space: nowrap;
 }
 
-.actions button[type="submit"],
-.actions .update {
-    background: linear-gradient(to right, #4ade80, #22c55e);
-    color: white;
+table img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.actions .delete {
-    background: linear-gradient(to right, #f87171, #ef4444);
-    color: white;
+/* Улучшенные стили для статусов */
+table select[name="status"] {
+    font-weight: 500;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding-right: 36px;
 }
 
-.actions button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Цветовые индикаторы для статусов */
+table select[name="status"] option[value="processing"] {
+    background-color: #fef3c7;
+    color: #d97706;
 }
 
-/* Стили для чередующихся строк */
-table tbody tr:nth-child(even) td {
-    background-color: #fafafa;
+table select[name="status"] option[value="shipped"] {
+    background-color: #dbeafe;
+    color: #2563eb;
 }
 
-/* Адаптивность */
-@media (max-width: 1400px) {
-    table {
-        font-size: 13px;
-    }
-    
-    table th, table td {
-        padding: 10px 8px;
-    }
-    
-    .actions button {
-        padding: 4px 8px;
-        font-size: 11px;
-        min-width: 50px;
-    }
+table select[name="status"] option[value="delivered"] {
+    background-color: #dcfce7;
+    color: #16a34a;
 }
 
-@media (max-width: 1200px) {
-    table th:nth-child(9),
-    table td:nth-child(9) {
-        display: none; /* Скрываем адрес доставки */
-    }
-    
-    table th:nth-child(3),
-    table td:nth-child(3) {
-        width: 30%; /* Увеличиваем ширину товаров */
-    }
+table select[name="status"] option[value="cancelled"] {
+    background-color: #fee2e2;
+    color: #dc2626;
 }
 
-@media (max-width: 992px) {
-    table th:nth-child(7),
-    table td:nth-child(7),
-    table th:nth-child(8),
-    table td:nth-child(8) {
-        display: none; /* Скрываем даты */
-    }
-    
-    table th:nth-child(2),
-    table td:nth-child(2) {
-        width: 20%; /* Увеличиваем ширину клиента */
-    }
-    
-    table th:nth-child(3),
-    table td:nth-child(3) {
-        width: 35%; /* Увеличиваем ширину товаров */
-    }
+/* Улучшенные стили для рейтинга */
+table select[name="rating"] {
+    width: 100px;
+    text-align: center;
+    font-weight: 600;
+    color: #f59e0b;
+    background-color: #fffbeb;
+    border-color: #fcd34d;
 }
 
+/* Адаптивность для маленьких экранов */
 @media (max-width: 768px) {
+    .table-wrapper {
+        margin: 10px -15px;
+        border-radius: 0;
+        max-height: none;
+    }
+
+    table th, table td {
+        padding: 12px;
+    }
+
+    table th {
+        font-size: 11px;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .actions button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Улучшение читаемости на мобильных устройствах */
     table {
         font-size: 13px;
     }
-    
-    table th, 
-    table td {
-        padding: 10px 12px;
+
+    table input,
+    table select,
+    table textarea {
+        font-size: 13px;
+        padding: 6px 10px;
     }
-    
-    .actions button {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
+}
+
+/* Скроллбар для таблицы */
+.table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 /* Стили для форм */
@@ -457,97 +488,29 @@ table input[type="email"],
 table input[type="tel"],
 table textarea {
     width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: 8px 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 14px;
-    line-height: 1.4;
-    color: #1e293b;
-    background-color: #f8fafc;
-    transition: all 0.2s ease;
-}
-
-/* Стили при наведении */
-table input:hover,
-table textarea:hover {
-    border-color: #cbd5e1;
-    background-color: #f1f5f9;
+    min-width: 150px;
 }
 
 /* При фокусе поле в таблице разворачивается поверх других */
 table input:focus,
 table textarea:focus {
-    position: absolute;
+    position: relative;
     z-index: 1000;
-    border-color: #5c6bc0;
-    box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.2);
+    box-shadow: 0 0 10px rgba(92, 107, 192, 0.2);
     background-color: white;
-    width: auto;
-    min-width: 250px;
-    white-space: normal;
-    outline: none;
 }
 
 /* Стили для длинных текстовых полей в таблице */
 table td textarea {
     height: 60px;
     min-height: 60px;
-    resize: both;
-    line-height: 1.6;
-    padding: 10px 12px;
 }
 
 table td textarea:focus {
     height: 150px;
-    width: 300px;
-    max-width: none;
-}
-
-/* Стили для disabled полей */
-table input:disabled,
-table textarea:disabled {
-    background-color: #f1f5f9;
-    border-color: #e2e8f0;
-    color: #64748b;
-    cursor: not-allowed;
-}
-
-/* Стили для placeholder */
-table input::placeholder,
-table textarea::placeholder {
-    color: #94a3b8;
-    font-style: italic;
-}
-
-/* Стили для валидации */
-table input:invalid,
-table textarea:invalid {
-    border-color: #f87171;
-}
-
-table input:invalid:focus,
-table textarea:invalid:focus {
-    border-color: #f87171;
-    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2);
-}
-
-/* Добавляем иконку для обязательных полей */
-table td.required input,
-table td.required textarea {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 24 24" fill="%23ef4444"><circle cx="12" cy="12" r="12"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 6px;
-    padding-right: 24px;
-}
-
-/* Добавляем стили для ячеек с фиксированной шириной */
-table td[data-fixed-width] {
-    width: 1%;
-    white-space: nowrap;
+    position: absolute;
+    width: auto;
+    min-width: 300px;
 }
 
 form input:focus,
@@ -599,6 +562,16 @@ form select:invalid:focus {
     transform: translateY(0);
 }
 
+/* Стили для кнопок действий */
+.actions button {
+    padding: 6px 12px; 
+    margin-right: 5px;
+    font-size: 13px; 
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s; 
+}
+
 /* Стиль для кнопки назад */
 .back-button {
     display: inline-block;
@@ -615,6 +588,42 @@ form select:invalid:focus {
 
 .back-button:hover {
     background-color: #e0e0e0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+        margin: 0;
+        border-radius: 0;
+    }
+    
+    table {
+        font-size: 12px;
+    }
+    
+    table th, table td {
+        padding: 8px;
+    }
+    
+    .tabs {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        margin-right: 0;
+        margin-bottom: 5px;
+        border-radius: 4px;
+    }
+    
+    .tab-button.active {
+        border-radius: 4px;
+    }
+    
+    .tab-button.active:after {
+        display: none;
+    }
 }
 
 /* Стили для select */
@@ -688,258 +697,4 @@ form select:invalid:focus {
 
 input:invalid + .error-message {
     display: block;
-}
-
-/* Стили для формы с файлом */
-.file-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin: 20px 0;
-}
-
-.file-input-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-}
-
-.file-input-container {
-    flex: 1;
-    min-width: 300px;
-}
-
-.file-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-/* Стили для кнопки выбора файла */
-.file-input-container input[type="file"] {
-    display: none;
-}
-
-.file-input-container .file-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #1e293b;
-    transition: all 0.2s ease;
-}
-
-.file-input-container .file-label:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
-}
-
-.file-input-container .file-name {
-    margin-left: 8px;
-    color: #64748b;
-}
-
-/* Стили для кнопок действий */
-.file-actions button {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    color: white;
-    min-width: 100px;
-    transition: all 0.2s ease;
-}
-
-.file-actions button.update {
-    background: linear-gradient(to right, #4ade80, #22c55e);
-}
-
-.file-actions button.update:hover {
-    background: linear-gradient(to right, #22c55e, #16a34a);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(34, 197, 94, 0.2);
-}
-
-.file-actions button.delete {
-    background: linear-gradient(to right, #f87171, #ef4444);
-}
-
-.file-actions button.delete:hover {
-    background: linear-gradient(to right, #ef4444, #dc2626);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
-}
-
-/* Подсказка о форматах */
-.file-format-hint {
-    font-size: 13px;
-    color: #64748b;
-    margin-top: 4px;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .file-input-wrapper {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .file-input-container {
-        min-width: 100%;
-    }
-
-    .file-actions {
-        justify-content: flex-start;
-    }
-
-    .file-actions button {
-        flex: 1;
-    }
-}
-
-/* Стили для таблицы категорий */
-.categories-table {
-    width: 100%;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-    margin: 20px 0;
-}
-
-.categories-table th {
-    background: #f8fafc;
-    color: #1e293b;
-    font-weight: 600;
-    padding: 16px;
-    text-align: left;
-    border-bottom: 2px solid #e2e8f0;
-}
-
-.categories-table td {
-    padding: 16px;
-    border-bottom: 1px solid #e2e8f0;
-    vertical-align: middle;
-}
-
-/* Стили для столбца ID */
-.categories-table th:first-child,
-.categories-table td:first-child {
-    width: 80px;
-    text-align: center;
-    color: #64748b;
-    font-weight: 500;
-}
-
-/* Стили для столбца НАЗВАНИЕ */
-.categories-table td:nth-child(2) {
-    font-weight: 500;
-    color: #1e293b;
-}
-
-/* Стили для столбца ИЗОБРАЖЕНИЕ */
-.categories-table td:last-child {
-    width: 300px;
-}
-
-/* Стили для предпросмотра изображения */
-.categories-table .image-preview {
-    width: 50px;
-    height: 50px;
-    border-radius: 4px;
-    object-fit: cover;
-    margin-right: 10px;
-}
-
-/* Стили для группы кнопок изображения */
-.image-buttons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-/* Стили для кнопки "Изменить" */
-.categories-table .btn-change {
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    color: #1e293b;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.categories-table .btn-change:hover {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
-}
-
-/* Стили для кнопки выбора файла */
-.categories-table .file-input {
-    display: none;
-}
-
-.categories-table .file-label {
-    background: #5c6bc0;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.categories-table .file-label:hover {
-    background: #3f51b5;
-}
-
-/* Стили для подсказки о форматах */
-.categories-table .format-hint {
-    font-size: 12px;
-    color: #64748b;
-    margin-top: 4px;
-}
-
-/* Состояние наведения на строку */
-.categories-table tbody tr:hover {
-    background-color: #f8fafc;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .categories-table th:first-child,
-    .categories-table td:first-child {
-        width: 60px;
-    }
-    
-    .categories-table td:last-child {
-        width: auto;
-    }
-    
-    .image-buttons {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .categories-table .btn-change,
-    .categories-table .file-label {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-/* Стили для текста "Файл не выбран" */
-.categories-table .no-file {
-    color: #94a3b8;
-    font-style: italic;
-    margin-left: 8px;
 }
