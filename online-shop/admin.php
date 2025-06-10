@@ -364,8 +364,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare("DELETE FROM reviews WHERE user_id = ?");
                 $stmt->execute([$user_id]);
                 
-                // 2. Удаляем заказы пользователя (если есть связь)
-                $stmt = $pdo->prepare("DELETE FROM orders WHERE user_id = ?");
+                // 2. Удаляем заказы пользователя через связь с customers
+                $stmt = $pdo->prepare("DELETE FROM orders WHERE customer_id IN (SELECT id FROM customers WHERE user_id = ?)");
                 $stmt->execute([$user_id]);
                 
                 // 3. Удаляем записи из корзины пользователя (если есть)
