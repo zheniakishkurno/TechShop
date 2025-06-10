@@ -160,90 +160,79 @@ table thead::after {
 }
 
 table {
-    min-width: 1200px; /* Минимальная ширина таблицы */
+    min-width: 1400px;
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     margin: 0;
     font-size: 14px;
     line-height: 1.6;
-    table-layout: fixed;
 }
 
 /* Фиксированные ширины колонок */
 table th:first-child,
 table td:first-child {
-    width: 60px; /* ID */
+    width: 70px; /* ID */
     text-align: center;
-    padding-left: 4px;
-    padding-right: 4px;
+    padding: 12px 8px;
 }
 
 table th:nth-child(2),
 table td:nth-child(2) {
-    width: 180px; /* Клиент */
+    width: 200px; /* Клиент */
+    padding: 12px 16px;
 }
 
 table th:nth-child(3),
 table td:nth-child(3) {
-    width: 300px; /* Товары */
+    width: 350px; /* Товары */
+    padding: 12px 16px;
 }
 
 table th:nth-child(4),
 table td:nth-child(4) {
-    width: 100px; /* Сумма */
+    width: 120px; /* Сумма */
     text-align: right;
+    padding: 12px 16px;
 }
 
 table th:nth-child(5),
 table td:nth-child(5) {
-    width: 100px; /* Статус */
+    width: 120px; /* Статус */
+    padding: 12px 16px;
 }
 
 table th:nth-child(6),
 table td:nth-child(6) {
-    width: 120px; /* Метод оплаты */
+    width: 140px; /* Метод оплаты */
+    padding: 12px 16px;
 }
 
 table th:nth-child(7),
 table td:nth-child(7) {
-    width: 120px; /* Дата создания */
+    width: 130px; /* Дата создания */
+    padding: 12px 16px;
 }
 
 table th:nth-child(8),
 table td:nth-child(8) {
-    width: 120px; /* Дата доставки */
+    width: 130px; /* Дата доставки */
+    padding: 12px 16px;
 }
 
 table th:nth-child(9),
 table td:nth-child(9) {
-    width: 200px; /* Адрес доставки */
+    width: 250px; /* Адрес доставки */
+    padding: 12px 16px;
 }
 
 table th:last-child,
 table td:last-child {
-    width: 100px; /* Действия */
-}
-
-/* Стили для ID колонки */
-table td:first-child {
-    font-family: monospace; /* Моноширинный шрифт для цифр */
-    font-weight: 500;
-    color: #666;
-    background: #f8fafc;
+    width: 120px; /* Действия */
+    padding: 12px;
 }
 
 /* Стили для ячеек */
-table th, table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #edf2f7;
-    vertical-align: middle;
-    position: relative;
-    white-space: nowrap;
-}
-
-/* Стили для заголовков */
 table th {
     background-color: #f8fafc;
     color: #1e293b;
@@ -251,32 +240,21 @@ table th {
     text-transform: uppercase;
     font-size: 12px;
     letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
-/* Стили для текста в ячейках */
 table td {
-    color: #333;
-}
-
-/* При наведении показываем полный текст */
-table td:hover {
-    white-space: normal;
-    overflow: visible;
-    z-index: 10;
-}
-
-table td:hover::after {
-    content: attr(title);
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: auto;
-    min-width: 100%;
-    padding: 8px;
     background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    z-index: 1000;
+    transition: all 0.2s ease;
+    line-height: 1.4;
+}
+
+/* ID колонка */
+table td:first-child {
+    font-family: monospace;
+    font-weight: 500;
+    color: #666;
+    background: #f8fafc;
 }
 
 /* Улучшенные стили для строк */
@@ -284,31 +262,45 @@ table tbody tr {
     transition: all 0.2s ease;
 }
 
+table tbody tr:hover {
+    background-color: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+table tbody tr:hover td {
+    background-color: #f8fafc;
+}
+
 /* Стили для чередующихся строк */
-table tbody tr:nth-child(even) {
+table tbody tr:nth-child(even) td {
     background-color: #fafafa;
 }
 
 /* Стили для кнопок действий */
 .actions {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     justify-content: flex-end;
 }
 
 .actions button {
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
     border: none;
-    color: white;
-    min-width: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .actions button[type="submit"] {
     background: linear-gradient(to right, #4ade80, #22c55e);
+    color: white;
 }
 
 .actions button[type="submit"]:hover {
@@ -319,6 +311,7 @@ table tbody tr:nth-child(even) {
 
 .actions button.delete {
     background: linear-gradient(to right, #f87171, #ef4444);
+    color: white;
 }
 
 .actions button.delete:hover {
@@ -376,41 +369,18 @@ table tbody tr:nth-child(even) {
 }
 
 @media (max-width: 768px) {
-    .table-wrapper {
-        margin: 10px -15px;
-        border-radius: 0;
-    }
-
-    table th:nth-child(6),
-    table td:nth-child(6) {
-        display: none; /* Скрываем метод оплаты */
+    table {
+        font-size: 13px;
     }
     
-    table th:nth-child(2),
-    table td:nth-child(2) {
-        width: 25%;
-    }
-    
-    table th:nth-child(3),
-    table td:nth-child(3) {
-        width: 40%;
-    }
-    
-    table th:first-child,
-    table td:first-child {
-        width: 40px; /* Уменьшаем на мобильных */
-        font-size: 12px;
-    }
-    
-    table th:nth-child(2),
-    table td:nth-child(2) {
-        width: 30%;
+    table th, 
+    table td {
+        padding: 10px 12px;
     }
     
     .actions button {
-        padding: 4px 8px;
-        font-size: 11px;
-        min-width: 40px;
+        padding: 6px 12px;
+        font-size: 12px;
     }
 }
 
