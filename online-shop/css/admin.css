@@ -515,6 +515,21 @@ table textarea {
     min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #1e293b;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+/* Стили при наведении */
+table input:hover,
+table textarea:hover {
+    border-color: #cbd5e1;
+    background-color: #f1f5f9;
 }
 
 /* При фокусе поле в таблице разворачивается поверх других */
@@ -522,11 +537,13 @@ table input:focus,
 table textarea:focus {
     position: absolute;
     z-index: 1000;
-    box-shadow: 0 0 10px rgba(92, 107, 192, 0.2);
+    border-color: #5c6bc0;
+    box-shadow: 0 0 0 3px rgba(92, 107, 192, 0.2);
     background-color: white;
     width: auto;
     min-width: 250px;
     white-space: normal;
+    outline: none;
 }
 
 /* Стили для длинных текстовых полей в таблице */
@@ -534,12 +551,52 @@ table td textarea {
     height: 60px;
     min-height: 60px;
     resize: both;
+    line-height: 1.6;
+    padding: 10px 12px;
 }
 
 table td textarea:focus {
     height: 150px;
     width: 300px;
     max-width: none;
+}
+
+/* Стили для disabled полей */
+table input:disabled,
+table textarea:disabled {
+    background-color: #f1f5f9;
+    border-color: #e2e8f0;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+/* Стили для placeholder */
+table input::placeholder,
+table textarea::placeholder {
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* Стили для валидации */
+table input:invalid,
+table textarea:invalid {
+    border-color: #f87171;
+}
+
+table input:invalid:focus,
+table textarea:invalid:focus {
+    border-color: #f87171;
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2);
+}
+
+/* Добавляем иконку для обязательных полей */
+table td.required input,
+table td.required textarea {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 24 24" fill="%23ef4444"><circle cx="12" cy="12" r="12"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 6px;
+    padding-right: 24px;
 }
 
 /* Добавляем стили для ячеек с фиксированной шириной */
