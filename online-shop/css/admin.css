@@ -698,3 +698,48 @@ form select:invalid:focus {
 input:invalid + .error-message {
     display: block;
 }
+
+/* Стили для таблиц */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    position: relative;
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+/* Специфичные стили для таблицы заказов */
+#orders table {
+    min-width: 1200px; /* Минимальная ширина таблицы */
+}
+
+#orders table td {
+    min-width: 120px; /* Минимальная ширина ячеек */
+    vertical-align: top;
+    white-space: normal; /* Разрешаем перенос текста */
+}
+
+#orders table td textarea {
+    min-height: 60px;
+    width: 100%;
+}
+
+#orders .customer-info {
+    max-width: 200px;
+}
+
+#orders .delivery-info {
+    max-width: 250px;
+}
+
+#orders .status-cell {
+    min-width: 150px;
+}
+
+#orders .actions-cell {
+    min-width: 180px;
+}
