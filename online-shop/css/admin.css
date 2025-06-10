@@ -714,32 +714,50 @@ input:invalid + .error-message {
 
 /* Специфичные стили для таблицы заказов */
 #orders table {
-    min-width: 1200px; /* Минимальная ширина таблицы */
-}
-
-#orders table td {
-    min-width: 120px; /* Минимальная ширина ячеек */
-    vertical-align: top;
-    white-space: normal; /* Разрешаем перенос текста */
-}
-
-#orders table td textarea {
-    min-height: 60px;
+    min-width: auto; /* Убираем фиксированную минимальную ширину */
     width: 100%;
 }
 
-#orders .customer-info {
-    max-width: 200px;
+#orders table td {
+    min-width: auto; /* Убираем фиксированную минимальную ширину ячеек */
+    padding: 16px;
+    vertical-align: middle;
+    white-space: normal;
 }
 
+#orders table td textarea {
+    min-height: 40px;
+    height: auto;
+    width: 100%;
+    resize: vertical;
+}
+
+#orders .customer-info,
 #orders .delivery-info {
-    max-width: 250px;
+    max-width: none; /* Убираем ограничение максимальной ширины */
 }
 
 #orders .status-cell {
-    min-width: 150px;
+    width: 120px; /* Фиксированная ширина для статуса */
 }
 
 #orders .actions-cell {
-    min-width: 180px;
+    width: 150px; /* Фиксированная ширина для действий */
+    white-space: nowrap;
+}
+
+/* Адаптивность для таблицы заказов */
+@media (max-width: 768px) {
+    #orders table {
+        min-width: 100%;
+    }
+    
+    #orders table td {
+        padding: 12px;
+    }
+    
+    #orders .status-cell,
+    #orders .actions-cell {
+        width: auto;
+    }
 }
