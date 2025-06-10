@@ -352,9 +352,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (isset($_POST['delete_user'])) {
+            // Сначала удаляем все отзывы пользователя
+            $stmt = $pdo->prepare("DELETE FROM reviews WHERE user_id = ?");
+            $stmt->execute([$_POST['user_id']]);
+            
+            // Затем удаляем самого пользователя
             $stmt = $pdo->prepare("DELETE FROM users WHERE id=?"); 
             $stmt->execute([$_POST['user_id']]);
-            $_SESSION['message'] = "Пользователь успешно удален!";
+            $_SESSION['message'] = "Пользователь и все его отзывы успешно удалены!";
         }
 
         // Обработка заказов
