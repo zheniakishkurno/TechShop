@@ -143,30 +143,29 @@ table thead::after {
 
 table {
     width: 100%;
-    border-collapse: separate;
     border-spacing: 0;
-    margin: 0;
     font-size: 14px;
-    line-height: 1.6;
 }
 
 /* Стили для ячеек */
 table th,
 table td {
-    padding: 12px;
+    padding: 16px;
     text-align: left;
     border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
 }
 
 table th {
-    background-color: #f8fafc;
+    background: #f8fafc;
     color: #1e293b;
     font-weight: 600;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
+    padding: 16px;
+    text-align: left;
+    border-bottom: 2px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 /* Стили для строк */
@@ -174,10 +173,9 @@ table tbody tr {
     transition: all 0.2s ease;
 }
 
+/* Стили для строк при наведении */
 table tbody tr:hover {
     background-color: #f8fafc;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 /* Стили для чередующихся строк */
@@ -198,11 +196,8 @@ table textarea {
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     font-size: 14px;
-    line-height: 1.4;
-    color: #1e293b;
-    background-color: #f8fafc;
+    background-color: white;
     transition: all 0.2s ease;
-    box-sizing: border-box;
 }
 
 /* Стили при наведении */
@@ -210,7 +205,7 @@ table input:hover,
 table select:hover,
 table textarea:hover {
     border-color: #cbd5e1;
-    background-color: #f1f5f9;
+    background-color: #f8fafc;
 }
 
 /* Стили при фокусе */
@@ -220,7 +215,6 @@ table textarea:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     outline: none;
-    background-color: white;
 }
 
 /* Стили для textarea */
@@ -234,7 +228,6 @@ table textarea {
     display: flex;
     gap: 8px;
     justify-content: flex-end;
-    min-width: max-content;
 }
 
 .actions button {
@@ -245,7 +238,6 @@ table textarea {
     border: none;
     cursor: pointer;
     transition: all 0.2s ease;
-    white-space: nowrap;
     color: white;
 }
 
@@ -313,7 +305,7 @@ table select[name="status"] {
     
     table th, 
     table td {
-        padding: 10px 8px;
+        padding: 12px;
     }
     
     .actions button {
