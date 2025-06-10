@@ -111,258 +111,143 @@ h3 {
     display: block;
 }
 
-/* Улучшенные стили для таблиц */
+/* Оптимизированные стили для таблиц */
 .table-wrapper {
     width: 100%;
-    overflow-x: auto;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     margin: 20px 0;
-    position: relative;
-    max-height: 700px;
-    overflow-y: auto;
-}
-
-/* Стили для заголовка таблицы */
-table thead {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: white;
-}
-
-table thead::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
 }
 
 table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 0;
+    border-collapse: collapse;
     font-size: 14px;
-    line-height: 1.6;
+    table-layout: fixed;
 }
 
-table th, table td {
-    padding: 16px;
+/* Фиксированные ширины колонок */
+table th:first-child,
+table td:first-child {
+    width: 40px; /* Чекбокс */
+}
+
+table th:nth-child(2),
+table td:nth-child(2) {
+    width: 25%; /* Email */
+}
+
+table th:nth-child(3),
+table td:nth-child(3) {
+    width: 15%; /* Сумма */
+}
+
+table th:nth-child(4),
+table td:nth-child(4) {
+    width: 10%; /* Статус */
+}
+
+table th:nth-child(5),
+table td:nth-child(5) {
+    width: 15%; /* Дата создания */
+}
+
+table th:nth-child(6),
+table td:nth-child(6) {
+    width: 15%; /* Дата доставки */
+}
+
+table th:last-child,
+table td:last-child {
+    width: 100px; /* Действия */
+}
+
+/* Стили для ячеек */
+table th, 
+table td {
+    padding: 12px 8px;
     text-align: left;
     border-bottom: 1px solid #edf2f7;
-    vertical-align: middle;
-}
-
-table th {
-    background-color: #f8fafc;
-    color: #1e293b;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.5px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Улучшенные стили для строк */
-table tbody tr {
-    transition: all 0.2s ease;
+/* При наведении показываем полный текст */
+table td:hover {
+    white-space: normal;
+    overflow: visible;
+    position: relative;
+    background-color: #fff;
+    z-index: 1;
 }
 
-table tbody tr:hover {
-    background-color: #f8fafc;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-/* Стили для чередующихся строк */
-table tbody tr:nth-child(even) {
-    background-color: #fafafa;
-}
-
-/* Улучшенные стили для ячеек с действиями */
+/* Стили для кнопок действий */
 .actions {
     display: flex;
-    gap: 8px;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 8px 0;
+    gap: 4px;
+    justify-content: flex-end;
 }
 
 .actions button {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
     border: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    color: white;
+    min-width: 60px;
 }
 
 .actions button[type="submit"] {
     background: linear-gradient(to right, #4ade80, #22c55e);
-    color: white;
-}
-
-.actions button[type="submit"]:hover {
-    background: linear-gradient(to right, #22c55e, #16a34a);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(34, 197, 94, 0.2);
 }
 
 .actions button.delete {
     background: linear-gradient(to right, #f87171, #ef4444);
-    color: white;
 }
 
-.actions button.delete:hover {
-    background: linear-gradient(to right, #ef4444, #dc2626);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+/* Адаптивность */
+@media (max-width: 1200px) {
+    table {
+        font-size: 13px;
+    }
+    
+    table th, 
+    table td {
+        padding: 8px 6px;
+    }
+    
+    .actions button {
+        padding: 4px 8px;
+        font-size: 11px;
+        min-width: 50px;
+    }
 }
 
-/* Улучшенные стили для полей ввода в таблице */
-table input[type="text"],
-table input[type="number"],
-table input[type="email"],
-table input[type="tel"],
-table select,
-table textarea {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: all 0.2s ease;
-    background-color: white;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-table input:focus,
-table select:focus,
-table textarea:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    outline: none;
-}
-
-/* Улучшенные стили для изображений */
-table img {
-    border-radius: 6px;
-    object-fit: cover;
-    border: 2px solid #e2e8f0;
-    transition: all 0.2s ease;
-}
-
-table img:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Улучшенные стили для статусов */
-table select[name="status"] {
-    font-weight: 500;
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    padding-right: 36px;
-}
-
-/* Цветовые индикаторы для статусов */
-table select[name="status"] option[value="processing"] {
-    background-color: #fef3c7;
-    color: #d97706;
-}
-
-table select[name="status"] option[value="shipped"] {
-    background-color: #dbeafe;
-    color: #2563eb;
-}
-
-table select[name="status"] option[value="delivered"] {
-    background-color: #dcfce7;
-    color: #16a34a;
-}
-
-table select[name="status"] option[value="cancelled"] {
-    background-color: #fee2e2;
-    color: #dc2626;
-}
-
-/* Улучшенные стили для рейтинга */
-table select[name="rating"] {
-    width: 100px;
-    text-align: center;
-    font-weight: 600;
-    color: #f59e0b;
-    background-color: #fffbeb;
-    border-color: #fcd34d;
-}
-
-/* Адаптивность для маленьких экранов */
 @media (max-width: 768px) {
     .table-wrapper {
         margin: 10px -15px;
         border-radius: 0;
-        max-height: none;
     }
 
-    table th, table td {
-        padding: 12px;
+    table th:nth-child(5),
+    table td:nth-child(5),
+    table th:nth-child(6),
+    table td:nth-child(6) {
+        display: none; /* Скрываем даты на мобильных */
     }
 
-    table th {
-        font-size: 11px;
+    table th:nth-child(2),
+    table td:nth-child(2) {
+        width: 35%; /* Увеличиваем ширину email */
     }
 
-    .actions {
-        flex-direction: column;
-        gap: 6px;
+    table th:nth-child(3),
+    table td:nth-child(3) {
+        width: 20%; /* Увеличиваем ширину суммы */
     }
-
-    .actions button {
-        width: 100%;
-        justify-content: center;
-    }
-
-    /* Улучшение читаемости на мобильных устройствах */
-    table {
-        font-size: 13px;
-    }
-
-    table input,
-    table select,
-    table textarea {
-        font-size: 13px;
-        padding: 6px 10px;
-    }
-}
-
-/* Скроллбар для таблицы */
-.table-wrapper::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-.table-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
 }
 
 /* Стили для форм */
@@ -562,16 +447,6 @@ form select:invalid:focus {
     transform: translateY(0);
 }
 
-/* Стили для кнопок действий */
-.actions button {
-    padding: 6px 12px; 
-    margin-right: 5px;
-    font-size: 13px; 
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all 0.3s; 
-}
-
 /* Стиль для кнопки назад */
 .back-button {
     display: inline-block;
@@ -588,42 +463,6 @@ form select:invalid:focus {
 
 .back-button:hover {
     background-color: #e0e0e0;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        padding: 10px;
-        margin: 0;
-        border-radius: 0;
-    }
-    
-    table {
-        font-size: 12px;
-    }
-    
-    table th, table td {
-        padding: 8px;
-    }
-    
-    .tabs {
-        flex-direction: column;
-    }
-    
-    .tab-button {
-        margin-right: 0;
-        margin-bottom: 5px;
-        border-radius: 4px;
-    }
-    
-    .tab-button.active {
-        border-radius: 4px;
-    }
-    
-    .tab-button.active:after {
-        display: none;
-    }
 }
 
 /* Стили для select */
