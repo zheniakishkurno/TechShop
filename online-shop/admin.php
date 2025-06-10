@@ -364,9 +364,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare("DELETE FROM reviews WHERE user_id = ?");
                 $stmt->execute([$user_id]);
                 
-                // 2. Удаляем заказы пользователя через связь с customers
-                $stmt = $pdo->prepare("DELETE FROM orders WHERE customer_id IN (SELECT id FROM customers WHERE user_id = ?)");
+                // 2. Получаем email пользователя
+                $stmt = $pdo->prepare("SELECT email FROM users WHERE id = ?");
                 $stmt->execute([$user_id]);
+                $user_email = $stmt->fetchColumn();
+
+                // 3. Получаем ID клиента по email
+                $stmt = $pdo->prepare("SELECT id FROM customers WHERE email = ?");
+                $stmt->execute([$user_email]);
+                $customer_id = $stmt->fetchColumn();
+
+                // 4. Если есть связанный клиент, удаляем его заказы
+                if ($customer_id) {
+                    $stmt = $pdo->prepare("DELETE FROM orders WHERE customer_id = ?");
+                    $stmt->execute([$customer_id]);
+                }
                 
                 // 3. Удаляем записи из корзины пользователя (если есть)
                 $stmt = $pdo->prepare("DELETE FROM cart_items WHERE user_id = ?");
