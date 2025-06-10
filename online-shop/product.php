@@ -376,7 +376,7 @@ require_once 'header.php';
                     </div>
                     
                     <?php if ($product['stock'] > 0): ?>
-                        <button class="add-to-cart-button" onclick="addToCart(<?= $product['id'] ?>)">
+                        <button class="add-to-cart-button" onclick="addToCart(<?= $product['id'] ?>)" data-id="<?= $product['id'] ?>">
                             В корзину
                         </button>
                     <?php else: ?>
