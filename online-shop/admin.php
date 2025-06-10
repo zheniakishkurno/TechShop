@@ -358,17 +358,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $user_id = $_POST['user_id'];
                 
-                // Сначала удаляем все отзывы пользователя
+                // Проверяем и удаляем все связанные данные
+                
+                // 1. Удаляем отзывы пользователя
                 $stmt = $pdo->prepare("DELETE FROM reviews WHERE user_id = ?");
                 $stmt->execute([$user_id]);
                 
-                // Затем удаляем самого пользователя
+                // 2. Удаляем заказы пользователя (если есть связь)
+                $stmt = $pdo->prepare("DELETE FROM orders WHERE user_id = ?");
+                $stmt->execute([$user_id]);
+                
+                // 3. Удаляем записи из корзины пользователя (если есть)
+                $stmt = $pdo->prepare("DELETE FROM cart_items WHERE user_id = ?");
+                $stmt->execute([$user_id]);
+                
+                // 4. Удаляем избранное пользователя (если есть)
+                $stmt = $pdo->prepare("DELETE FROM favorites WHERE user_id = ?");
+                $stmt->execute([$user_id]);
+                
+                // 5. Наконец, удаляем самого пользователя
                 $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
                 $stmt->execute([$user_id]);
                 
                 // Если все операции успешны, фиксируем транзакцию
                 $pdo->commit();
-                $_SESSION['message'] = "Пользователь и все его отзывы успешно удалены!";
+                $_SESSION['message'] = "Пользователь и все связанные данные успешно удалены!";
             } catch (PDOException $e) {
                 // В случае ошибки откатываем все изменения
                 $pdo->rollBack();
