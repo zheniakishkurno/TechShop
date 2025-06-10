@@ -352,14 +352,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (isset($_POST['delete_user'])) {
-            // Сначала удаляем все отзывы пользователя
-            $stmt = $pdo->prepare("DELETE FROM reviews WHERE user_id = ?");
-            $stmt->execute([$_POST['user_id']]);
-            
-            // Затем удаляем самого пользователя
-            $stmt = $pdo->prepare("DELETE FROM users WHERE id=?"); 
-            $stmt->execute([$_POST['user_id']]);
-            $_SESSION['message'] = "Пользователь и все его отзывы успешно удалены!";
+            try {
+                // Начинаем транзакцию
+                $pdo->beginTransaction();
+                
+                $user_id = $_POST['user_id'];
+                
+                // Сначала удаляем все отзывы пользователя
+                $stmt = $pdo->prepare("DELETE FROM reviews WHERE user_id = ?");
+                $stmt->execute([$user_id]);
+                
+                // Затем удаляем самого пользователя
+                $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+                $stmt->execute([$user_id]);
+                
+                // Если все операции успешны, фиксируем транзакцию
+                $pdo->commit();
+                $_SESSION['message'] = "Пользователь и все его отзывы успешно удалены!";
+            } catch (PDOException $e) {
+                // В случае ошибки откатываем все изменения
+                $pdo->rollBack();
+                $_SESSION['error'] = "Ошибка при удалении пользователя: " . $e->getMessage();
+                error_log("Error deleting user: " . $e->getMessage());
+            }
+            header("Location: admin.php");
+            exit;
         }
 
         // Обработка заказов
