@@ -1,7 +1,7 @@
 <?php
 $host = 'dpg-d15vvs7diees73eiqul0-a.oregon-postgres.render.com';
 $dbname = 'electronics_shop';
-$user = ' electronics_shop_d7t7_user';
+$user = 'electronics_shop_d7t7_user';
 $password = 'NA3a44kFrN8KQg4H4zP8TEqdUZFeOhAc';
 
 $dsn = "pgsql:host=$host;dbname=$dbname;sslmode=require";
