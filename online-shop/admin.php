@@ -875,10 +875,10 @@ $reviews = $pdo->query("SELECT
                     <label for="first_name">Имя</label>
                     <div class="input-wrapper">
                         <input type="text" id="first_name" name="first_name" 
-                               pattern="[А-Яа-яЁё\s-]{2,50}" 
-                               title="Имя должно содержать только кириллицу, дефис и пробелы (от 2 до 50 символов)"
+                            pattern=".{2,}"
+                               title="Имя должно содержать минимум 2 символа"
                                required />
-                        <span class="error-message">Введите корректное имя (только кириллица, от 2 до 50 символов)</span>
+                        <span class="error-message">Имя должно содержать минимум 2 символа</span>
                     </div>
                 </div>
 
