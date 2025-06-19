@@ -374,8 +374,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$user_email]);
                 $customer_id = $stmt->fetchColumn();
 
-                // 4. Если есть связанный клиент, удаляем его заказы
+                // 4. Если есть связанный клиент, удаляем его заказы и связанные order_items
                 if ($customer_id) {
+                    // Получаем все заказы клиента
+                    $stmt = $pdo->prepare("SELECT id FROM orders WHERE customer_id = ?");
+                    $stmt->execute([$customer_id]);
+                    $order_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+                    // Удаляем order_items для каждого заказа
+                    if ($order_ids) {
+                        $in = str_repeat('?,', count($order_ids) - 1) . '?';
+                        $stmt = $pdo->prepare("DELETE FROM order_items WHERE order_id IN ($in)");
+                        $stmt->execute($order_ids);
+                    }
+
+                    // Теперь удаляем заказы
                     $stmt = $pdo->prepare("DELETE FROM orders WHERE customer_id = ?");
                     $stmt->execute([$customer_id]);
                 }
@@ -386,7 +399,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->execute([$customer_id]);
                 }
                 
-                // 5. Наконец, удаляем самого пользователя
+                // 6. Наконец, удаляем самого пользователя
                 $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
                 $stmt->execute([$user_id]);
                 
