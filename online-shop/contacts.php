@@ -29,7 +29,7 @@
             <ul>
                 <li><strong>Телефон:</strong> +375 44 123-45-67 </li>
                 <li><strong>Email:</strong> support@techshop.ru</li>
-                <li><strong>Адрес:</strong> Минск, ул. Уручье, 4</li>
+                <li><strong>Адрес:</strong> Минск, ул. Уручская 21в</li>
             </ul>
         </section>
         <section class="map">
