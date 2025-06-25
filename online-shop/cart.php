@@ -210,7 +210,7 @@ document.getElementById('delivery_method').addEventListener('change', function()
         addressField.style.display = 'block';
         addressInput.required = false;
         addressInput.readOnly = true;
-        addressInput.value = 'Уручье 4';
+        addressInput.value = 'ул. Уручская 21в';
     } else {
         addressField.style.display = 'none';
         addressInput.required = false;
